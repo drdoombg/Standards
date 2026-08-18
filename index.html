@@ -173,6 +173,7 @@
   <button class="tab-btn" onclick="showTab('doccontrol',this)">Document Control</button>
   <button class="tab-btn" onclick="showTab('cop',this)">Customer COPs</button>
   <button class="tab-btn" onclick="showTab('analyser',this)">⚠ Result Analyser</button>
+  <button class="tab-btn" onclick="showTab('bacteria',this)">🧫 Bacteria Guide</button>
 </div>
 
 <!-- ═══════════════════════════ TAB 1: LIMITS ═══════════════════════════ -->
@@ -1169,6 +1170,222 @@
   <div id="azResults" style="margin-top:12px;"></div>
 </div>
 
+<!-- ═══════════════════════════ TAB 11: BACTERIA GUIDE ═══════════════════════════ -->
+<div id="tab-bacteria" class="tab-panel">
+
+<div class="note" style="margin-bottom:18px;">Every organism tested across 2SFG procedure D2.0 and all customer COPs — classified by role, with what it means in practice at Scunthorpe. Sorted from most critical (safety) to least (quality/spoilage).</div>
+
+<!-- ── TIER 1: PATHOGENS ── -->
+<div class="section-title" style="border-left-color:#ff2d55;color:#ff2d55;">TIER 1 — Pathogens (Food Safety · Cause illness in humans)</div>
+<div class="note" style="border-left-color:#ff2d55;background:#1a0005;">These are the organisms that can make people seriously ill or kill them. A positive result triggers immediate escalation, batch hold, FSA reporting, and potential product withdrawal. Zero tolerance.</div>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th>Organism</th><th>Full Name</th><th>What it is</th><th>Why it matters in poultry</th><th>Limits / Action</th><th>MIMS Column</th></tr></thead>
+<tbody>
+  <tr>
+    <td style="font-weight:700;color:#ff2d55;white-space:nowrap;"><i>Salmonella</i> Enteritidis (SE)</td>
+    <td><i>Salmonella enterica</i> serovar Enteritidis</td>
+    <td>Gram-negative rod bacterium. Group D Salmonella. The most common cause of egg/poultry-linked salmonellosis in the UK.</td>
+    <td>Lives in the gut of chickens (often without the bird showing symptoms). Contaminates carcasses at slaughter. Causes severe gastroenteritis, fever, diarrhoea in humans. Can be fatal in vulnerable people.</td>
+    <td class="num"><span class="pill pill-abs">Absence in 25g</span> — any detection = immediate batch hold, DTC + TD escalation, FSA report, customer notification. n=5, c=0.</td>
+    <td class="mims-col">SOB-25c / TP4177</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#ff2d55;white-space:nowrap;"><i>Salmonella</i> Typhimurium (ST)</td>
+    <td><i>Salmonella enterica</i> serovar Typhimurium</td>
+    <td>Gram-negative rod. Group B Salmonella. Second key regulated serovar alongside SE in EU/UK poultry regulation.</td>
+    <td>Same route and illness as SE. ST is also a common cause of human food poisoning outbreaks. Legally required to be absent alongside SE in poultrymeat.</td>
+    <td class="num"><span class="pill pill-abs">Absence in 25g</span> — same action as SE above. Fully typed if detected. DTC + TD + FSA.</td>
+    <td class="mims-col">SOB-25c / TP4177 (ID column confirms SE vs ST)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#ff6b35;white-space:nowrap;"><i>Salmonella</i> spp. (other serovars)</td>
+    <td>All other <i>Salmonella</i> species and serovars</td>
+    <td>Large family — 2,500+ serovars. Most are pathogenic to humans. The specific serovar matters for severity and legal action required.</td>
+    <td>Any Salmonella in mince, meat preparations, and meat products = automatic fail. Not all trigger the same FSA reporting as SE/ST but all require DTC + TD escalation and disposal as Cat 2.</td>
+    <td class="num"><span class="pill pill-abs">Absence</span> — detected = dispose as Cat 2, escalate DTC + TD, FSA report.</td>
+    <td class="mims-col">SOB-25c / TP4177 · ID column for serovar</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#ff6b35;white-space:nowrap;"><i>Campylobacter</i> spp.</td>
+    <td>Principally <i>C. jejuni</i> and <i>C. coli</i></td>
+    <td>Gram-negative, spiral-shaped, microaerophilic bacterium. The UK's #1 cause of bacterial food poisoning — over 500,000 cases per year.</td>
+    <td>Lives naturally in the intestines of poultry without causing disease in the bird. Spreads to carcasses during slaughter (scalding, plucking, evisceration). Causes human campylobacteriosis: severe diarrhoea, cramps, fever lasting 1–2 weeks. Can lead to reactive arthritis and Guillain-Barré syndrome.</td>
+    <td class="num">Must be <b>enumerated</b> (not just presence/absence). Neck skin: Fail &gt;1000 cfu/g (Table 8). Product: &lt;600 cfu/g Co-op target; &gt;1000 all COP limits exceeded. Caeca: high counts = high-risk flock.</td>
+    <td class="mims-col">Campy1Fc / TP4138 · CampyFnc / TP4138* (presumptive)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#f87171;white-space:nowrap;"><i>E. coli</i> O157 (STEC/VTEC)</td>
+    <td><i>Escherichia coli</i> O157:H7 (Shiga toxin-producing)</td>
+    <td>A specific dangerous variant of E. coli that produces Shiga toxins. Not routinely in poultry but tested by ASDA and Iceland for red meat products.</td>
+    <td>Can cause haemolytic uraemic syndrome (HUS) — kidney failure, especially in children. Infectious dose is very low (as few as 10 organisms). Primarily a red meat concern but appears in ASDA/Iceland specs.</td>
+    <td class="num"><span class="pill pill-abs">Not Detected</span> (ASDA Cat 2 stuffing and Iceland raw meat specs) — detected = immediate fail.</td>
+    <td class="mims-col">EcPF / TP4167 (confirmed E. coli in some suites)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#f87171;white-space:nowrap;"><i>Listeria monocytogenes</i></td>
+    <td><i>Listeria monocytogenes</i></td>
+    <td>Gram-positive rod. Can grow at refrigeration temperatures (0–4°C) — making it particularly dangerous in chilled, ready-to-eat environments.</td>
+    <td>NOT routinely tested at 2SFG Scunthorpe because all products are raw and require cooking. Cooking destroys Listeria. Low care environment = excluded from routine testing (per Appendix 8 of procedure). High care sites need separate RA.</td>
+    <td class="num"><span class="pill pill-info">Not tested (low care raw poultry)</span> — only relevant if site has high care / RTE production.</td>
+    <td class="mims-col">Not in standard suite at Scunthorpe</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#f87171;white-space:nowrap;"><i>Bacillus cereus</i></td>
+    <td><i>Bacillus cereus</i></td>
+    <td>Gram-positive, spore-forming rod. Produces heat-stable toxins. Spores survive cooking.</td>
+    <td>Relevant in cereal-based products, ingredients, and stuffing. If detected above limit — must be differentiated from <i>B. thuringiensis</i> (a natural insecticide, not pathogenic). <i>B. cereus</i> causes vomiting and/or diarrhoea.</td>
+    <td class="num">Speciate if above unacceptable limit. Differentiate from <i>B. thuringiensis</i> before action. M&S tests as Test 5 (long shelf life products).</td>
+    <td class="mims-col">Reported under Bacillus spp. identification columns</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#f87171;white-space:nowrap;"><i>Clostridium perfringens</i></td>
+    <td><i>Clostridium perfringens</i></td>
+    <td>Gram-positive, anaerobic, spore-forming rod. Spores survive cooking; vegetative cells multiply rapidly during cooling.</td>
+    <td>Mainly a concern in water samples from surface-influenced sources. Iceland also tests for it in long-life vacuum-packed products (target &lt;100 cfu/g, weekly). Causes food poisoning through toxin production in the gut.</td>
+    <td class="num">Water (surface-influenced): 0 cfu/100ml. Iceland long-life VP: &lt;100 cfu/g target / 100 cfu/g OOS.</td>
+    <td class="mims-col">Reported in water suites (SRClW area)</td>
+  </tr>
+</tbody>
+</table></div>
+
+<!-- ── TIER 2: HYGIENE INDICATORS ── -->
+<div class="section-title" style="border-left-color:#ffd60a;color:#ffd60a;margin-top:24px;">TIER 2 — Hygiene Indicators (Process Hygiene · Show whether cleaning and handling are working)</div>
+<div class="note" style="border-left-color:#ffd60a;background:#1c1400;">These organisms don't generally cause illness themselves, but their presence tells you whether the process is clean. High counts = something is wrong with hygiene, temperature control, or cross-contamination. They drive the swab KPI and corrective action cycle.</div>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th>Organism</th><th>Full Name</th><th>What it is</th><th>Why it matters in poultry</th><th>Limits at 2SFG</th><th>MIMS Column</th></tr></thead>
+<tbody>
+  <tr>
+    <td style="font-weight:700;color:#ffd60a;white-space:nowrap;"><i>E. coli</i> (generic)</td>
+    <td><i>Escherichia coli</i> (beta-glucuronidase positive, confirmed)</td>
+    <td>Gram-negative rod from the faecal coliform group. The confirmed, specific marker of faecal contamination. Distinct from E. coli O157 above.</td>
+    <td>Presence on product or swabs = faecal contamination at some point in the process. In raw poultry it's expected at low levels, but high counts indicate poor hygiene at slaughter or in cutting. On hand swabs it indicates inadequate hand washing.</td>
+    <td class="num">Swabs: Pass &lt;10, Caution 10–100, Fail &gt;100 cfu/swab. Minced Meat legal: m=50, M=500. Meat Prep legal: m=500, <b>M=5000</b>. Most COP limits: 50–500 cfu/g.</td>
+    <td class="mims-col">EcF / TP4133</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#ffd60a;white-space:nowrap;">Enterobacteriaceae</td>
+    <td>Family <i>Enterobacteriaceae</i> (presumptive)</td>
+    <td>Large family of Gram-negative rods including E. coli, Salmonella, Klebsiella, Citrobacter, Enterobacter, Proteus, and many others. Broader than E. coli alone.</td>
+    <td>A wider faecal indicator. On swabs, Enterobacteriaceae &gt;100 is a fail — it catches a broader range of contamination than E. coli alone. Useful as an early warning: if Enterobacteriaceae is rising, E. coli and potentially pathogens may follow.</td>
+    <td class="num">Environmental swabs: Fail &gt;100 cfu/swab (Table 4). KFC product: target &lt;10,000, USL 10,000.</td>
+    <td class="mims-col">EntF / TP4103 (product) · EntS / TP4103 (swab)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#ffd60a;white-space:nowrap;">Total Coliforms</td>
+    <td>Coliform group (presumptive)</td>
+    <td>Broader group than E. coli — includes faecal and environmental coliforms. Lactose-fermenting Gram-negative rods.</td>
+    <td>Used primarily in water testing. Any detection in water triggers a Low Level Positive response. Used in some product suites (ColiF). Less specific than E. coli but useful as an early hygiene indicator.</td>
+    <td class="num">Water: 0 cfu/100ml — Low Level Positive if detected; High Level if ≥3/100ml in 2 consecutive samples or &gt;5% in a year.</td>
+    <td class="mims-col">ColiF / TP4102 (product) · ColiW / TP4136 (water)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#ffd60a;white-space:nowrap;">Enterococci</td>
+    <td><i>Enterococcus</i> spp.</td>
+    <td>Gram-positive cocci. Inhabit the intestinal tracts of humans and animals. Formerly called Faecal Streptococci.</td>
+    <td>Used in water testing as a definitive marker of faecal contamination. More resistant to environmental conditions than E. coli — can persist in water systems longer. Presence = definitive faecal pollution of water supply.</td>
+    <td class="num">Water: 0 cfu/100ml — High Level Positive if detected. Immediate action.</td>
+    <td class="mims-col">EntWc / TP4137 (water)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#ffd60a;white-space:nowrap;"><i>Staphylococcus aureus</i> (Coagulase +ve)</td>
+    <td><i>Staphylococcus aureus</i> (coagulase-positive, confirmed)</td>
+    <td>Gram-positive coccus. Produces heat-stable toxins. Found naturally on human skin, nasal passages, and hands.</td>
+    <td>The key organism for hand swabs. High counts indicate operatives are not washing hands properly or are handling product while carrying a skin/nasal infection. The toxin it produces survives cooking — which is why controlling it at the handling stage matters even for raw products that will be cooked.</td>
+    <td class="num">Hand/PPE swabs: Pass &lt;10, Caution 10–100, Fail &gt;100 cfu/swab (Table 6). ASDA: target &lt;20, report &gt;1000. Iceland Added Value: target &lt;100, OOS 100.</td>
+    <td class="mims-col">SaFc / TP4106</td>
+  </tr>
+</tbody>
+</table></div>
+
+<!-- ── TIER 3: SPOILAGE ORGANISMS ── -->
+<div class="section-title" style="border-left-color:#60b8ff;color:#60b8ff;margin-top:24px;">TIER 3 — Spoilage Organisms (Quality · Affect shelf life, not food safety)</div>
+<div class="note" style="border-left-color:#60b8ff;background:#001020;">These organisms don't generally make people ill from poultry products — but they cause the product to spoil (off-smell, slime, colour change) before the use-by date. High counts = product will fail shelf life. They are the main organisms driving customer complaints about quality.</div>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th>Organism</th><th>Full Name</th><th>What it is</th><th>Why it matters in poultry</th><th>Limits at 2SFG / COPs</th><th>MIMS Column</th></tr></thead>
+<tbody>
+  <tr>
+    <td style="font-weight:700;color:#60b8ff;white-space:nowrap;"><i>Pseudomonas</i> spp.</td>
+    <td><i>Pseudomonas</i> species (principally <i>P. fluorescens</i> and <i>P. fragi</i>)</td>
+    <td>Gram-negative aerobic rods. Highly psychrotrophic — grow very well at refrigeration temperatures (0–4°C). Produce slime and enzymes that break down protein and fat.</td>
+    <td>The primary spoilage organism in chilled poultry. Responsible for the characteristic "off" smell and sliminess of chicken going bad in the fridge. High counts on intake = short effective shelf life remaining. The main reason poultry has a short shelf life vs other meats.</td>
+    <td class="num">Swabs: Pass ≤1000, Fail &gt;1000 (Table 4). Product — NO internal limit (customer COP only): Aldi SOL &lt;5,000; Co-op &lt;10,000/g; Tesco &lt;5,000/g (Spec 1) / &lt;10,000 (Spec 5); M&amp;S target &lt;10,000; Iceland &lt;10,000; Ocado EOL &lt;100,000; ASDA &lt;10,000; KFC &lt;5,000.</td>
+    <td class="mims-col">PsFc / TP4115 · spPsF50c / spPsF52c / spPsF53c / TP4150</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#60b8ff;white-space:nowrap;">TVC / ACC / Aerobic Colony Count</td>
+    <td>Total Viable Count at 30°C (Total Aerobic Colony Count)</td>
+    <td>A count of ALL aerobic bacteria that can grow at 30°C. Not a specific organism — it's a total load indicator covering hundreds of species simultaneously.</td>
+    <td>The single most important overall hygiene/spoilage indicator. A high TVC means the product has a lot of bacteria of many types — it will spoil faster, and may have elevated hygiene-indicator organisms too. Used both on product (shelf life) and on swabs (process hygiene).</td>
+    <td class="num">Swabs: Pass ≤1000, Fail &gt;1000 (Table 4). Minced Meat legal: m=5×10⁵, M=5×10⁶ (OOS if &gt;40%). KFC: target &lt;5×10⁵, USL 1×10⁶. Tesco Spec 1: report &gt;1×10⁶. M&amp;S: daily baseline monitoring.</td>
+    <td class="mims-col">TVCF / TP4100 · spTVCF50 / TP4145 · TVCS / TP4100 (swab)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#60b8ff;white-space:nowrap;">Lactic Acid Bacteria (LAB)</td>
+    <td><i>Lactobacillus</i>, <i>Leuconostoc</i>, <i>Carnobacterium</i> and related genera</td>
+    <td>Gram-positive, generally anaerobic or microaerophilic bacteria. Produce lactic acid as a metabolic byproduct.</td>
+    <td>Dominant spoilage organisms in vacuum-packed and modified atmosphere products. They create sour smell, slime, and gas in packs. Not a food safety risk but ruins product quality. Rise dramatically as use-by date approaches in MAP packs.</td>
+    <td class="num">Per product specification. No internal 2SFG procedure limit — tracked for shelf life trending.</td>
+    <td class="mims-col">LacFc / TP4114</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#60b8ff;white-space:nowrap;">Yeasts</td>
+    <td>Various yeast species (principally <i>Candida</i> spp., <i>Rhodotorula</i> spp.)</td>
+    <td>Unicellular fungi (eukaryotes). Not bacteria — but grouped with moulds in micro testing as fungal spoilage organisms.</td>
+    <td>Spoilage in coated, marinated, and ingredient products. Also used for air quality testing (spore testing in pre-chill and ingredient packing areas). Co-op has a specific yeast limit on marinated/coated products. Found in stuffing and brine ingredients.</td>
+    <td class="num">Air plates: Acceptable &lt;10, Warning 10–20, Adverse &gt;20 cfu/plate. Co-op product (marinated): target &lt;10,000/g, unacceptable &gt;1,000,000/g. Raw Material Intake (dry): tested per batch.</td>
+    <td class="mims-col">YF / TP4109</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#60b8ff;white-space:nowrap;">Moulds</td>
+    <td>Various mould species (<i>Aspergillus</i>, <i>Penicillium</i>, <i>Fusarium</i> and others)</td>
+    <td>Multicellular filamentous fungi. Grow as visible colonies — the "furry" growth seen on spoiled food. Some produce mycotoxins.</td>
+    <td>Mainly an ingredient and air quality concern. Mould in pre-chill or ingredient packing areas = product contamination risk. High mould counts in dry ingredients (breadcrumbs, stuffing, spices) indicates poor storage or moisture ingress.</td>
+    <td class="num">Air plates: same limits as Yeasts above (&lt;10 acceptable, &gt;20 adverse). Dry intake tested per batch vs specification.</td>
+    <td class="mims-col">MF / TP4109 (same code as Yeasts in some suites)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#60b8ff;white-space:nowrap;"><i>Bacillus</i> spp. (non-cereus)</td>
+    <td><i>Bacillus subtilis</i>, <i>B. licheniformis</i>, <i>B. pumilus</i>, <i>B. megaterium</i> etc.</td>
+    <td>Gram-positive, spore-forming aerobic rods. Very heat-resistant spores. Widespread in soil and the environment.</td>
+    <td>Found in ingredients (especially stuffing, spices, breadcrumbs) and occasionally finished products. High counts in stuffing = ingredient quality issue. Not pathogenic (unless confirmed as <i>B. cereus</i>), but cause spoilage and product quality failures. Must be speciated if above limit.</td>
+    <td class="num">If above unacceptable limit: speciate to confirm species. If <i>B. cereus</i> detected — further differentiation from <i>B. thuringiensis</i> required before action.</td>
+    <td class="mims-col">Reported in identification columns (ID / Cspp)</td>
+  </tr>
+  <tr>
+    <td style="font-weight:700;color:#60b8ff;white-space:nowrap;">Sulphite Reducing Clostridia (SRC)</td>
+    <td"><i>Clostridium</i> spp. (sulphite-reducing, excluding <i>C. perfringens</i>)</td>
+    <td>Anaerobic, spore-forming, Gram-positive rods. Reduce sulphite compounds as part of their metabolism. Found in soil and intestinal tracts.</td>
+    <td>Used only in water testing — specifically for water that originates from or is influenced by surface water. Their presence indicates the water source has been contaminated with soil or faecal material at some point. Customer-specific action if detected.</td>
+    <td class="num">Water: 0 cfu/100ml — customer specific action if detected.</td>
+    <td class="mims-col">SRClW / TP4143 (water only)</td>
+  </tr>
+</tbody>
+</table></div>
+
+<!-- ── QUICK REFERENCE ── -->
+<div class="section-title" style="margin-top:24px;">Quick Reference — What Each Result Means on Your Daily File</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>You see this in MIMS…</th><th>Organism</th><th>Tier</th><th>What to think first</th></tr></thead>
+<tbody>
+  <tr><td class="mims-col">SOB-25c = Pos / Hold</td><td><i>Salmonella</i></td><td><span class="pill pill-fail">SAFETY</span></td><td>Stop. Escalate immediately. DTC + TD. FSA report. Check serovar in ID column.</td></tr>
+  <tr><td class="mims-col">Campy1Fc &gt;1000 on product</td><td><i>Campylobacter</i></td><td><span class="pill pill-fail">SAFETY</span></td><td>Exceeds all COP limits. Investigate handling, check neck skin Campy results for same kill date.</td></tr>
+  <tr><td class="mims-col">Campy1Fc &gt;4500 on neck skin</td><td><i>Campylobacter</i></td><td><span class="pill pill-fail">SAFETY</span></td><td>Table 8 fail. Investigation + action plan for slaughter hygiene. Biosecurity review for farm of origin.</td></tr>
+  <tr><td class="mims-col">CampyFnc very high on Caeca</td><td><i>Campylobacter</i></td><td><span class="pill pill-warn">PROCESS</span></td><td>High-risk flock. Flag for slaughter team. Not a legal fail but predicts neck skin positives.</td></tr>
+  <tr><td class="mims-col">EcF &gt;1000 on product</td><td><i>E. coli</i></td><td><span class="pill pill-warn">HYGIENE</span></td><td>Check against customer COP. Meat Prep: M=5000, action at 500. Minced Meat: M=500, action at 50.</td></tr>
+  <tr><td class="mims-col">PsFc &gt;4,000,000 on product</td><td><i>Pseudomonas</i></td><td><span class="pill pill-info">QUALITY</span></td><td>Very high spoilage load. Check kill date vs pack date. Short shelf life remaining. Check COP for retailer.</td></tr>
+  <tr><td class="mims-col">TVCS &gt;1000 on swab</td><td>TVC (all aerobic bacteria)</td><td><span class="pill pill-warn">HYGIENE</span></td><td>Swab fail. Retest soonest. Hygiene Manager must be informed. Trend — 3 fails in 12 months = RCA.</td></tr>
+  <tr><td class="mims-col">EntS &gt;100 on swab</td><td>Enterobacteriaceae</td><td><span class="pill pill-warn">HYGIENE</span></td><td>Swab fail. More specific than TVC — suggests faecal contamination route. Investigate source.</td></tr>
+  <tr><td class="mims-col">SaFc 10–100 on hand swab</td><td><i>S. aureus</i></td><td><span class="pill pill-caution">CAUTION</span></td><td>Caution band. Retrain on hand washing. Check if operative has skin lesion or nasal infection.</td></tr>
+  <tr><td class="mims-col">EcW &gt;0 in water</td><td><i>E. coli</i> in water</td><td><span class="pill pill-fail">CRITICAL</span></td><td>High Level Positive. Quarantine water outlet. Stop production if no other supply. Risk assess affected product.</td></tr>
+  <tr><td class="mims-col">TVC22 &gt;30,000 in water</td><td>TVC in water dispenser</td><td><span class="pill pill-warn">HYGIENE</span></td><td>Abnormal change. Investigate — could be biofilm in dispenser. Retest. Notify STL.</td></tr>
+</tbody>
+</table></div>
+
+</div>
+
 <!-- ═══════════════════════════ SEARCH SCRIPT ═══════════════════════════ -->
 <script>
 // ── Search index ──────────────────────────────────────────────────────────
@@ -1322,7 +1539,25 @@ const SEARCH_INDEX = [
   { t:'Tesco ACC aerobic colony count', d:'Tesco Spec 1: ACC <1×10⁵/g · Report 1×10⁶/g · Each batch. Tesco Spec 5: <5×10⁵/g · Report 5×10⁶/g · Each batch.', cat:'Customer COPs', tab:'cop' },
   { t:'Tesco E coli Staphylococcus anaerobic', d:'Tesco Spec 1: E. coli <50/g · Report 5×10²/g each batch. Anaerobic count <1×10⁵/g each bulk consignment. Spec 5: E. coli <50/g · S. aureus <100/g Monthly (coated/batter products).', cat:'Customer COPs', tab:'cop' },
   { t:'Tesco testing frequency schedule 1-4 5-10 more than 10', d:'Tesco frequency by number of products supplied: 1–4 products = test each daily/weekly/monthly. 5–10 = rotate coverage. >10 = alternative plan agreed with Tesco Technical Manager.', cat:'Customer COPs', tab:'cop' },
-  { t:'Tesco salmonella campylobacter legislative pathogen reduction', d:'Tesco: Salmonella, Campylobacter, E. coli O157 compliance via pathogen reduction or monitoring scheme. Not required on finished Tesco product but results exceeding legal limits must be reported. Most appropriate sampling site selected (farm, carcass, finished product).', cat:'Customer COPs', tab:'cop' },];
+  { t:'Tesco salmonella campylobacter legislative pathogen reduction', d:'Tesco: Salmonella, Campylobacter, E. coli O157 compliance via pathogen reduction or monitoring scheme. Not required on finished Tesco product but results exceeding legal limits must be reported. Most appropriate sampling site selected (farm, carcass, finished product).', cat:'Customer COPs', tab:'cop' },
+  // BACTERIA GUIDE
+  { t:'Salmonella Enteritidis SE Group D food safety pathogen', d:'Most common poultry-linked salmonellosis cause in UK. Lives in chicken gut without symptoms. Causes severe gastroenteritis. Legal: absence in 25g, n=5 c=0. Any positive = DTC+TD escalation, batch hold, FSA report, customer notification.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Salmonella Typhimurium ST Group B food safety', d:'Second key regulated serovar alongside SE. Same route and illness. Legally required absent alongside SE in poultrymeat. Fully typed if detected. Same escalation as SE.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Campylobacter jejuni coli food safety poultry', d:'UK #1 cause of bacterial food poisoning. Lives in chicken intestines without harming the bird. Contaminates carcasses during slaughter. Causes campylobacteriosis — severe diarrhoea, cramps, fever 1-2 weeks. Must be enumerated. Neck skin fail >1000 cfu/g.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'E coli O157 STEC VTEC pathogen dangerous', d:'Shiga toxin-producing E. coli. Causes haemolytic uraemic syndrome (HUS) — kidney failure especially in children. Infectious dose very low (10 organisms). Tested by ASDA Cat 2 and Iceland specs. Not Detected required.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Listeria monocytogenes not tested low care raw poultry', d:'Not routinely tested at 2SFG Scunthorpe — all products are raw and require cooking. Listeria killed by cooking. Low care environment excluded per Appendix 8. Only relevant if site has high care or RTE production.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Bacillus cereus thuringiensis spore forming speciate', d:'Spore-forming. Produces heat-stable toxins. Spores survive cooking. Found in ingredients (stuffing, spices). If above limit: speciate. If B. cereus confirmed: differentiate from B. thuringiensis (natural insecticide, not pathogenic) before action.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Clostridium perfringens water long life vacuum packed', d:'Anaerobic spore-forming rod. Spores survive cooking; vegetative cells multiply during cooling. Water: 0 cfu/100ml (surface-influenced water). Iceland long-life VP products: target <100 cfu/g, weekly.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'E coli generic faecal contamination hygiene indicator', d:'Gram-negative rod. Confirmed marker of faecal contamination. High counts = faecal contamination in process. Hand swabs: caution 10-100, fail >100. Minced Meat legal: m=50, M=500. Meat Prep legal: m=500, M=5000. MIMS: EcF / TP4133.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Enterobacteriaceae faecal indicator swab fail 100', d:'Family including E. coli, Salmonella, Klebsiella, Citrobacter. Broader faecal indicator. Swab fail >100 cfu/swab (Table 4). Early warning: if rising, E. coli and pathogens may follow. MIMS: EntF / TP4103.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Total Coliforms water hygiene indicator', d:'Broader group than E. coli — faecal and environmental coliforms. Water: 0 cfu/100ml. Low Level Positive if detected; High Level if ≥3/100ml in 2 consecutive or >5% in a year. MIMS: ColiF / TP4102 (product), ColiW / TP4136 (water).', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Enterococci faecal cocci water definitive contamination', d:'Gram-positive cocci. More resistant than E. coli — persists longer in water. Water: 0 cfu/100ml — High Level Positive if detected. Definitive marker of faecal pollution of water supply. MIMS: EntWc / TP4137.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Staphylococcus aureus coagulase positive hand swab skin nasal', d:'Gram-positive coccus. Found on human skin and nasal passages. Produces heat-stable toxins. Key organism for hand swabs. Pass <10, Caution 10-100, Fail >100 cfu/swab (Table 6). High count = inadequate hand washing or skin infection. MIMS: SaFc / TP4106.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Pseudomonas spoilage psychrotrophic chilled shelf life smell slime', d:'Gram-negative aerobic rods. Grow well at 0-4°C. Primary spoilage organism in chilled poultry — causes off-smell and sliminess. No internal 2SFG product limit. Customer COP limits vary: Aldi SOL <5000, Co-op <10,000/g, Tesco <5000/g (Spec 1). MIMS: PsFc / TP4115.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'TVC total viable count total aerobic colony count overall load', d:'Count of ALL aerobic bacteria at 30°C. Not a specific organism — overall load indicator. High TVC = product spoils faster. Swab limit: fail >1000. Minced Meat legal: m=5×10⁵, M=5×10⁶. MIMS: TVCF / TP4100, spTVCF50 / TP4145, TVCS (swab).', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Lactic acid bacteria LAB vacuum packed MAP spoilage sour smell', d:'Lactobacillus, Leuconostoc, Carnobacterium. Anaerobic/microaerophilic. Dominant spoilage in vacuum-packed and MAP products. Create sour smell, slime, gas in packs. Not food safety risk — quality/shelf life. MIMS: LacFc / TP4114.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Yeasts moulds fungi spoilage air quality ingredient', d:'Unicellular fungi (yeasts) and filamentous fungi (moulds). Used for air quality testing and dry ingredient testing. Co-op marinated products: yeast target <10,000/g, unacceptable >1,000,000/g. Air plates: acceptable <10, warning 10-20, adverse >20 cfu/plate. MIMS: YF and MF / TP4109.', cat:'Bacteria Guide', tab:'bacteria' },
+  { t:'Sulphite reducing clostridia SRC water surface influenced', d:'Anaerobic spore-forming rods. Used in water testing only — specifically for surface-influenced water sources. Presence indicates soil or faecal contamination of water source. Water: 0 cfu/100ml — customer specific action. MIMS: SRClW / TP4143.', cat:'Bacteria Guide', tab:'bacteria' },];
 
 function hl(text, q) {
   if (!q) return text;
@@ -1370,7 +1605,7 @@ function goToTab(tabId, title) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tabId).classList.add('active');
   const btns = document.querySelectorAll('.tab-btn');
-  const tabOrder = ['limits','sample','timing','mims','actions','procedures','raci','doccontrol','cop','analyser'];
+  const tabOrder = ['limits','sample','timing','mims','actions','procedures','raci','doccontrol','cop','analyser','bacteria'];
   const idx = tabOrder.indexOf(tabId);
   if (btns[idx]) btns[idx].classList.add('active');
   results.style.display = 'none';
