@@ -1758,7 +1758,7 @@ function azAnalyseRow(row) {
   if (isSwab) {
     const isPPE = mat.includes('ppe')||desc.includes('glove')||desc.includes('bump hat')||desc.includes('hand');
     const tvcs=azVal(row.TVCS), ents=azVal(row.EntS), pss=azVal(row.PsSc);
-    const saf=azVal(row.SaFc), ecf=azVal(row.EcF??row.EcPF);
+    const saf=azVal(row.SaFc), ecf=azVal(row.EcF ?? row.EcPF ?? null);
     if (azNum(tvcs)&&tvcs>1000) flags.push({sev:'FAIL', msg:`Swab TVC ${tvcs.toLocaleString()} cfu/swab — >1000 limit (Table 4). Fail.`});
     if (azNum(ents)&&ents>100)  flags.push({sev:'FAIL', msg:`Swab Enterobacteriaceae ${ents.toLocaleString()} cfu/swab — >100 limit (Table 4). Fail.`});
     if (azNum(pss)&&pss>1000)   flags.push({sev:'FAIL', msg:`Swab Pseudomonas ${pss.toLocaleString()} cfu/swab — >1000 limit (Table 4). Fail.`});
@@ -1785,40 +1785,102 @@ function azAnalyseRow(row) {
       flags.push({sev:'CRITICAL', msg:`Salmonella POSITIVE — escalate immediately to DTC + TD. Hold batch. Notify customers. FSA report required.`});
 
     const isMince = desc.includes('mince') || unit.includes('mince');
-    const isMeatPrep = desc.includes('trim')||desc.includes('spatchcock')||desc.includes('rib')||desc.includes('preparation');
-    const ecf = azVal(row.EcF??row.EcPF), tvc = azVal(row.TVCF??row.spTVCF50);
-    const campy = azVal(row.Campy1Fc);
-    const campyS = String(row.Campy1Fc??row.CampyFnc??'');
+    const isMeatPrep = desc.includes('trim')||desc.includes('spatchcock')||desc.includes('rib')||desc.includes('preparation')||desc.includes('back strip')||desc.includes('skin');
 
+    // Resolve E. coli — EcPF (TP4167) is equally valid as EcF (TP4133); use highest numeric
+    const _ecfN = azVal(row.EcF), _ecpfN = azVal(row.EcPF);
+    const ecf = (azNum(_ecfN) && azNum(_ecpfN)) ? Math.max(_ecfN, _ecpfN)
+              : (azNum(_ecfN) ? _ecfN : (azNum(_ecpfN) ? _ecpfN : null));
+    const ecfCol = (azNum(_ecpfN) && (!azNum(_ecfN) || _ecpfN >= _ecfN)) ? 'EcPF/TP4167' : 'EcF/TP4133';
+
+    // EcPF as string ">15000" etc — parse manually
+    const _ecpfStr = String(row.EcPF ?? '');
+    if (!azNum(_ecpfN) && _ecpfStr.startsWith('>')) {
+      const _pv = parseFloat(_ecpfStr.replace('>','').replace(/,/g,''));
+      if (!isNaN(_pv) && _pv >= 1000)
+        flags.push({sev:'FAIL', msg:`Product E. coli EcPF/TP4167 ${_ecpfStr} cfu/g — very high. Immediate attention.`});
+    }
+
+    const tvc = azVal(row.TVCF ?? row.spTVCF50);
+    const campy = azVal(row.Campy1Fc);
+    const campyS = String(row.Campy1Fc ?? row.CampyFnc ?? '');
+
+    // Resolve Pseudomonas — check ALL Ps columns, take highest numeric
+    const _psAll = [row.PsFc, row.spPsF50c, row.spPsF52c, row.spPsF53c].map(azVal);
+    const _psNums = _psAll.filter(azNum);
+    const ps = _psNums.length > 0 ? Math.max(..._psNums) : (_psAll.find(v => v !== null) ?? null);
+
+    // Pseudomonas string ">4000000" / ">400000000" etc — parse ALL Ps columns for >strings
+    const _psCols = [row.PsFc, row.spPsF50c, row.spPsF52c, row.spPsF53c];
+    _psCols.forEach(pv => {
+      const pvs = String(pv ?? '');
+      if (pvs.startsWith('>')) {
+        const pvn = parseFloat(pvs.replace('>','').replace(/,/g,''));
+        if (!isNaN(pvn) && pvn >= 1000000)
+          flags.push({sev:'FAIL', msg:`Product Pseudomonas ${pvs} cfu/g — very high (check COP for ${retailer||'retailer'}).`});
+      }
+    });
+
+    // Coliforms on product (ColiF) — Sandy intake style
+    const coli = azVal(row.ColiF);
+    if (azNum(coli)) {
+      if (coli > 5000) flags.push({sev:'FAIL', msg:`Product Coliforms (ColiF) ${coli.toLocaleString()} cfu/g — very high faecal indicator. Investigate.`});
+      else if (coli > 1000) flags.push({sev:'WARN', msg:`Product Coliforms (ColiF) ${coli.toLocaleString()} cfu/g — elevated faecal indicator.`});
+    }
+
+    // Legal product limits (Table 7)
     if (isMince && azNum(ecf)) {
-      if (ecf>500) flags.push({sev:'FAIL', msg:`Legal: Minced Meat E. coli ${ecf.toLocaleString()} >M (500 cfu/g). Automatic fail.`});
-      else if(ecf>50) flags.push({sev:'WARN', msg:`Legal: Minced Meat E. coli ${ecf.toLocaleString()} between m(50)–M(500). Count in n=5 plan.`});
+      if (ecf>500) flags.push({sev:'FAIL', msg:`Legal: Minced Meat E. coli (${ecfCol}) ${ecf.toLocaleString()} cfu/g — >M (500). Automatic fail.`});
+      else if(ecf>50) flags.push({sev:'WARN', msg:`Legal: Minced Meat E. coli (${ecfCol}) ${ecf.toLocaleString()} cfu/g — between m(50)–M(500). Count in n=5 plan.`});
     }
     if (isMeatPrep && azNum(ecf)) {
-      if (ecf>5000) flags.push({sev:'FAIL', msg:`Legal: Meat Prep E. coli ${ecf.toLocaleString()} >M (5000 cfu/g). Automatic fail.`});
-      else if(ecf>500) flags.push({sev:'WARN', msg:`Legal: Meat Prep E. coli ${ecf.toLocaleString()} between m(500)–M(5000). Count in n=5 plan.`});
+      if (ecf>5000) flags.push({sev:'FAIL', msg:`Legal: Meat Prep E. coli (${ecfCol}) ${ecf.toLocaleString()} cfu/g — >M (5000). Automatic fail.`});
+      else if(ecf>500) flags.push({sev:'WARN', msg:`Legal: Meat Prep E. coli (${ecfCol}) ${ecf.toLocaleString()} cfu/g — between m(500)–M(5000). Count in n=5 plan.`});
     }
     if (isMince && azNum(tvc)) {
-      if (tvc>5e6) flags.push({sev:'FAIL', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} >M (5×10⁶). Automatic fail.`});
-      else if(tvc>5e5) flags.push({sev:'WARN', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} between m(5×10⁵)–M(5×10⁶).`});
+      if (tvc>5e6) flags.push({sev:'FAIL', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} cfu/g — >M (5×10⁶). Automatic fail.`});
+      else if(tvc>5e5) flags.push({sev:'WARN', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} cfu/g — between m(5×10⁵)–M(5×10⁶).`});
+    }
+
+    // General high E. coli (non-mince/non-meat-prep rows like external intake, AMBER Skin)
+    if (!isMince && !isMeatPrep && azNum(ecf)) {
+      if (ecf > 15000)      flags.push({sev:'FAIL', msg:`Product E. coli (${ecfCol}) ${ecf.toLocaleString()} cfu/g — extremely elevated. Immediate attention.`});
+      else if (ecf > 5000)  flags.push({sev:'FAIL', msg:`Product E. coli (${ecfCol}) ${ecf.toLocaleString()} cfu/g — very high. Check against customer spec.`});
+      else if (ecf > 1000)  flags.push({sev:'WARN', msg:`Product E. coli (${ecfCol}) ${ecf.toLocaleString()} cfu/g — elevated. Check against spec.`});
+    }
+
+    // CampyDBc — Campylobacter Detection column (Pos/T.F) — whole bird suites like 2SP058
+    const campyDB = String(row.CampyDBc ?? '');
+    const cspp = String(row.Cspp ?? row.ID ?? '');
+    if (campyDB === 'Pos' || campyDB.toLowerCase() === 'positive') {
+      const speciesNote = cspp && cspp !== '.' ? ` (Species: ${cspp})` : '';
+      flags.push({sev:'FAIL', msg:`Product Campylobacter DETECTED (CampyDBc = Pos)${speciesNote} — quantification may be pending. Iceland COP: target <10 cfu/g, OOS ≥1000. Investigate.`});
+    }
+
+    // SOBsp — Salmonella serogroup/species identification column
+    const sobsp = String(row.SOBsp ?? '');
+    if (sobsp && sobsp !== '.' && sobsp !== 'N/D') {
+      // Already flagged by Salmonella Pos check above — add serogroup context
+      const salm2 = azVal(row['SOB-25c']);
+      if (String(salm2||'').toLowerCase().includes('pos') || salm2 === 'Hold') {
+        flags.push({sev:'CRITICAL', msg:`Salmonella serogroup identified as ${sobsp}. ${sobsp.includes('G') ? 'Group G is NOT SE (Group D) or ST (Group B) — lower regulatory threshold but still requires disposal as Cat 2 and FSA report.' : 'Confirm if SE (Group D) or ST (Group B) — if confirmed, mandatory FSA report + DTC + TD escalation.'}`});
+      }
     }
 
     // Campylobacter on finished product
-    if (campyS.includes('>4000000')||campyS.includes('>400000000'))
       flags.push({sev:'FAIL', msg:`Product Campylobacter ${campyS} cfu/g — all COP limits exceeded.`});
     else if (azNum(campy)&&campy>1000) flags.push({sev:'FAIL', msg:`Product Campylobacter ${campy.toLocaleString()} cfu/g — >1000 cfu/g (Co-op/Ocado/Iceland COP limit). Immediate attention.`});
     else if (azNum(campy)&&campy>600)  flags.push({sev:'WARN', msg:`Product Campylobacter ${campy.toLocaleString()} cfu/g — exceeds Co-op target 600 cfu/g, approaching 1000 limit.`});
 
-    // General high Pseudomonas
-    const ps = azVal(row.PsFc??row.spPsF50c??row.spPsF52c??row.spPsF53c);
-    if (azNum(ps)&&ps>1e6&&!AZ_COP[retailer])
+    // General Pseudomonas flag for unmatched retailers
+    if (azNum(ps) && ps > 1000000 && !AZ_COP[retailer])
       flags.push({sev:'WARN', msg:`Pseudomonas ${ps.toLocaleString()} cfu/g — elevated (no COP matched, check spec).`});
 
-    // Run COP checks for all relevant fields
+    // Run all COP checks using resolved values
     if (AZ_COP[retailer]) {
-      const cols = {PsFc:ps,TVCF:tvc,EntF:azVal(row.EntF),SaFc:azVal(row.SaFc),Campy1Fc:campy,EcF:ecf};
-      Object.entries(cols).forEach(([col,val]) => {
-        if (azNum(val)) flags.push(...azCopFlags(retailer,col,val,eol));
+      const cols = {PsFc: ps, TVCF: tvc, EntF: azVal(row.EntF), SaFc: azVal(row.SaFc), Campy1Fc: campy, EcF: ecf};
+      Object.entries(cols).forEach(([col, val]) => {
+        if (azNum(val)) flags.push(...azCopFlags(retailer, col, val, eol));
       });
     }
   }
@@ -1990,7 +2052,7 @@ function azRender() {
         ['Start Date',azFmt(row.STARTDATE)],['Sample Date',azFmt(row.SAMDATE)],['Manuf Date',azFmt(row.MANUFDATE)],
         ['TVC',azFmt(row.TVCF??row.spTVCF50)],['E. coli',azFmt(row.EcF??row.EcPF)],
         ['Pseudomonas',azFmt(row.PsFc??row.spPsF50c??row.spPsF52c)],
-        ['Campylobacter',azFmt(row.Campy1Fc??row.CampyFnc)],['Salmonella 25g',azFmt(row['SOB-25c'])],
+        ['Campylobacter',azFmt(row.Campy1Fc??row.CampyFnc)],['Campy Detection (CampyDBc)',azFmt(row.CampyDBc)],['Salmonella 25g',azFmt(row['SOB-25c'])],['Salmonella Serogroup (SOBsp)',azFmt(row.SOBsp)],
         ['S. aureus',azFmt(row.SaFc)],['Enterobacteriaceae',azFmt(row.EntF)],
         ['Swab TVC',azFmt(row.TVCS)],['Swab Ent',azFmt(row.EntS)],['Swab Ps',azFmt(row.PsSc)],
         ['Water TVC 22°C',azFmt(row.TVC22)],['Water TVC 37°C',azFmt(row.TVC37)],
