@@ -106,6 +106,39 @@
   .timing-card .t-unit { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
   .timing-card .t-cond { font-size: 11px; color: var(--label); margin-top: 4px; }
 
+  /* ── Analyser tab ── */
+  .az-drop {
+    border: 1.5px dashed #253450; border-radius: 8px; padding: 28px 20px;
+    text-align: center; cursor: pointer; background: #0a0e18;
+    transition: border-color .15s;
+  }
+  .az-drop:hover { border-color: var(--accent); }
+  .az-drop.dragging { border-color: var(--accent2); background: #0d1624; }
+  .az-summary { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 10px; }
+  .az-sev-btn {
+    border-radius: 5px; padding: 5px 13px; cursor: pointer; font-size: 11px;
+    font-weight: 700; border: 1.5px solid #1e2d45; background: #0a0e18;
+    color: #6b7280; transition: all .12s; letter-spacing: .03em;
+  }
+  .az-sev-btn.active { color: #fff; }
+  .az-search {
+    margin-left: auto; background: #0a0e18; border: 1px solid #1e2d45;
+    border-radius: 6px; padding: 5px 12px; color: var(--text); font-size: 12px; outline: none;
+  }
+  .az-card { background: #0a0e18; border-radius: 6px; overflow: hidden; margin-bottom: 7px; }
+  .az-card-hdr { padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+  .az-card-hdr:hover { background: #0f1520; }
+  .az-sev-pill { border-radius: 4px; padding: 2px 8px; font-size: 10px; font-weight: 800; letter-spacing: .07em; white-space: nowrap; }
+  .az-flags { padding: 0 14px 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+  .az-flag-pill { border-radius: 4px; padding: 3px 10px; font-size: 11px; }
+  .az-detail { border-top: 1px solid #1a2535; padding: 12px 14px; display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 8px 16px; }
+  .az-detail-item .az-dl { font-size: 10px; color: #475569; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 1px; }
+  .az-detail-item .az-dv { font-size: 12px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .az-files-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+  .az-file-chip { background: #0f1d35; border: 1px solid #1e3a5f; border-radius: 4px; padding: 3px 10px; font-size: 11px; color: #60a5fa; }
+  .az-clear-btn { background: #1a0a0a; border: 1px solid #6b2020; color: #f87171; border-radius: 5px; padding: 5px 14px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all .12s; }
+  .az-clear-btn:hover { background: #2d0f0f; border-color: #f87171; }
+
   /* MIMS tab suite grid */
   .suite-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; margin-bottom: 16px; }
   .suite-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
@@ -139,6 +172,7 @@
   <button class="tab-btn" onclick="showTab('raci',this)">RACI &amp; Responsibilities</button>
   <button class="tab-btn" onclick="showTab('doccontrol',this)">Document Control</button>
   <button class="tab-btn" onclick="showTab('cop',this)">Customer COPs</button>
+  <button class="tab-btn" onclick="showTab('analyser',this)">⚠ Result Analyser</button>
 </div>
 
 <!-- ═══════════════════════════ TAB 1: LIMITS ═══════════════════════════ -->
@@ -1104,6 +1138,37 @@
 
 </div>
 
+<!-- ═══════════════════════════ TAB 10: RESULT ANALYSER ═══════════════════════════ -->
+<div id="tab-analyser" class="tab-panel">
+  <div class="note" style="margin-bottom:14px;">
+    <b>Result Analyser:</b> Upload one or more <code>SIS_Adverse_Notification_*.xlsx</code> files. Every row is checked against 2SFG Procedure D2.0 limits (swabs, water, product, neck skin) and all customer COP limits. Only rows with at least one flag are shown, sorted worst-first.
+  </div>
+
+  <!-- Drop zone -->
+  <div id="azDrop" class="az-drop" onclick="document.getElementById('azInput').click()" ondrop="azOnDrop(event)" ondragover="event.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')">
+    <div style="font-size:28px;margin-bottom:8px;">📂</div>
+    <div style="font-size:13px;color:#94a3b8;" id="azDropLabel">Drop SIS_Adverse_Notification_*.xlsx files here, or click to browse</div>
+    <div style="font-size:11px;color:#475569;margin-top:4px;">Multiple files supported — results merged and sorted by severity</div>
+    <input id="azInput" type="file" accept=".xlsx,.xls" multiple style="display:none" onchange="azOnFiles(this.files)">
+  </div>
+
+  <!-- File chips + Clear -->
+  <div id="azFileChips" class="az-files-list" style="display:none"></div>
+
+  <!-- Controls bar -->
+  <div id="azControls" style="display:none;margin-top:14px;">
+    <div class="az-summary" id="azSummaryBar"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap;">
+      <span id="azCount" style="font-size:11px;color:#475569;"></span>
+      <button class="az-clear-btn" onclick="azClear()">✕ Clear all</button>
+      <input class="az-search" id="azSearch" placeholder="Search product / retailer / sample #…" oninput="azRender()" style="min-width:220px;">
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="azResults" style="margin-top:12px;"></div>
+</div>
+
 <!-- ═══════════════════════════ SEARCH SCRIPT ═══════════════════════════ -->
 <script>
 // ── Search index ──────────────────────────────────────────────────────────
@@ -1305,7 +1370,7 @@ function goToTab(tabId, title) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tabId).classList.add('active');
   const btns = document.querySelectorAll('.tab-btn');
-  const tabOrder = ['limits','sample','timing','mims','actions','procedures','raci','doccontrol','cop'];
+  const tabOrder = ['limits','sample','timing','mims','actions','procedures','raci','doccontrol','cop','analyser'];
   const idx = tabOrder.indexOf(tabId);
   if (btns[idx]) btns[idx].classList.add('active');
   results.style.display = 'none';
@@ -1325,6 +1390,398 @@ function showTab(id, btn) {
 document.addEventListener('click', e => {
   if (!e.target.closest('.search-wrap')) results.style.display = 'none';
 });
+
+// ═══════════════ ANALYSER ENGINE ═══════════════════════════════════════════
+
+// Load SheetJS dynamically when Analyser tab is first used
+let XLSX_LOADED = false;
+function ensureXLSX(cb) {
+  if (XLSX_LOADED && window.XLSX) { cb(); return; }
+  const s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  s.onload = () => { XLSX_LOADED = true; cb(); };
+  document.head.appendChild(s);
+}
+
+// ── State
+let AZ_ROWS = [];       // all analysed rows across all files
+let AZ_FILTER = 'ALL';
+let AZ_FILES = [];      // filenames loaded
+
+// ── Severity config
+const AZ_SEV = {
+  CRITICAL: { color:'#ff2d55', bg:'#2d0010', order:0 },
+  FAIL:     { color:'#ff6b35', bg:'#2d1200', order:1 },
+  WARN:     { color:'#ffd60a', bg:'#2a1f00', order:2 },
+  CAUTION:  { color:'#f4a261', bg:'#2a1500', order:3 },
+  INFO:     { color:'#60b8ff', bg:'#001a2d', order:4 },
+};
+
+// ── Value parser
+function azVal(v) {
+  if (v === null || v === undefined || v === '.' || v === '') return null;
+  if (typeof v === 'number') return v;
+  const s = String(v).trim();
+  if (['T.F','N/D','I/S'].includes(s)) return s;
+  if (s === 'Pos' || s === 'Positive') return 'Pos';
+  if (s === 'Hold') return 'Hold';
+  if (s.startsWith('>') && !isNaN(s.slice(1).replace(/,/g,''))) return parseFloat(s.slice(1).replace(/,/g,'')) * 1.01;
+  if (s.startsWith('<') && !isNaN(s.slice(1).replace(/,/g,''))) return parseFloat(s.slice(1).replace(/,/g,'')) * 0.99;
+  if (!isNaN(s.replace(/,/g,''))) return parseFloat(s.replace(/,/g,''));
+  return s;
+}
+const azNum = v => typeof v === 'number';
+
+// ── COP limits table
+const AZ_COP = {
+  'Aldi':    { PsFc:{sol:5000,eol:1e7,lbl:'Pseudomonas'}, EcF:{sol:100,eol:500,lbl:'E. coli'}, Campy1Fc:{sol:500,eol:1000,lbl:'Campylobacter'} },
+  'CO-OP':   { PsFc:{unaccp:1e7,lbl:'Pseudomonas'}, EcF:{unaccp:500,lbl:'E. coli'}, SaFc:{unaccp:100,lbl:'S. aureus (marinated)'}, Campy1Fc:{tgt:600,unaccp:1000,lbl:'Campylobacter'} },
+  'Tesco':   { TVCF:{rpt:1e6,lbl:'ACC (Spec 1)'}, PsFc:{rpt:5e5,lbl:'Pseudomonas (Spec 1)'}, EcF:{rpt:500,lbl:'E. coli'} },
+  'M&S':     { PsFc:{tgt:1e4,rpt:1e7,lbl:'Pseudomonas (process hygiene)'}, Campy1Fc:{tgt:1000,rpt:10000,lbl:'Campylobacter'} },
+  'Iceland': { PsFc:{tgt:1e4,oos:1e6,lbl:'Pseudomonas (cutting)'}, EcF:{tgt:100,oos:1000,lbl:'E. coli'}, Campy1Fc:{tgt:10,oos:1000,lbl:'Campylobacter'} },
+  'Ocado':   { PsFc:{tgt:1e5,act:1e7,lbl:'Pseudomonas (EOL)'}, Campy1Fc:{tgt:1000,act:1000,lbl:'Campylobacter'} },
+  'KFC':     { TVCF:{tgt:5e5,usl:1e6,lbl:'TVC'}, EntF:{tgt:1e4,usl:1e4,lbl:'Enterobacteriaceae'}, PsFc:{tgt:5000,usl:1e7,lbl:'Pseudomonas'}, EcF:{tgt:500,usl:500,lbl:'E. coli'}, Campy1Fc:{tgt:1000,usl:1000,lbl:'Campylobacter'} },
+  'ASDA':    { PsFc:{tgt:1e4,rpt:1e6,lbl:'Pseudomonas (Cat4)'}, EcF:{tgt:100,rpt:1000,lbl:'E. coli'}, SaFc:{tgt:20,rpt:1000,lbl:'S. aureus'}, Campy1Fc:{tgt:10,rpt:1000,lbl:'Campylobacter'} },
+};
+
+function azCopFlags(retailer, col, val, eol) {
+  const f = []; const cop = AZ_COP[retailer]; if (!cop||!cop[col]||!azNum(val)) return f;
+  const l = cop[col];
+  if (l.unaccp!==undefined && val>l.unaccp) f.push({sev:'FAIL', msg:`${retailer} COP: ${l.lbl} >${(l.unaccp).toLocaleString()} cfu/g. Fail.`});
+  else if (l.rpt!==undefined && val>l.rpt)  f.push({sev:'FAIL', msg:`${retailer} COP: ${l.lbl} >${(l.rpt).toLocaleString()} cfu/g (report limit). Fail.`});
+  else if (l.oos!==undefined && val>=l.oos)  f.push({sev:'FAIL', msg:`${retailer} COP: ${l.lbl} ≥OOS ${(l.oos).toLocaleString()} cfu/g. Fail.`});
+  else if (l.usl!==undefined && val>=l.usl)  f.push({sev:'FAIL', msg:`${retailer} COP: ${l.lbl} ≥USL ${(l.usl).toLocaleString()} cfu/g. Fail.`});
+  else if (l.act!==undefined && val>=l.act)  f.push({sev:'FAIL', msg:`${retailer} COP: ${l.lbl} ≥action ${(l.act).toLocaleString()} cfu/g. Fail.`});
+  else if (l.eol!==undefined && eol && val>l.eol) f.push({sev:'FAIL', msg:`${retailer} COP: ${l.lbl} EOL >${(l.eol).toLocaleString()} cfu/g. Fail.`});
+  else if (l.sol!==undefined && !eol && val>l.sol) f.push({sev:'WARN', msg:`${retailer} COP: ${l.lbl} SOL >target ${(l.sol).toLocaleString()} cfu/g.`});
+  else if (l.tgt!==undefined && val>l.tgt)   f.push({sev:'WARN', msg:`${retailer} COP: ${l.lbl} >target ${(l.tgt).toLocaleString()} cfu/g. Monitor.`});
+  return f;
+}
+
+// ── Main row analyser
+function azAnalyseRow(row) {
+  const flags = [];
+  const det   = (row.DETTYPE||'').toLowerCase();
+  const desc  = (row.DESCRIPTN||'').toLowerCase();
+  const unit  = (row.UNIT||'').toLowerCase();
+  const mat   = (row.MATERIAL||'').toLowerCase();
+  const retailer = row.RETAILER||'';
+  const eol   = row.EOL === true || String(row.EOL).toLowerCase() === 'true';
+
+  const isSwab    = det==='swab' || mat.includes('swab');
+  const isCaeca   = det==='caeca' || unit==='caeca';
+  const isNeck    = unit==='neck' || desc.includes('neck skin');
+  const isWater   = det==='water' || mat.includes('water');
+  const isProd    = ['product','prep','intake'].includes(det);
+
+  // ── WATER (Table 2)
+  if (isWater) {
+    const t22=azVal(row.TVC22), t37=azVal(row.TVC37), coli=azVal(row.ColiW),
+          coliF=azVal(row.ColiW44), ecw=azVal(row.EcW), ent=azVal(row.EntWc), src=azVal(row.SRClW);
+    if (azNum(t37)&&t37>=1)   flags.push({sev:'WARN',    msg:`Water TVC 37°C ${t37} cfu/ml ≥1 (limit: <1). Low Level Positive — re-sample.`});
+    if (azNum(t22)&&t22>100)  flags.push({sev:'WARN',    msg:`Water TVC 22°C ${t22.toLocaleString()} cfu/ml — abnormal change. Investigate.`});
+    if (azNum(coli)&&coli>0)  flags.push({sev:'FAIL',    msg:`Water Total Coliforms ${coli} MPN/100ml detected. High Level Positive — quarantine outlet.`});
+    if (azNum(coliF)&&coliF>0)flags.push({sev:'FAIL',    msg:`Water Faecal Coliforms ${coliF} MPN/100ml detected. High Level Positive.`});
+    if (azNum(ecw)&&ecw>0)    flags.push({sev:'CRITICAL',msg:`Water E. coli ${ecw} MPN/100ml — High Level Positive. Stop use. Production risk.`});
+    if (azNum(ent)&&ent>0)    flags.push({sev:'CRITICAL',msg:`Water Enterococci ${ent} cfu/100ml — High Level Positive.`});
+    if (azNum(src)&&src>0)    flags.push({sev:'WARN',    msg:`Water SR Clostridia ${src} cfu/100ml — customer specific action.`});
+    // Also check if TVC22/TVC37 are string-flagged
+    if (String(t22||'').includes('>30000')) flags.push({sev:'WARN', msg:`Water TVC 22°C >30,000 cfu/ml — very high, abnormal change.`});
+  }
+
+  // ── CAECA
+  if (isCaeca) {
+    const campy = azVal(row.CampyFnc ?? row.Campy1Fc);
+    const cs = String(row.CampyFnc||row.Campy1Fc||'');
+    if (cs.includes('>1.5e9')||cs.includes('>150000000')) flags.push({sev:'FAIL', msg:`Caeca Campylobacter >1.5×10⁹ / >1.5×10⁸ cfu/g — extremely high-risk flock.`});
+    else if (azNum(campy)) {
+      if (campy>=5e8)  flags.push({sev:'FAIL', msg:`Caeca Campylobacter ${(campy/1e9).toFixed(2)}×10⁹ cfu/g — extremely high-risk flock.`});
+      else if (campy>=1e8) flags.push({sev:'WARN', msg:`Caeca Campylobacter ${Math.round(campy/1e6)}M cfu/g — high-risk flock.`});
+      else if (campy>=1e7) flags.push({sev:'INFO', msg:`Caeca Campylobacter ${Math.round(campy/1e6)}M cfu/g — elevated.`});
+    }
+  }
+
+  // ── NECK SKIN (Table 8)
+  if (isNeck) {
+    const campy = azVal(row.Campy1Fc ?? row.CampyFnc);
+    const cs = String(row.Campy1Fc||row.CampyFnc||'');
+    if (cs.includes('>4500')||cs.includes('>3900')||cs.includes('>4000'))
+      flags.push({sev:'FAIL', msg:`Neck skin Campylobacter ${cs} — exceeds 1000 cfu/g (Table 8). Fail. Investigation + action plan required.`});
+    else if (azNum(campy)&&campy>1000)
+      flags.push({sev:'FAIL', msg:`Neck skin Campylobacter ${campy.toLocaleString()} cfu/g — >1000 Table 8 limit. Fail.`});
+    else if (azNum(campy)&&campy>0)
+      flags.push({sev:'INFO', msg:`Neck skin Campylobacter ${campy.toLocaleString()} cfu/g (limit >1000 = fail).`});
+    const salm = azVal(row['SOB-25c']);
+    if (salm&&salm!=='N/D'&&salm!==null&&salm!=='.') {
+      const ss = String(salm);
+      if (ss==='Pos'||ss==='Hold'||ss.toLowerCase().includes('pos'))
+        flags.push({sev:'CRITICAL', msg:`Neck skin Salmonella POSITIVE — immediate escalation, FSA report required.`});
+    }
+  }
+
+  // ── SWAB (Table 4 + Table 6)
+  if (isSwab) {
+    const isPPE = mat.includes('ppe')||desc.includes('glove')||desc.includes('bump hat')||desc.includes('hand');
+    const tvcs=azVal(row.TVCS), ents=azVal(row.EntS), pss=azVal(row.PsSc);
+    const saf=azVal(row.SaFc), ecf=azVal(row.EcF??row.EcPF);
+    if (azNum(tvcs)&&tvcs>1000) flags.push({sev:'FAIL', msg:`Swab TVC ${tvcs.toLocaleString()} cfu/swab — >1000 limit (Table 4). Fail.`});
+    if (azNum(ents)&&ents>100)  flags.push({sev:'FAIL', msg:`Swab Enterobacteriaceae ${ents.toLocaleString()} cfu/swab — >100 limit (Table 4). Fail.`});
+    if (azNum(pss)&&pss>1000)   flags.push({sev:'FAIL', msg:`Swab Pseudomonas ${pss.toLocaleString()} cfu/swab — >1000 limit (Table 4). Fail.`});
+    if (isPPE) {
+      if (azNum(saf)) {
+        if (saf>100)    flags.push({sev:'FAIL',    msg:`Hand/Glove S. aureus ${saf.toLocaleString()} cfu/swab — >100 (Table 6). Fail.`});
+        else if(saf>=10)flags.push({sev:'CAUTION', msg:`Hand/Glove S. aureus ${saf.toLocaleString()} cfu/swab — 10–100 (Table 6). Caution.`});
+      }
+      if (azNum(ecf)) {
+        if (ecf>100)    flags.push({sev:'FAIL',    msg:`Hand/Glove E. coli ${ecf.toLocaleString()} cfu/swab — >100 (Table 6). Fail.`});
+        else if(ecf>=10)flags.push({sev:'CAUTION', msg:`Hand/Glove E. coli ${ecf.toLocaleString()} cfu/swab — 10–100 (Table 6). Caution.`});
+      }
+    }
+    // Campylobacter on live collection swab (Table 5)
+    const cswab = azVal(row.CampySSc ?? row.Campy1Fc);
+    if (azNum(cswab)&&cswab>1000) flags.push({sev:'FAIL', msg:`Live collection equipment Campylobacter ${cswab.toLocaleString()} cfu/swab — High Level >1000 (Table 5).`});
+  }
+
+  // ── PRODUCT / INTAKE (Table 7 + COPs)
+  if (isProd) {
+    const salm = azVal(row['SOB-25c']);
+    const ss = String(salm||'');
+    if (ss==='Pos'||ss==='Hold'||ss.toLowerCase().includes('pos'))
+      flags.push({sev:'CRITICAL', msg:`Salmonella POSITIVE — escalate immediately to DTC + TD. Hold batch. Notify customers. FSA report required.`});
+
+    const isMince = desc.includes('mince') || unit.includes('mince');
+    const isMeatPrep = desc.includes('trim')||desc.includes('spatchcock')||desc.includes('rib')||desc.includes('preparation');
+    const ecf = azVal(row.EcF??row.EcPF), tvc = azVal(row.TVCF??row.spTVCF50);
+    const campy = azVal(row.Campy1Fc);
+    const campyS = String(row.Campy1Fc??row.CampyFnc??'');
+
+    if (isMince && azNum(ecf)) {
+      if (ecf>500) flags.push({sev:'FAIL', msg:`Legal: Minced Meat E. coli ${ecf.toLocaleString()} >M (500 cfu/g). Automatic fail.`});
+      else if(ecf>50) flags.push({sev:'WARN', msg:`Legal: Minced Meat E. coli ${ecf.toLocaleString()} between m(50)–M(500). Count in n=5 plan.`});
+    }
+    if (isMeatPrep && azNum(ecf)) {
+      if (ecf>5000) flags.push({sev:'FAIL', msg:`Legal: Meat Prep E. coli ${ecf.toLocaleString()} >M (5000 cfu/g). Automatic fail.`});
+      else if(ecf>500) flags.push({sev:'WARN', msg:`Legal: Meat Prep E. coli ${ecf.toLocaleString()} between m(500)–M(5000). Count in n=5 plan.`});
+    }
+    if (isMince && azNum(tvc)) {
+      if (tvc>5e6) flags.push({sev:'FAIL', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} >M (5×10⁶). Automatic fail.`});
+      else if(tvc>5e5) flags.push({sev:'WARN', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} between m(5×10⁵)–M(5×10⁶).`});
+    }
+
+    // Campylobacter on finished product
+    if (campyS.includes('>4000000')||campyS.includes('>400000000'))
+      flags.push({sev:'FAIL', msg:`Product Campylobacter ${campyS} cfu/g — all COP limits exceeded.`});
+    else if (azNum(campy)&&campy>1000) flags.push({sev:'FAIL', msg:`Product Campylobacter ${campy.toLocaleString()} cfu/g — >1000 cfu/g (Co-op/Ocado/Iceland COP limit). Immediate attention.`});
+    else if (azNum(campy)&&campy>600)  flags.push({sev:'WARN', msg:`Product Campylobacter ${campy.toLocaleString()} cfu/g — exceeds Co-op target 600 cfu/g, approaching 1000 limit.`});
+
+    // General high Pseudomonas
+    const ps = azVal(row.PsFc??row.spPsF50c??row.spPsF52c??row.spPsF53c);
+    if (azNum(ps)&&ps>1e6&&!AZ_COP[retailer])
+      flags.push({sev:'WARN', msg:`Pseudomonas ${ps.toLocaleString()} cfu/g — elevated (no COP matched, check spec).`});
+
+    // Run COP checks for all relevant fields
+    if (AZ_COP[retailer]) {
+      const cols = {PsFc:ps,TVCF:tvc,EntF:azVal(row.EntF),SaFc:azVal(row.SaFc),Campy1Fc:campy,EcF:ecf};
+      Object.entries(cols).forEach(([col,val]) => {
+        if (azNum(val)) flags.push(...azCopFlags(retailer,col,val,eol));
+      });
+    }
+  }
+
+  // Dedupe
+  const seen=new Set();
+  return flags.filter(f=>{const k=f.sev+f.msg;if(seen.has(k))return false;seen.add(k);return true;});
+}
+
+// ── Parse xlsx buffer
+function azParseBuffer(buf, fname) {
+  const wb = window.XLSX.read(buf, {type:'array', cellDates:true});
+  const ws = wb.Sheets['Adverse'];
+  if (!ws) throw new Error(`No 'Adverse' sheet in ${fname}`);
+  const raw = window.XLSX.utils.sheet_to_json(ws, {header:1, defval:'.'});
+  const codes = raw[0]||[];
+  const data  = raw.slice(4).filter(r=>r[0]&&r[0]!=='.'&&String(r[0]).trim()!=='');
+  return data.map(r=>{
+    const obj={_file:fname};
+    codes.forEach((col,i)=>{if(col&&col!=='.')obj[col]=r[i]??'.'});
+    return obj;
+  });
+}
+
+// ── File handling
+function azOnDrop(e) {
+  e.preventDefault();
+  document.getElementById('azDrop').classList.remove('dragging');
+  azOnFiles(e.dataTransfer.files);
+}
+
+function azOnFiles(fileList) {
+  ensureXLSX(()=>{
+    const files = Array.from(fileList);
+    let done=0;
+    document.getElementById('azDropLabel').textContent = `Loading ${files.length} file(s)…`;
+    files.forEach(file=>{
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        try {
+          const rows = azParseBuffer(new Uint8Array(ev.target.result), file.name);
+          rows.forEach(row=>{
+            const flags=azAnalyseRow(row);
+            if(flags.length>0) AZ_ROWS.push({...row,_flags:flags,_uid:Math.random()});
+          });
+          if(!AZ_FILES.includes(file.name)) AZ_FILES.push(file.name);
+        } catch(ex) {
+          AZ_ROWS.push({_file:file.name,DESCRIPTN:'Parse error',_flags:[{sev:'WARN',msg:ex.message}],_uid:Math.random()});
+        }
+        done++;
+        if(done===files.length) azAfterLoad();
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  });
+}
+
+function azAfterLoad() {
+  // Sort: worst severity first, then by file/date
+  AZ_ROWS.sort((a,b)=>{
+    const ao=Math.min(...a._flags.map(f=>AZ_SEV[f.sev]?.order??9));
+    const bo=Math.min(...b._flags.map(f=>AZ_SEV[f.sev]?.order??9));
+    return ao-bo;
+  });
+  document.getElementById('azDrop').style.display='none';
+  document.getElementById('azControls').style.display='block';
+  azUpdateFileChips();
+  azRender();
+}
+
+function azUpdateFileChips() {
+  const el=document.getElementById('azFileChips');
+  if(AZ_FILES.length===0){el.style.display='none';return;}
+  el.style.display='flex';
+  el.innerHTML=AZ_FILES.map(f=>`<span class="az-file-chip">📄 ${f}</span>`).join('');
+}
+
+function azClear() {
+  AZ_ROWS=[];AZ_FILES=[];AZ_FILTER='ALL';
+  document.getElementById('azDropLabel').textContent='Drop SIS_Adverse_Notification_*.xlsx files here, or click to browse';
+  document.getElementById('azDrop').style.display='block';
+  document.getElementById('azControls').style.display='none';
+  document.getElementById('azFileChips').innerHTML='';
+  document.getElementById('azFileChips').style.display='none';
+  document.getElementById('azResults').innerHTML='';
+  document.getElementById('azSearch').value='';
+  document.getElementById('azInput').value='';
+}
+
+function azMaxSev(flags) {
+  const best=Math.min(...flags.map(f=>AZ_SEV[f.sev]?.order??9));
+  return Object.keys(AZ_SEV).find(k=>AZ_SEV[k].order===best)||'INFO';
+}
+
+function azFmt(v) {
+  if(v===null||v===undefined||v==='.'||v==='')return '—';
+  if(v instanceof Date)return v.toLocaleDateString('en-GB');
+  if(typeof v==='number')return v.toLocaleString();
+  return String(v);
+}
+
+function azRender() {
+  const q=(document.getElementById('azSearch')?.value||'').toLowerCase();
+
+  // Counts
+  const counts={CRITICAL:0,FAIL:0,WARN:0,CAUTION:0,INFO:0};
+  AZ_ROWS.forEach(r=>r._flags.forEach(f=>{if(counts[f.sev]!==undefined)counts[f.sev]++;}));
+
+  // Summary bar
+  const bar=document.getElementById('azSummaryBar');
+  if(bar){
+    bar.innerHTML=['ALL',...Object.keys(AZ_SEV)].map(s=>{
+      const cfg=AZ_SEV[s]||{color:'#60a5fa'};
+      const cnt=s==='ALL'?AZ_ROWS.length:counts[s];
+      const active=AZ_FILTER===s;
+      const bc=active?(s==='ALL'?'#3b82f6':cfg.color):'#1e2d45';
+      const tc=active?(s==='ALL'?'#60a5fa':cfg.color):'#6b7280';
+      const bg=active?(s==='ALL'?'#0f1d35':(AZ_SEV[s]?.bg||'#1a2535')):'#0a0e18';
+      return `<button class="az-sev-btn ${active?'active':''}" onclick="AZ_FILTER='${s}';azRender()"
+        style="border-color:${bc};color:${tc};background:${bg}">
+        ${s==='ALL'?`All (${cnt})`:`${s} (${cnt})`}</button>`;
+    }).join('');
+  }
+
+  // Filter
+  const filtered=AZ_ROWS.filter(r=>{
+    const sm=AZ_FILTER==='ALL'||r._flags.some(f=>f.sev===AZ_FILTER);
+    const qm=!q||[r.DESCRIPTN,r.RETAILER,r.SAMPNUM,r.MATERIAL,r.UNIT,r._file]
+      .some(v=>String(v??'').toLowerCase().includes(q));
+    return sm&&qm;
+  });
+
+  const cnt=document.getElementById('azCount');
+  if(cnt)cnt.textContent=`Showing ${filtered.length} flagged sample${filtered.length!==1?'s':''} ${AZ_FILTER!=='ALL'?'(filtered: '+AZ_FILTER+')':''}`;
+
+  const res=document.getElementById('azResults');
+  if(!res)return;
+
+  if(filtered.length===0){
+    res.innerHTML='<div style="padding:30px;text-align:center;color:#475569;font-size:13px;">No flagged results match the current filter.</div>';
+    return;
+  }
+
+  res.innerHTML=filtered.map(row=>{
+    const ms=azMaxSev(row._flags);
+    const cfg=AZ_SEV[ms];
+    const uid=row._uid;
+    const expState=window._azExp&&window._azExp[uid];
+    const retailer=row.RETAILER||'—';
+    const desc=row.DESCRIPTN||'—';
+    const snum=row.SAMPNUM||'—';
+    const eolBadge=row.EOL===true?'<span style="background:#1e1b4b;color:#a5b4fc;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px;">EOL</span>':'';
+    const stBadge=row.SAMPSTATUS==='ACTIVE'?'<span style="background:#0c2a0a;color:#4ade80;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px;">ACTIVE</span>':'';
+    const fileTag=row._file?`<span style="font-size:10px;color:#334155;margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;" title="${row._file}">${row._file.replace('SIS_Adverse_Notification_','').replace('.xlsx','')}</span>`:'';
+
+    const flagPills=row._flags.map(f=>{
+      const fc=AZ_SEV[f.sev];
+      return `<div class="az-flag-pill" style="background:${fc.bg};border:1px solid ${fc.color}55;color:${fc.color}">
+        <b>${f.sev}:</b> ${f.msg}</div>`;
+    }).join('');
+
+    let detailHtml='';
+    if(expState){
+      const fields=[
+        ['Sample #',row.SAMPNUM],['Description',row.DESCRIPTN],['Retailer',row.RETAILER],
+        ['Material',row.MATERIAL],['Unit',row.UNIT],['Shift',row.SHIFT],['EOL',String(row.EOL)],
+        ['Suite',row.SUITE],['Status',row.SAMPSTATUS],['Order',row.ORDER],['Other ID',row.OTHER_ID],
+        ['Farm/Load',`Farm ${row.FARM_NO??'—'} · ${row.PEN_NO??'—'} · Load ${row.LOAD_NO??'—'}`],
+        ['Start Date',azFmt(row.STARTDATE)],['Sample Date',azFmt(row.SAMDATE)],['Manuf Date',azFmt(row.MANUFDATE)],
+        ['TVC',azFmt(row.TVCF??row.spTVCF50)],['E. coli',azFmt(row.EcF??row.EcPF)],
+        ['Pseudomonas',azFmt(row.PsFc??row.spPsF50c??row.spPsF52c)],
+        ['Campylobacter',azFmt(row.Campy1Fc??row.CampyFnc)],['Salmonella 25g',azFmt(row['SOB-25c'])],
+        ['S. aureus',azFmt(row.SaFc)],['Enterobacteriaceae',azFmt(row.EntF)],
+        ['Swab TVC',azFmt(row.TVCS)],['Swab Ent',azFmt(row.EntS)],['Swab Ps',azFmt(row.PsSc)],
+        ['Water TVC 22°C',azFmt(row.TVC22)],['Water TVC 37°C',azFmt(row.TVC37)],
+        ['Water Coliforms',azFmt(row.ColiW)],['Water E. coli',azFmt(row.EcW)],
+        ['Caeca Campy',azFmt(row.CampyFnc)],['ID',azFmt(row.ID)],
+        ['Det Type',row.DETTYPE],['Retest',String(row.RETEST)],['Sampled By',row.SAMBY],['File',row._file],
+      ];
+      detailHtml=`<div class="az-detail">${fields.map(([l,v])=>`
+        <div class="az-detail-item"><div class="az-dl">${l}</div><div class="az-dv" title="${v??''}">${v??'—'}</div></div>`).join('')}</div>`;
+    }
+
+    return `<div class="az-card" style="border:1px solid ${cfg.color}44;border-left:3px solid ${cfg.color}">
+      <div class="az-card-hdr" onclick="if(!window._azExp)window._azExp={};window._azExp['${uid}']=!window._azExp['${uid}'];azRender()">
+        <span class="az-sev-pill" style="background:${cfg.bg};color:${cfg.color}">${ms}</span>
+        <span style="font-size:13px;font-weight:600;color:#e2e8f0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${desc}</span>
+        <span style="font-size:11px;color:#64748b;white-space:nowrap;">${retailer}</span>
+        <span style="font-size:11px;color:#475569;white-space:nowrap;">#${snum}</span>
+        ${eolBadge}${stBadge}${fileTag}
+        <span style="color:#475569;font-size:13px;margin-left:6px;">${expState?'▲':'▼'}</span>
+      </div>
+      <div class="az-flags">${flagPills}</div>
+      ${detailHtml}
+    </div>`;
+  }).join('');
+}
+// ─────────────────────────────────────────────────────────────────────────────
 
 // Service Worker registration
 if ('serviceWorker' in navigator) {
