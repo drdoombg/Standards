@@ -126,6 +126,10 @@
   <button class="tab-btn" onclick="showTab('timing',this)">Timing &amp; Transport</button>
   <button class="tab-btn" onclick="showTab('mims',this)">MIMS Fields &amp; Codes</button>
   <button class="tab-btn" onclick="showTab('actions',this)">Actions on Failure</button>
+  <button class="tab-btn" onclick="showTab('procedures',this)">Procedures &amp; Methods</button>
+  <button class="tab-btn" onclick="showTab('raci',this)">RACI &amp; Responsibilities</button>
+  <button class="tab-btn" onclick="showTab('doccontrol',this)">Document Control</button>
+  <button class="tab-btn" onclick="showTab('cop',this)">Customer COPs</button>
 </div>
 
 <!-- ═══════════════════════════ TAB 1: LIMITS ═══════════════════════════ -->
@@ -544,6 +548,553 @@
 
 </div>
 
+<!-- ═══════════════════════════ TAB 6: PROCEDURES & METHODS ═══════════════════════════ -->
+<div id="tab-procedures" class="tab-panel">
+
+  <div class="note"><b>These are the physical step-by-step collection methods from the document appendices.</b> All procedures require hands washed as per handwashing procedure before handling any sample material at any stage.</div>
+
+  <div class="section-title">Appendix 1 — Water Sampling Method</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Order bottles from lab</td><td>Sodium thiosulphate-dosed bottles required for chlorinated water (all tap water). Order only lab-supplied or approved vendor bottles.</td></tr>
+      <tr><td class="num">2</td><td>Store bottles</td><td>4–25°C. Use within shelf life stated on bottle.</td></tr>
+      <tr><td class="num">3</td><td>Label the bottle</td><td>Record a legible, permanent ID number. Record on submission form along with source description, date, and time of sampling.</td></tr>
+      <tr><td class="num">4</td><td>Prepare the tap</td><td>Tap must be clean — no attachments, no grease, no cleaning agents. <b>Run tap for 2 minutes before sampling.</b></td></tr>
+      <tr><td class="num">5</td><td>Fill the bottle</td><td>Do not contaminate bottle neck, inside, or lid. Do not put cap on any surface. Fill to top mark. Avoid splashing. Leave small air gap at top.</td></tr>
+      <tr><td class="num">6</td><td>Reseal</td><td>Replace cap without touching the inner contact surfaces. If accidental contamination occurs — discard and use a new sterile bottle.</td></tr>
+      <tr><td class="num">7</td><td>Store and transport</td><td>Store 2–4°C in dark. Use cool boxes and ice packs. Transport containers must be clean. Target: within 6 hours. Hard limit: 24 hours.</td></tr>
+      <tr><td class="num">8</td><td>Submit</td><td>Include submission form (or send electronically ahead of samples). Use UKAS testing suite for potable/drinking water. Non-UKAS suite acceptable for other water types.</td></tr>
+      <tr><td class="num">9</td><td>Validity</td><td>Results invalid if received >24 hrs after sampling OR if no date/time of sampling provided. Lab will add disclaimer on the report.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Appendix 2 — Air Sampling Method</div>
+  <div class="note">Two methods: <b>Passive (Exposure)</b> — plate left open for 1 hour. <b>Active (Air Sampler Unit)</b> — device samples for ~1 minute. Plates must stabilise at room temperature for 1 hour before exposure. Always include a control plate — must NOT be opened.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Order plates from lab</td><td>Correct agar for organism under test. Always include a control plate with each submission.</td></tr>
+      <tr><td class="num">2</td><td>Store plates</td><td>2–5°C refrigerated. Do NOT push to back — may freeze and become unusable. Use within shelf life.</td></tr>
+      <tr><td class="num">3</td><td>Stabilise at room temperature</td><td>Allow plates to reach room temperature — <b>1 hour stabilisation before exposing.</b></td></tr>
+      <tr><td class="num">4</td><td>Label the plate</td><td>Number on lid. Record number on submission form with location, date, time.</td></tr>
+      <tr><td class="num">5a</td><td>Passive method</td><td>Remove lid (do not contaminate inside surface or lid). Expose agar for <b>1 hour</b> (or specified period). Temperature, airflow and humidity affect performance — record conditions. Replace lid. Tape up.</td></tr>
+      <tr><td class="num">5b</td><td>Active method (air sampler)</td><td>Remove device lid → unscrew top section → insert plate with agar facing up → remove plate lid (do not touch media) → screw top back on → press "Yes" until device operates → samples ~1 min → device powers down → remove top → remove plate → replace lid. Tape up. Device will not start if top is not screwed correctly or needs charging.</td></tr>
+      <tr><td class="num">6</td><td>Control plate</td><td>Do NOT open. Label, tape up, return with all sample plates.</td></tr>
+      <tr><td class="num">7</td><td>Transport</td><td>Direct to lab within <b>20 min</b> (max 1 hr without refrigeration). Or refrigerate: preferably &lt;5°C, max 8°C. Transport within 24 hrs. Results invalid if received &gt;24 hrs or no date/time provided.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Appendix 4 — Environmental Microbiological Swabs</div>
+  <div class="note">Sampling locations, areas, timing, and technique must follow risk-based principles. Reference standard: <b>ISO 18593:2018.</b> Hygiene swabs must be physically separated from other sample categories to prevent cross-contamination.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Order swabs from lab</td><td>Request correct type for area and organism. Include a control swab in the order — must be submitted and returned with test swabs.</td></tr>
+      <tr><td class="num">2</td><td>Store swabs</td><td>Unopened: 4–10°C. Use within shelf life stated on packaging.</td></tr>
+      <tr><td class="num">3</td><td>Prepare outside production area</td><td>Prepare hygienically outside production — prevents foreign body risks and false contamination. Wash hands before handling.</td></tr>
+      <tr><td class="num">4</td><td>Label and record</td><td>Legible, permanent ID number on swab. Record on submission form: location, date, time.</td></tr>
+      <tr><td class="num">5</td><td>Choose sampling area</td><td><b>Detection:</b> 1000–3000 cm² (as large as possible). <b>Enumeration:</b> ≤100 cm² (10 cm × 10 cm).</td></tr>
+      <tr><td class="num">6a</td><td>Stick swab — transport type</td><td>Check seal is intact. Open pouch with pull tabs. Remove lid from tube and discard. Dip swab into tube to moisten. Sample defined area: swab in all directions, rotating swab to use entire surface. Return to tube, seal properly.</td></tr>
+      <tr><td class="num">6b</td><td>Stick swab — jumbo type</td><td>Check seal. Remove from tube (pre-moistened). Same swabbing technique as above.</td></tr>
+      <tr><td class="num">6c</td><td>Sponge swab</td><td><b>Open bag and pull back over your hand, grasping the sponge through the bag.</b> Do not touch the sponge directly. <b>Using the bag as a glove</b>, collect sample over defined area. Pull the bag back over the sponge and seal.</td></tr>
+      <tr><td class="num">7</td><td>Control swab</td><td>Do NOT use to sample. Label, tape up, return with sample swabs.</td></tr>
+      <tr><td class="num">8</td><td>If pre-soaked transit swabs not used</td><td>Pre-soak swab tips with sterile chemical to neutralise cleaning agents + surfactant to remove more debris.</td></tr>
+      <tr><td class="num">9</td><td>Store and transport</td><td>Store at <b>1–4°C</b>. Transport within <b>24 hours</b>. Results invalid if received &gt;24 hrs or no date/time provided.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Appendix 4 — Hand Swab Method</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Step</th><th>Instruction</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Follow all preparatory steps from the Environmental Microbiological Swabs method above.</td></tr>
+      <tr><td class="num">2</td><td>Select operatives randomly from production area on a weekly basis — swab <b>after</b> hand washing station.</td></tr>
+      <tr><td class="num">3</td><td>Label the casing with the name or clock number of the person being swabbed, plus other traceability information.</td></tr>
+      <tr><td class="num">4</td><td>Swab approximately <b>10 cm × 10 cm</b> covering: wrist, between fingers, palms, fingertips, and nail beds.</td></tr>
+      <tr><td class="num">5</td><td>Return swab to its casing. Store in refrigerated environment after sampling.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Appendix 5 — Aseptic Product Sampling Method (6 Steps)</div>
+  <div class="note">Core principle: <b>nothing must touch the inside of the sample bag</b> at any point except the product being sampled. The bag is used as a sterile barrier.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Step</th><th>Action</th><th>Critical Rule</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Wash hands. Take a sample bag.</td><td>Standard handwashing procedure first.</td></tr>
+      <tr><td class="num">2</td><td>Open the bag.</td><td>Nothing must touch the inside of the bag.</td></tr>
+      <tr><td class="num">3</td><td>Hold the bag by the bottom seam.</td><td>—</td></tr>
+      <tr><td class="num">4</td><td><b>Turn the bag inside out.</b></td><td>Nothing must touch the inside of the bag. Your hand is now on the outside of the inside surface — this is the sterile grip.</td></tr>
+      <tr><td class="num">5</td><td><b>Pick up the product.</b></td><td>Hand on the outside of the (now inverted) bag. Product goes onto the inside (sterile) surface.</td></tr>
+      <tr><td class="num">6</td><td><b>Pull the bag back the right way.</b> Seal and label.</td><td>Do not touch inside during inversion. Seal fully. Label for complete traceability.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">For sub-samples: wipe exterior packaging with alcohol wipes before opening. Utensils (knives/spoons) must be sterile — sterilise by dipping into methylated spirits and flaming, or use alcohol wipes. Do not re-contaminate sterilised area before use. Liquid samples: use sterile dip pots. Pre-packed small containers: do not open — supply sufficient packs to meet the required weight. Transport within <b>48 hours</b>.</div>
+
+  <div class="section-title">Appendix 7 — Pooled Neck Skin Sample Collection (Salmonella &amp; Campylobacter)</div>
+  <div class="note"><b>PPE required:</b> Slash gloves + blue nitrile gloves (clean). Probe wipes available. Steriliser temp confirmed at <b>min. 82°C</b> before starting. Carcasses must have been chilled for <b>at least 1.5 hours</b> before sampling.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Prepare sample label before collecting</td><td>Information from <b>Animal Transport Certificate (ATC)</b> — if Daily Production Schedule is used, it must be verified against ATC for that load.</td></tr>
+      <tr><td class="num">2</td><td>Check PPE and equipment</td><td>Slash glove + blue nitrile gloves, clean. Probe wipes available. Knives sterile. Steriliser temp ≥82°C confirmed.</td></tr>
+      <tr><td class="num">3</td><td>Wear all required PPE</td><td>As per procedure.</td></tr>
+      <tr><td class="num">4</td><td>Harvest the neck flap</td><td><b>Grab the neck flap with the slash-glove hand</b> and remove using a sterile knife.</td></tr>
+      <tr><td class="num">5</td><td>Prepare the sample bag as a sterile sleeve</td><td><b>Grip the bag at the bottom seam and fold it back over your hand so the bag is inside out.</b> The sterile inside of the bag holds the neck flaps, preventing cross-contamination to and from your glove.</td></tr>
+      <tr><td class="num">6</td><td>Continue harvesting</td><td>Harvest until correct number of neck flaps collected — per Table 8 (3 neck skins per pooled sample, 5 pooled samples per session = 15 birds per session).</td></tr>
+      <tr><td class="num">7</td><td>Between batches</td><td>Change and/or clean and sterilise gloves and knives between each batch.</td></tr>
+      <tr><td class="num">8</td><td>Seal and transfer</td><td>Confirm label is correct. Seal the sample bag. Transfer immediately to refrigerated container. Store 1–4°C.</td></tr>
+      <tr><td class="num">9</td><td>After sampling</td><td>Clean knives and return to steriliser.</td></tr>
+      <tr><td class="num">10</td><td>If contamination detected</td><td>If neck skin is contaminated (crops or other contamination) — dispose samples, sanitise all equipment, re-take samples.</td></tr>
+      <tr><td class="num">11</td><td>Transport and testing</td><td>Immediately to refrigerated container (0–4°C). Salmonella testing commences within 24 hrs of collection.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Appendix 8 — Listeria Risk Assessment (Primary Sites Summary)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Point</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>Risk to humans</td><td><i>Listeria monocytogenes</i> causes listeriosis — serious infection primarily affecting pregnant women, newborns, and immunocompromised adults. Symptoms: fever, muscle aches, GI symptoms; can spread to nervous system causing headache, stiff neck, confusion, loss of balance, convulsions. In pregnancy: miscarriage, stillbirth, premature delivery, neonatal infection.</td></tr>
+      <tr><td>Sources</td><td>Soil and water. Vegetables from contaminated soil or manure. Animals can carry without symptoms and contaminate meats and dairy. Found in raw meats, vegetables, and processed foods contaminated post-processing (e.g. soft cheeses, deli meats).</td></tr>
+      <tr><td>Key fact for raw poultry</td><td>Listeria is killed by pasteurisation and cooking. Raw poultry is sold raw and must be cooked before consumption — Listeria is therefore <b>considered low risk in low care (primary processing) environments</b>.</td></tr>
+      <tr><td>Policy for low care sites</td><td><b>Listeria is NOT routinely tested in low care facilities.</b> Use-by date and cooking instructions must be clearly printed on all product sold directly to consumers.</td></tr>
+      <tr><td>Sites with high care areas</td><td>Separate Listeria risk assessment and testing programme required.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Appendix 6 — Salmonella Sample Collection Matrix</div>
+  <div class="note">A rolling week-by-week matrix is used to ensure Salmonella finished product sampling is spread across different days. Samples must be collected on different days each week to encompass every processing day over time. Product types and customers must be rotated weekly. The document provides a blank 8-week × 7-day grid — each site must generate its own site-specific version according to their production schedule.</div>
+
+</div>
+
+<!-- ═══════════════════════════ TAB 7: RACI & RESPONSIBILITIES ═══════════════════════════ -->
+<div id="tab-raci" class="tab-panel">
+
+  <div class="note"><b>Policy Objective:</b> Product.<br>
+  <b>Procedure Objectives:</b><br>
+  1. To ensure that microbiological testing is completed to comply with legal requirements, customer specifications, and to appropriate frequencies.<br>
+  2. To ensure consistent methods of sampling and reporting to obtain reliable results for the purpose of analysis, action, and continuous improvement.<br>
+  <b>Scope:</b> All ingredients, WIP, finished products, water, air, and equipment validation/verification, as identified by risk assessments and customer requirements. For general requirements and laboratories, refer to the Inspection &amp; Testing Management Procedure.</div>
+
+  <div class="section-title">RACI Matrix</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Responsibility Area</th><th>R — Responsible (does the work)</th><th>A — Accountable (owns the outcome)</th><th>C — Consulted</th><th>I — Informed</th></tr></thead>
+    <tbody>
+      <tr><td>Implementation and monitoring</td><td>Site Technical Lead (STL)</td><td>Divisional Technical Controller (DTC)</td><td>STL / DTC</td><td>TLT / KPI reporting</td></tr>
+      <tr><td>Sampling and testing</td><td>Checkers / Testers</td><td>QA Manager</td><td>Site Technical Lead</td><td>Site Technical Lead / KPI reporting</td></tr>
+      <tr><td>Input data (MIMS entry)</td><td>KPI administrators</td><td>Compliance Manager</td><td>Site Technical Lead</td><td>Site Technical Lead / KPI reporting</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Role Definitions &amp; Duties (Derived from Procedure)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Role</th><th>Key Duties from This Procedure</th></tr></thead>
+    <tbody>
+      <tr><td><b>Site Technical Lead (STL)</b></td><td>
+        · Owns implementation and monitoring of the full micro testing programme<br>
+        · Must be informed of all water failures (safety assessment duty)<br>
+        · Consulted on all sampling and testing decisions<br>
+        · Must have access to swab results and record of actions<br>
+        · First point of escalation for site-level technical decisions<br>
+        · Involved in determining swabbing locations alongside Hygiene Manager
+      </td></tr>
+      <tr><td><b>Divisional Technical Controller (DTC)</b></td><td>
+        · Accountable for implementation and monitoring at divisional level<br>
+        · Must be notified <b>immediately</b> of confirmed SE / ST results<br>
+        · Must be notified <b>immediately</b> of any positive Salmonella species<br>
+        · Consulted at divisional level
+      </td></tr>
+      <tr><td><b>Technical Director (TD)</b></td><td>
+        · Must be notified immediately alongside DTC for confirmed SE / ST and positive Salmonella species
+      </td></tr>
+      <tr><td><b>QA Manager</b></td><td>
+        · Accountable for sampling and testing activities<br>
+        · Oversight of sample collection, submission, and result management
+      </td></tr>
+      <tr><td><b>Compliance Manager</b></td><td>
+        · Accountable for data input into MIMS and databases<br>
+        · Ensures KPI data is accurate and entered correctly
+      </td></tr>
+      <tr><td><b>KPI Administrators</b></td><td>
+        · Responsible for data input into MIMS and reporting databases<br>
+        · Must enter routine micro results onto database for trend analysis<br>
+        · Reporting feeds into site, division, and group KPI reporting
+      </td></tr>
+      <tr><td><b>Checkers / Testers</b></td><td>
+        · Responsible for physical sampling and testing activities<br>
+        · Must be suitably trained individuals<br>
+        · Independent monitoring must be carried out by an independent person
+      </td></tr>
+      <tr><td><b>Site Hygiene Manager</b></td><td>
+        · Must be involved in determining swabbing locations<br>
+        · Must have access to all swab results<br>
+        · Must record all actions taken as a result of failures and trends
+      </td></tr>
+      <tr><td><b>Engineering Manager</b></td><td>
+        · Must be informed of water failures (mechanical investigation duty)
+      </td></tr>
+      <tr><td><b>On-site OV (Official Veterinarian)</b></td><td>
+        · Receives neck skin Salmonella results weekly<br>
+        · Legally required recipient of process hygiene monitoring results (slaughterhouses)
+      </td></tr>
+      <tr><td><b>AWO / Deputy</b></td><td>
+        · Must authorise processing of SHS (Special Health Status) flocks<br>
+        · Must physically remove the SHS marker from the first module before processing begins
+      </td></tr>
+      <tr><td><b>Food Standards Agency (FSA)</b></td><td>
+        · Must be notified of confirmed SE/ST results (England/Wales: food.gov.uk incident portal)<br>
+        · Must be notified of positive Salmonella species (Scotland: foodstandards.gov.scot)<br>
+        · Any withdrawal or recall must comply with microbiological criteria regulations
+      </td></tr>
+      <tr><td><b>Customers / Customer Technologists</b></td><td>
+        · Must be notified of confirmed SE/ST affecting their product<br>
+        · Must be notified of positive Salmonella affecting their product<br>
+        · Must agree any alternative testing strategies in writing on product specification<br>
+        · Customer-specific KPI reporting requirements apply per customer code of practice
+      </td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Training Record (M7)</div>
+  <div class="note">The following confirmation must be signed by all personnel who are required to follow this procedure. The record confirms the person has read, understood, and commits to following the requirements.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Field</th><th>Required Entry</th></tr></thead>
+    <tbody>
+      <tr><td>Trainer Name</td><td>Name of the person delivering the training</td></tr>
+      <tr><td>Trainer Signature</td><td>Signed by trainer</td></tr>
+      <tr><td>Date / Time (from – to)</td><td>Training session date and duration</td></tr>
+      <tr><td>Employee Name</td><td>Name of employee being trained</td></tr>
+      <tr><td>Employee Signature</td><td>Signed by employee confirming understanding and commitment</td></tr>
+      <tr><td>Interpreter Name</td><td>If applicable — name of interpreter present</td></tr>
+      <tr><td>Interpreter Signature</td><td>If applicable — signed by interpreter</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn">Training records must be completed and retained. The signature confirms the employee commits to following the requirements — not just that they attended.</div>
+
+</div>
+
+<!-- ═══════════════════════════ TAB 8: DOCUMENT CONTROL ═══════════════════════════ -->
+<div id="tab-doccontrol" class="tab-panel">
+
+  <div class="note"><b>Document Reference:</b> Inspection and Testing Procedure – Microbiology &nbsp;·&nbsp; <b>Current Version:</b> D2.0 &nbsp;·&nbsp; <b>Date:</b> 17/10/2025 &nbsp;·&nbsp; <b>Issued by:</b> UKP Technical Services Manager &nbsp;·&nbsp; <b>Authorised by:</b> Technical Manager</div>
+
+  <div class="section-title">Changes Log (M8)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Issue No.</th><th>Date</th><th>Section(s) Amended</th><th>Detail of Change</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="num">1</td><td>04/07/2019</td><td>All</td>
+        <td>Inspection &amp; Testing Procedure broken down into separate procedures: Chemical &amp; Microbiological, and Physical Testing.</td>
+      </tr>
+      <tr>
+        <td class="num">D1.0</td><td>23/05/2025</td><td>Multiple sections</td>
+        <td>
+          <b>M3p:</b> "…in low care environment." added (Listeria swabbing exclusion).<br>
+          <b>M3k:</b> Swab segregation requirement added (hygiene swabs physically separated from other categories).<br>
+          <b>Scope:</b> References to ATP swabbing removed throughout — no longer used.<br>
+          <b>RACI:</b> References to TM &amp; HOT amended to "Site Technical Lead" throughout.<br>
+          <b>Table 1:</b> Campy Pooled Neck Skin amended to 5 samples, each consisting of 3 pooled neck skins.<br>
+          <b>Table 1:</b> Raw Material Intake updated to current regime: Pseudomonas + E. coli for Exit Chiller Wholebirds (Slaughter Sites only); Pseudomonas only for Intake Fresh Wholebirds ≥K+1 and All Portions (Receiving Sites).<br>
+          <b>Header:</b> 2sfg logo updated.<br>
+          <b>M4g:</b> Amended to "For distinct customer requirements…refer to the relevant Customer codes of practice."<br>
+          <b>Former M6:</b> Listeria section removed along with all references to Listeria product testing, swabbing, RTE, and high risk. Sections renumbered throughout.<br>
+          <b>M3 / S1:</b> Section name amended from M3 to S1 to allow site amends of water TVC limits to reflect ambient levels.<br>
+          <b>S1:</b> Water testing requirements updated.<br>
+          <b>Former M13b:</b> Campy Finished Product Assessment (Retail Sites Only) removed — no longer in place.<br>
+          <b>M3n + Table 1:</b> References to pre-clean Campy swabs on live collection equipment removed.<br>
+          <b>Table 4, App 4:</b> Environmental swab pass rate updated to 98%. Warning standard removed — now strictly Pass ≤1000 / Fail >1000 in line with group policy statement 2SFG-S035.<br>
+          <b>Appendix 3:</b> Environmental Swabbing Risk Assessment decision tree reworded (Q on lairage/EV).<br>
+          <b>S1f:</b> New clause added on ice testing requirements.<br>
+          <b>M3b:</b> New clause added on review of RA and RCA/investigation requirement if 3 or more failures in a 12-month period.<br>
+          <b>New Appendix:</b> Campylobacter Pooled Neck Skin Sample Collection Method (now Appendix 7).
+        </td>
+      </tr>
+      <tr>
+        <td class="num">D2.0</td><td>17/10/2025</td><td>Multiple sections</td>
+        <td>
+          <b>M5c1a &amp; M5c2a:</b> "at the end of life" added to Salmonella sampling requirements.<br>
+          <b>M5c1e &amp; M5c2d:</b> New clause on "ghost" batches added — mandatory wording: "Retained batch – not on the market" in MIMS OTHER_ID.<br>
+          <b>M5c1h:</b> Amended to "All Salmonella positive samples are fully typed."<br>
+          <b>M5c1k:</b> New clause on confirmed SE/ST escalation to Technical Controller and Technical Director (Poultrymeat).<br>
+          <b>M5c1l ii &amp; iii:</b> Unsatisfactory results amended to specifically name "Confirmed Salmonella Enteritidis (SE) and Salmonella Typhimurium (ST)."<br>
+          <b>M5c2g:</b> New clause on positive Salmonella species escalation to Technical Controller and Technical Director (Mince, Meat Preparations and Meat Products).<br>
+          <b>M5c2h ii &amp; iii:</b> Unsatisfactory results amended to "positive Salmonella species."<br>
+          <b>M3p:</b> Appendix 9 reference amended to Appendix 8.<br>
+          <b>M5c1:</b> Sub-section header amended to "Poultrymeat (portions and wholebirds)."<br>
+          <b>M5c1d:</b> Amendment to "Product types and customers are to be rotated every week."<br>
+          <b>M5c4:</b> Reworded and amended to include "2 Agriculture" in SHS flock identification context.
+        </td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Review Record (M9)</div>
+  <div class="note">The review record table is maintained in the live document. Fields: Date Reviewed · Reviewed By · Comments. The procedure must be reviewed annually or after significant changes to the process flow or equipment (per M3 swabbing RA requirement).</div>
+
+  <div class="section-title">Document Footer Reference</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Field</th><th>D1.0</th><th>D2.0 (Current)</th></tr></thead>
+    <tbody>
+      <tr><td>Reference</td><td colspan="2">Inspection and Testing Procedure – Microbiology</td></tr>
+      <tr><td>Version No.</td><td>D1.0</td><td><b>D2.0</b></td></tr>
+      <tr><td>Date</td><td>23/05/2025</td><td><b>17/10/2025</b></td></tr>
+      <tr><td>Issued by</td><td colspan="2">UKP Technical Services Manager</td></tr>
+      <tr><td>Authorised by</td><td colspan="2">Technical Manager</td></tr>
+      <tr><td>Total pages</td><td colspan="2">19</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Key Regulatory &amp; Standard References in the Document</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Reference</th><th>What it covers</th></tr></thead>
+    <tbody>
+      <tr><td>Retained EU Law – EU Directive 98/83/EC</td><td>Potable water specification standards</td></tr>
+      <tr><td>EN/ISO 6579</td><td>Salmonella detection method (finished product and neck skin)</td></tr>
+      <tr><td>ISO 4833</td><td>TVC / Aerobic Colony Count method (Minced Meat)</td></tr>
+      <tr><td>ISO 16649-1 or -2</td><td>E. coli enumeration method (Minced Meat and Meat Preparations)</td></tr>
+      <tr><td>ISO 18593:2018</td><td>Environmental swabbing — guidance on sampling locations, areas, times, and technique</td></tr>
+      <tr><td>2SFG-S035</td><td>Group policy statement — basis for swab pass rate 98% and Pass/Fail limits</td></tr>
+      <tr><td>2sfg UKP Shelf Life Testing Protocol</td><td>Shelf life testing schedule and results recording</td></tr>
+      <tr><td>Microbiological Criteria for Foodstuffs (UK Regulations)</td><td>Governs actions (withdrawal, recall) for unsatisfactory results</td></tr>
+      <tr><td>FSA Food Incident Reporting Portal (England/Wales)</td><td>food.gov.uk/contact/businesses/report-safety-concern/report-a-food-safety-incident</td></tr>
+      <tr><td>FSA Food Incident Reporting (Scotland)</td><td>foodstandards.gov.scot/business-and-industry/scottish-food-crime-and-incidents-unit/food-incidents/report-a-food-incident</td></tr>
+    </tbody>
+  </table></div>
+
+</div>
+
+<!-- ═══════════════════════════ TAB 9: CUSTOMER COPs ═══════════════════════════ -->
+<div id="tab-cop" class="tab-panel">
+
+  <div class="note"><b>COP = Code of Practice.</b> Each retailer sets their own microbiological limits which may be tighter than 2SFG internal procedure limits. These are the limits results are judged against for that customer's product. All testing is UKAS accredited (No. 1916) unless otherwise stated. OOS action in all cases: investigation and root cause analysis by site Technical Team unless stated otherwise.</div>
+
+  <!-- ALDI -->
+  <div class="section-title">ALDI — Finished Product Standards</div>
+  <div class="note">All methods: Current Accredited Method · UKAS No. 1916 · Method in scope: Yes · OOS action: Investigation and root cause analysis by site Technical Team</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Organism</th><th>Start of Life Target</th><th>End of Life Target</th><th>Testing Frequency</th><th>Comments</th></tr></thead>
+    <tbody>
+      <tr><td><i>Pseudomonas</i> spp.</td><td class="num">&lt;5,000 cfu/g</td><td class="num">&lt;10,000,000 cfu/g</td><td>SOL: Daily/Weekly/Monthly · EOL: Annual</td><td>Finished Product</td></tr>
+      <tr><td><i>E. coli</i></td><td class="num">&lt;100 cfu/g</td><td class="num">&lt;500 cfu/g</td><td>SOL: Daily/Weekly/Monthly · EOL: Annual</td><td>Finished product</td></tr>
+      <tr><td><i>Campylobacter</i> spp.</td><td class="num">&lt;500 cfu/g</td><td class="num">&lt;1,000 cfu/g</td><td>Monthly / Annually</td><td>Finished product</td></tr>
+      <tr><td><i>Salmonella</i> spp.</td><td class="num"><span class="pill pill-abs">Absent in 25g</span></td><td class="num"><span class="pill pill-abs">Absent in 25g</span></td><td>Weekly/Monthly/Annually · EOL on each SKU</td><td>Finished product</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ASDA -->
+  <div class="section-title">ASDA — Microbiological Testing Standards (Issue 1.6 · April 2023)</div>
+  <div class="note">Three product categories. Pathogen testing (Salmonella/Campylobacter) must comply with all legislative requirements. Pathogen testing on ASDA retail products is NOT required on first production. Ensure on-pack cook instructions validated to 70°C for minimum 2 minutes or process equivalent.</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Category 4 — Raw Poultry (Dept 50 &amp; 71) · Fresh &amp; Frozen Whole Birds and Portions · Risk: Medium</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test</th><th>Target (cfu/g)</th><th>Due Diligence</th><th>Report Limit (cfu/g)</th></tr></thead>
+    <tbody>
+      <tr><td><i>E. coli</i></td><td class="num">&lt;1×10²</td><td>✓</td><td class="num" style="color:#fbbf24;">&gt;1×10³</td></tr>
+      <tr><td><i>Co-agulase +ve Staphylococcus aureus</i></td><td class="num">&lt;20</td><td>—</td><td class="num" style="color:#fbbf24;">&gt;1×10³</td></tr>
+      <tr><td><i>Pseudomonas</i> spp.</td><td class="num">&lt;1×10⁴</td><td>✓</td><td class="num" style="color:#fbbf24;">&gt;1×10⁶</td></tr>
+      <tr><td><i>Salmonella</i> /25g</td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td>✓</td><td><span class="pill pill-fail">Detected</span></td></tr>
+      <tr><td><i>Campylobacter</i> spp./25g</td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td>—</td><td><span class="pill pill-fail">Detected</span></td></tr>
+      <tr><td><i>Campylobacter</i> cfu/g</td><td class="num">&lt;10</td><td>✓</td><td class="num" style="color:#f87171;">&gt;1,000 cfu/g</td></tr>
+    </tbody>
+  </table></div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Category 5 — Raw Poultry Added Value (Dept 50 &amp; 71) · With Veg/Sauces, Rolled, Stuffed Chicken Joints · Risk: Medium</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test</th><th>Target (cfu/g)</th><th>Due Diligence</th><th>Report Limit (cfu/g)</th></tr></thead>
+    <tbody>
+      <tr><td><i>E. coli</i></td><td class="num">&lt;1×10²</td><td>✓</td><td class="num" style="color:#fbbf24;">&gt;1×10³</td></tr>
+      <tr><td><i>Co-agulase +ve Staphylococcus aureus</i></td><td class="num">&lt;20</td><td>—</td><td class="num" style="color:#fbbf24;">&gt;1×10³</td></tr>
+      <tr><td><i>Pseudomonas</i> spp.</td><td class="num">&lt;1×10⁴</td><td>✓</td><td class="num" style="color:#fbbf24;">&gt;1×10⁶</td></tr>
+      <tr><td><i>Salmonella</i> /25g</td><td class="num"><span class="pill pill-abs">Not Detected</span> · See note</td><td>✓</td><td><span class="pill pill-fail">Detected</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Category 2 — Raw Meat With Stuffing (Dept 48 &amp; 71) · e.g. Rolled &amp; Stuffed Pork Joint · Risk: Medium</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test</th><th>Target (cfu/g)</th><th>Due Diligence</th><th>Report Limit (cfu/g)</th></tr></thead>
+    <tbody>
+      <tr><td><i>E. coli</i></td><td class="num">&lt;1×10²</td><td>✓</td><td class="num" style="color:#fbbf24;">&gt;1×10³</td></tr>
+      <tr><td><i>Co-agulase +ve Staphylococcus aureus</i></td><td class="num">&lt;20</td><td>—</td><td class="num" style="color:#fbbf24;">&gt;1×10³</td></tr>
+      <tr><td><i>Salmonella</i> /25g</td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td>✓</td><td><span class="pill pill-fail">Detected</span></td></tr>
+      <tr><td><i>E. coli</i> O157/25g</td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td>✓</td><td><span class="pill pill-fail">Detected</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn">ASDA: Pathogen testing on ASDA retail products is NOT required on first production. Salmonella/E. coli O157 testing: ensure legislative requirements are met. Pork/beef/lamb cooking: edges sealed if cooked medium/raw. Pork validated to 70°C min. 2 minutes.</div>
+
+  <!-- CO-OP -->
+  <div class="section-title">CO-OP — Chilled Raw Category 42: Raw Poultry (Including Coated)</div>
+  <div class="note">Product examples: Whole birds and portions (chicken, turkey, pheasant, quail) including coated and breaded whole muscle portions. Process: Slaughter – scald – defeather – eviscerate – chill – (coat/marinade) – flash fry – chill – pack – chill. Shelf life: K+20d unless deep chill. Sampling: 5×25g samples spaced out over the production run ($). Key safety controls include storage time/temp from kill to pack, cooking instructions validated to 70°C. Packaging must include 'Do Not Wash' statement (see Co-op Food Cooking &amp; Reheat Guidelines Policy).</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Organism</th><th>Target</th><th>Unacceptable</th><th>Frequency</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><i>Pseudomonas</i> spp</td><td class="num">&lt;1×10⁴/g</td><td class="num" style="color:#f87171;">&gt;1×10⁷/g</td><td>Each batch</td><td>—</td></tr>
+      <tr><td><i>E. coli</i> $</td><td class="num">&lt;10/g</td><td class="num" style="color:#f87171;">&gt;5×10²/g</td><td>Weekly</td><td>$ = 5×25g samples spaced over production run</td></tr>
+      <tr><td><i>S. aureus</i> ^</td><td class="num">&lt;20/g</td><td class="num" style="color:#f87171;">&gt;100/g</td><td>Weekly</td><td>^ Marinated/coated products only</td></tr>
+      <tr><td>Yeasts ^</td><td class="num">&lt;1×10⁴/g</td><td class="num" style="color:#f87171;">&gt;1×10⁶/g</td><td>Weekly</td><td>^ Marinated/coated products only</td></tr>
+      <tr><td><i>Salmonella</i> spp $</td><td class="num"><span class="pill pill-abs">ND in 25g</span></td><td><span class="pill pill-fail">Present in 25g</span></td><td>Weekly</td><td>$ = 5×25g samples spaced over production run</td></tr>
+      <tr><td><i>Campylobacter</i> spp</td><td class="num">&lt;600 cfu/g</td><td class="num" style="color:#f87171;">&gt;1,000 cfu/g</td><td>Monthly</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- ICELAND -->
+  <div class="section-title">Iceland — Supplier Technical Document TD-01 (Rev 3, April 2023 · Approved: Neil Spreadbury)</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Raw Meat &amp; Poultry — Whole Muscle Cuts/Pieces · Chilled or Frozen · Ready to Cook</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test Required</th><th>Item Specific</th><th>Target</th><th>Start of Life Out of Specification</th><th>Test Frequency</th></tr></thead>
+    <tbody>
+      <tr><td><i>Pseudomonas</i> spp.</td><td>b</td><td class="num">&lt;1.0×10⁴ cfu/g</td><td class="num" style="color:#f87171;">1.0×10⁶ cfu/g</td><td>Per batch</td></tr>
+      <tr><td><i>Escherichia coli</i></td><td>—</td><td class="num">&lt;1.0×10² cfu/g</td><td class="num" style="color:#f87171;">1.0×10³ cfu/g</td><td>Per batch</td></tr>
+      <tr><td><i>Clostridium perfringens</i></td><td>c</td><td class="num">&lt;100 cfu/g</td><td class="num" style="color:#fbbf24;">100 cfu/g</td><td>Weekly</td></tr>
+      <tr><td><i>E. coli</i> O157</td><td>a</td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td><span class="pill pill-fail">Detected</span></td><td>Monthly</td></tr>
+      <tr><td><i>Salmonella</i></td><td>—</td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td><span class="pill pill-fail">Detected</span></td><td>Monthly</td></tr>
+      <tr><td><i>Campylobacter</i></td><td>b</td><td class="num">&lt;10 cfu/g</td><td class="num" style="color:#f87171;">1.0×10³ cfu/g</td><td>Monthly</td></tr>
+      <tr><td><i>Campylobacter</i> (whole bird carcass)</td><td>d</td><td colspan="2">FSA guidance: sampling prior to freezing on whole bird poultry. Target &lt;10% of whole birds with levels of 1×10³ cfu/g or greater.</td><td>Monitoring only</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note" style="margin-bottom:12px;"><b>Item annotations:</b> Blank = All items · a = Red Meat products (beef, pork, lamb) · b = Raw poultry and any other avian species · c = Long life vacuum packed products only · d = Whole bird poultry carcass</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Value Added Meat &amp; Poultry Products (incl. flash fried) — Breaded Chicken, SFC, Popsters, Breaded Burgers, Fingers, Whole Muscle &amp; Comminuted/Reformed, Marinated Wings/Legs/Drumsticks · Chilled or Frozen</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test Required</th><th>Target</th><th>Start of Life Out of Specification</th><th>Test Frequency</th></tr></thead>
+    <tbody>
+      <tr><td><i>Pseudomonas</i> spp.</td><td class="num">&lt;1.0×10⁴ cfu/g</td><td class="num" style="color:#f87171;">1.0×10⁵ cfu/g</td><td>Per Batch</td></tr>
+      <tr><td><i>Escherichia coli</i></td><td class="num">&lt;100 cfu/g</td><td class="num" style="color:#f87171;">500 cfu/g</td><td>Per Batch</td></tr>
+      <tr><td><i>Staphylococcus aureus</i></td><td class="num">&lt;100 cfu/g</td><td class="num" style="color:#fbbf24;">100 cfu/g</td><td>Monthly</td></tr>
+      <tr><td><i>Salmonella</i></td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td><span class="pill pill-fail">Detected</span></td><td>Monthly</td></tr>
+      <tr><td><i>Campylobacter</i> Detection</td><td class="num"><span class="pill pill-abs">Not Detected</span></td><td><span class="pill pill-fail">Detected</span></td><td>Monthly</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- KFC -->
+  <div class="section-title">KFC — Micro &amp; Analytical Testing Standards (Yum! Food Safety Audit 2018)</div>
+  <div class="note">KFC distinguishes between Microbiological Testing (shelf life, process controls, food safety compliance) and Analytical Testing (pH, water activity, viscosity, temperature/weight checks, calibrated equipment). All limits per batch unless stated. Salmonella: absent in 25g per EU reg 2073/2005.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Organism</th><th>Frequency</th><th>Target (SPECS)</th><th>USL — Upper Specification Limit (SPECS &amp; SGS)</th></tr></thead>
+    <tbody>
+      <tr><td>Total Viable Count (TVC)</td><td>Each batch</td><td class="num">&lt;5×10⁵ cfu/g</td><td class="num" style="color:#f87171;">1×10⁶ cfu/g</td></tr>
+      <tr><td>Enterobacteriaceae</td><td>Each batch</td><td class="num">&lt;1×10⁴ cfu/g</td><td class="num" style="color:#fbbf24;">1×10⁴ cfu/g</td></tr>
+      <tr><td><i>Staphylococcus</i> Coagulase Positive</td><td>Each batch</td><td class="num">&lt;1×10² cfu/g</td><td class="num" style="color:#fbbf24;">1×10² cfu/g</td></tr>
+      <tr><td><i>Pseudomonas</i></td><td>Monthly</td><td class="num">&lt;5×10³ cfu/g</td><td class="num" style="color:#f87171;">1×10⁷ cfu/g</td></tr>
+      <tr><td><i>Escherichia coli</i>*</td><td>Each batch</td><td class="num">&lt;5×10² cfu/g</td><td class="num" style="color:#fbbf24;">5×10² cfu/g</td></tr>
+      <tr><td><i>Campylobacter</i></td><td>Monthly</td><td class="num">&lt;1×10³ cfu/g</td><td class="num" style="color:#f87171;">1×10³ cfu/g</td></tr>
+      <tr><td><i>Salmonella</i> spp.**</td><td>Each batch or weekly</td><td class="num"><span class="pill pill-abs">Absent in 25g</span></td><td><span class="pill pill-fail">Absent in 25g (EU reg 2073/2005)</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- M&S -->
+  <div class="section-title">M&amp;S — Requirements for Finished Product (Version 3.0, March 2019)</div>
+  <div class="note">M&amp;S uses numbered test references from their criteria chart. Two frameworks apply: <b>Food Safety</b> (legal criteria, red outline) and <b>Process Hygiene</b> (quality monitoring, green fill). Confidential to Marks &amp; Spencer PLC.</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Section 2 — Food Safety: Ready to Cook, Packed in Low Risk Environment</div>
+  <div class="note warn">Mince and meat preparations made from poultry → Test 11 &amp; 12: <i>Salmonella</i> spp. Mince/meat preps made from meat other than poultry → No tests needed (low risk). Long shelf life chilled products (&gt;20 days) / non-meat protein (e.g. soya, tofu) → Test 10: STEC / Test 5: <i>Bacillus cereus</i>.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test Ref</th><th>Organism</th><th>Frequency</th><th>Target</th><th>Action Level</th><th>Report Level</th><th>Action Required</th></tr></thead>
+    <tbody>
+      <tr><td class="num">11/12</td><td><i>Salmonella</i> spp.</td><td>To be agreed by category tech</td><td>ND in 25g</td><td>N/A</td><td>Detected in 10g</td><td>If present in 25g: report immediately to M&amp;S IT; set up incident management; following RA may withdraw product from market</td></tr>
+    </tbody>
+  </table></div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Section 4 — Process Hygiene: Ready to Cook, Contains Raw Meat/Fish/Poultry</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test Ref</th><th>Organism</th><th>Frequency</th><th>Target</th><th>Action</th><th>Report</th><th>Action Required</th></tr></thead>
+    <tbody>
+      <tr><td class="num">51</td><td><i>Pseudomonas</i> spp. cfu/g</td><td>Daily</td><td class="num">&lt;10⁴</td><td class="num">10⁴–10⁷</td><td class="num" style="color:#f87171;">&gt;10⁷</td><td>Trend results, investigate and action adverse trends</td></tr>
+      <tr><td class="num">55</td><td><i>Salmonella</i> spp.</td><td>Defined by EC Regs</td><td>ND in 25g of pooled sample of neck skin</td><td>Detected in 25g of pooled sample</td><td>—</td><td>Sampling plans defined in EU Regulations. Improvements in slaughter hygiene, process controls, origin of animals, biosecurity at farms</td></tr>
+      <tr><td class="num">56</td><td>TVC cfu/g</td><td>Daily</td><td colspan="2">Establish baseline by product and monitor deviations</td><td>—</td><td>Trend results, investigate and action adverse trends</td></tr>
+      <tr><td class="num">57</td><td><i>E. coli</i></td><td>Daily</td><td colspan="2">Establish baseline by product and monitor deviations</td><td>—</td><td>Trend results, investigate and action adverse trends</td></tr>
+      <tr><td class="num">59</td><td><i>Campylobacter</i> spp.</td><td>To be defined by supplier. Samples ≥5g</td><td class="num">&lt;10³ cfu/g</td><td class="num">10³–10⁴ cfu/g</td><td class="num" style="color:#f87171;">&gt;10,000 cfu/g</td><td>Sampling/analysis protocol defined by FSA. Results combined with M&amp;S IT and submitted to FSA via BRC for anonymisation quarterly. Target, action and report level reported on M&amp;S website each quarter.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">M&amp;S also requires: Test 52 <i>E. coli</i> and Test 53 TVC for Contains ONLY Minced Meat for retail sale · Test 58 Enterobacteriaceae for Raw Fish · Test 23 Enterobacteriaceae for Coated Fish &amp; Poultry · Test 6 <i>Bacillus cereus</i> for Cereal-based products.</div>
+
+  <!-- OCADO -->
+  <div class="section-title">Ocado — Section 7.7: RTC Poultry</div>
+  <div class="note">Raw poultry, products and preparations including free from flash fried chicken and marinated (BBQ) products. Storage: Chilled or frozen · Use: RTC · Controls: GAP, slaughterhouse controls, consumer use.<br>
+  OOS actions: <b>Safety criteria</b> — Isolate stock where possible, contact Ocado PTM/PT for risk assessment prior to action. <b>Process hygiene criteria</b> — Investigate cause and plan actions to prevent reoccurrence. If investigation indicates food safety or quality concerns, contact Ocado PTM/PT before action.</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Safety Criteria</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Microorganism</th><th>Stage of Life</th><th>Target</th><th>Action</th><th>Frequency</th></tr></thead>
+    <tbody>
+      <tr><td><i>Salmonella</i>*</td><td>SOL</td><td class="num"><span class="pill pill-abs">ND in 25g</span></td><td><span class="pill pill-fail">Detected in 25g</span></td><td>Monthly</td></tr>
+      <tr><td><i>Campylobacter</i></td><td>SOL</td><td class="num">&lt;1,000 cfu/g</td><td class="num" style="color:#f87171;">≥1,000 cfu/g</td><td>Monthly</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note" style="margin-bottom:10px;">*Confirm if <i>S. enteritidis</i> for <i>S. typhimurium</i> for fresh poultry meat</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Process Hygiene Criteria</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Microorganism</th><th>Stage of Life</th><th>Target</th><th>Action</th><th>Frequency</th></tr></thead>
+    <tbody>
+      <tr><td><i>Pseudomonas</i></td><td>EOL* (start, middle, end of life for shelf life validation)</td><td class="num">&lt;10E5 (100,000) cfu/g</td><td class="num" style="color:#f87171;">10E7 (10,000,000) cfu/g</td><td>Each batch</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- TESCO -->
+  <div class="section-title">Tesco — Microbiological Testing Specifications</div>
+  <div class="note">Tesco requires legislative compliance for Salmonella/Campylobacter/E. coli O157 though testing on finished product is not mandatory — it can be as part of a pathogen reduction or monitoring scheme. Most appropriate sampling site should be selected (farm, carcass, finished product). Results exceeding legal limits (if on Tesco product) must be reported.</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Spec 1 — Fresh Meat &amp; Poultry Uncured · Full Customer Cook from Chilled or Frozen · e.g. Raw chicken, whole muscle cuts</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test</th><th>Target</th><th>Report</th><th>Frequency</th></tr></thead>
+    <tbody>
+      <tr><td>¹Aerobic colony count (ACC)</td><td class="num">&lt;1×10⁵ per g</td><td class="num" style="color:#f87171;">1×10⁶ per g</td><td>Each batch</td></tr>
+      <tr><td>²<i>Pseudomonas</i> species</td><td class="num">&lt;5×10³ per g</td><td class="num" style="color:#fbbf24;">5×10⁵ per g</td><td>Each batch</td></tr>
+      <tr><td>¹<i>Escherichia coli</i></td><td class="num">&lt;50 per g</td><td class="num" style="color:#fbbf24;">5×10² per g</td><td>Each batch</td></tr>
+      <tr><td>³Anaerobic colony count</td><td class="num">&lt;1×10⁵ per g</td><td class="num" style="color:#f87171;">1×10⁶ per g</td><td>Each bulk consignment</td></tr>
+      <tr><td>⁴<i>Cl. estertheticum</i></td><td>Absence / swab</td><td>Absence / swab</td><td>See note ³</td></tr>
+      <tr><td>⁴<i>Campylobacter</i></td><td colspan="2">5% or less whole birds with levels of 1×10³ per g or greater</td><td>—</td></tr>
+      <tr><td>¹<i>Salmonella</i>, <i>E. coli</i> O157</td><td colspan="3">Legislative / pathogen reduction scheme. See note above.</td></tr>
+      <tr><td>²<i>Salmonella</i>, <i>Campylobacter</i></td><td colspan="3">Legislative / pathogen reduction scheme. See note above.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note" style="margin-bottom:10px;">¹ Red meats (beef, pork, lamb, venison etc.) · ² Poultry and other avian species · ³ Long life vacuum packed products only (35+ days, 0 to -2°C primals + 14 days finished product) — must have deep clean, fogging with peracetic acid, and monitoring programme targeting key equipment · ⁴ Same as ³ conditions</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Spec 5 — Flash Fried &amp; Value Added Meat &amp; Poultry · Full Customer Cook Chilled or Frozen · e.g. Breaded chicken, BBQ ranges</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Test</th><th>Target</th><th>Report</th><th>Frequency</th></tr></thead>
+    <tbody>
+      <tr><td>¹Aerobic colony count (ACC)</td><td class="num">&lt;5×10⁵ per g</td><td class="num" style="color:#f87171;">5×10⁶ per g</td><td>Each batch</td></tr>
+      <tr><td>²<i>Pseudomonas</i> species</td><td class="num">&lt;1×10⁴ per g</td><td class="num" style="color:#fbbf24;">1×10⁵ per g</td><td>Each batch</td></tr>
+      <tr><td>¹<i>Escherichia coli</i></td><td class="num">&lt;50 per g</td><td class="num" style="color:#fbbf24;">5×10² per g</td><td>Each batch</td></tr>
+      <tr><td>³<i>Staphylococcus aureus</i></td><td class="num">&lt;1×10² per g</td><td class="num" style="color:#fbbf24;">5×10² per g</td><td>Monthly</td></tr>
+      <tr><td>¹<i>Salmonella</i>, <i>E. coli</i> O157 · ²<i>Salmonella</i>, <i>Campylobacter</i> · ²<i>E. coli</i></td><td colspan="3">Legislative / pathogen reduction / monitoring scheme. Results on Tesco product must be reported if exceeding legal limits.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">¹ Red meats · ² Poultry and other avian species · ³ Only products coated with batter, unless batter system controlled (batter temp &lt;10°C, or full clean down every 4–8 hrs). Test is on raw batter directly.</div>
+
+  <div style="font-weight:700;color:var(--accent2);font-size:12px;margin:10px 0 6px;">Tesco Test Frequency Schedule (number of products supplied to Tesco)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Products Supplied</th><th>Daily</th><th>Weekly</th><th>Monthly</th><th>Survey</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1–4</td><td>Test each product daily</td><td>Test each product weekly</td><td>Test each product monthly</td><td>Each product tested annually minimum</td></tr>
+      <tr><td class="num">5–10</td><td>One product per day + all covered over the month</td><td>One product per week + all covered over 2 months</td><td>Two products per month + all covered over 3 months</td><td>Each product tested annually minimum</td></tr>
+      <tr><td class="num">&gt;10</td><td colspan="4">Alternative sampling plan — ensures adequate coverage of different production lines and raw materials. Must be agreed with Tesco Technical Manager.</td></tr>
+    </tbody>
+  </table></div>
+
+  <!-- QUICK COMPARISON -->
+  <div class="section-title">Quick Comparison — Pseudomonas Limits by Customer (Product)</div>
+  <div class="note">This is the answer to the question "what is the Pseudomonas limit for product?" — it's customer-dependent. None of these limits appear in the internal 2SFG procedure document.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Customer</th><th>Product Type</th><th>Target</th><th>Report / Unacceptable</th><th>Frequency</th></tr></thead>
+    <tbody>
+      <tr><td><b>Aldi</b></td><td>Finished product</td><td class="num">&lt;5,000 cfu/g (SOL)</td><td class="num" style="color:#f87171;">&lt;10,000,000 cfu/g (EOL)</td><td>Daily/Weekly/Monthly</td></tr>
+      <tr><td><b>ASDA Cat 4 &amp; 5</b></td><td>Raw poultry</td><td class="num">&lt;10,000 cfu/g</td><td class="num" style="color:#f87171;">&gt;1,000,000 cfu/g</td><td>—</td></tr>
+      <tr><td><b>Co-op</b></td><td>Raw poultry incl. coated</td><td class="num">&lt;10,000/g</td><td class="num" style="color:#f87171;">&gt;10,000,000/g</td><td>Each batch</td></tr>
+      <tr><td><b>Iceland (Cutting)</b></td><td>Raw meat &amp; poultry</td><td class="num">&lt;10,000 cfu/g</td><td class="num" style="color:#f87171;">1,000,000 cfu/g</td><td>Per batch</td></tr>
+      <tr><td><b>Iceland (Added Value)</b></td><td>Value added/flash fried</td><td class="num">&lt;100,000 cfu/g</td><td class="num" style="color:#f87171;">100,000 cfu/g</td><td>Per batch</td></tr>
+      <tr><td><b>KFC</b></td><td>Finished product</td><td class="num">&lt;5,000 cfu/g</td><td class="num" style="color:#f87171;">10,000,000 cfu/g</td><td>Monthly</td></tr>
+      <tr><td><b>M&amp;S</b></td><td>Raw poultry (process hygiene)</td><td class="num">&lt;10,000 cfu/g</td><td class="num" style="color:#f87171;">&gt;10,000,000 cfu/g</td><td>Daily</td></tr>
+      <tr><td><b>Ocado</b></td><td>RTC poultry (process hygiene · EOL)</td><td class="num">&lt;100,000 cfu/g</td><td class="num" style="color:#f87171;">10,000,000 cfu/g</td><td>Each batch</td></tr>
+      <tr><td><b>Tesco Spec 1</b></td><td>Fresh poultry (raw)</td><td class="num">&lt;5,000 per g</td><td class="num" style="color:#fbbf24;">500,000 per g</td><td>Each batch</td></tr>
+      <tr><td><b>Tesco Spec 5</b></td><td>Flash fried / value added</td><td class="num">&lt;10,000 per g</td><td class="num" style="color:#fbbf24;">100,000 per g</td><td>Each batch</td></tr>
+    </tbody>
+  </table></div>
+
+</div>
+
 <!-- ═══════════════════════════ SEARCH SCRIPT ═══════════════════════════ -->
 <script>
 // ── Search index ──────────────────────────────────────────────────────────
@@ -632,7 +1183,72 @@ const SEARCH_INDEX = [
   { t:'OOS out of spec results phone email immediate', d:'OOS results must be reported immediately by telephone or email — not waiting for weekly MIMS update.', cat:'Actions', tab:'actions' },
   { t:'Category 2 waste disposal salmonella positive', d:'Confirmed Salmonella (mince/meat preps): dispose batch as Category 2 material. SE/ST poultrymeat: Cat 2 or heat-treated Cat 3 if not sent to market.', cat:'Actions', tab:'actions' },
   { t:'96% improvement plan product', d:'If fewer than 96% of routine product results are at or below the standard (m) limit — an improvement plan must be put in place.', cat:'Actions', tab:'actions' },
-];
+  // PROCEDURES
+  { t:'water tap 2 minutes before sampling', d:'Tap must be left to run for 2 minutes before collecting a water sample. Appendix 1.', cat:'Procedures', tab:'procedures' },
+  { t:'water bottle sodium thiosulphate chlorine', d:'Bottles dosed with sodium thiosulphate required for chlorinated water (including all tap water). Must be ordered from lab. Appendix 1.', cat:'Procedures', tab:'procedures' },
+  { t:'sponge swab technique bag as glove', d:'Open sponge swab bag and pull back over hand, grasping sponge through the bag. Use the bag as a glove to collect the sample. Do not touch the sponge directly. Pull bag back over sponge and seal. Appendix 4.', cat:'Procedures', tab:'procedures' },
+  { t:'stick swab jumbo transport technique', d:'Check seal before use. Dip transport swab into tube to moisten. Jumbo swab is pre-moistened. Swab in all directions rotating to use entire surface. Return to tube, seal properly. Appendix 4.', cat:'Procedures', tab:'procedures' },
+  { t:'aseptic product sampling bag inside out', d:'Turn bag inside out, pick up product with hand on outside of bag (product inside). Pull bag right way out. Nothing must touch inside of bag except product. Appendix 5.', cat:'Procedures', tab:'procedures' },
+  { t:'neck skin slash glove sterile knife ATC', d:'Grab neck flap with slash-glove hand, remove with sterile knife. Fold bag back over hand inside-out as sterile sleeve. Verify label against ATC before sampling. Steriliser min 82°C. Carcasses chilled ≥1.5 hrs first. Appendix 7.', cat:'Procedures', tab:'procedures' },
+  { t:'neck skin contamination crops dispose re-take', d:'If neck skin is contaminated (crops or other contamination) — dispose samples, sanitise all equipment, re-take the samples. Appendix 7.', cat:'Procedures', tab:'procedures' },
+  { t:'air plate stabilise one hour room temperature', d:'Air plates must stabilise at room temperature for 1 hour before exposing. Store at 2–5°C, do not push to back of fridge — may freeze. Appendix 2.', cat:'Procedures', tab:'procedures' },
+  { t:'active air sampler device how to use', d:'Remove lid → unscrew top → insert plate agar facing up → remove plate lid → screw top back → press Yes → samples ~1 min → powers down → remove top → remove plate → replace lid. Tape. Appendix 2.', cat:'Procedures', tab:'procedures' },
+  { t:'control swab control plate not opened return', d:'Control swabs must NOT be used to sample. Control plates must NOT be opened. Both must be labelled, taped, and returned with samples. Appendix 2, Appendix 4.', cat:'Procedures', tab:'procedures' },
+  { t:'Listeria low risk raw poultry no testing', d:'Since raw poultry is cooked by consumer, Listeria is low risk in low care environments. NOT routinely tested in low care. Sites with high care need separate Listeria RA and testing programme. Appendix 8.', cat:'Procedures', tab:'procedures' },
+  { t:'pre-soaked swab neutralise cleaning agents surfactant', d:'If pre-soaked transit swabs are not used, pre-soak swab tips with a sterile chemical to neutralise cleaning agents and a surfactant to remove more debris. Appendix 4.', cat:'Procedures', tab:'procedures' },
+  { t:'ISO 18593 swabbing standard', d:'Environmental swabbing methodology reference standard: ISO 18593:2018. Covers sampling location, area, time, and frequency recommendations. Appendix 4.', cat:'Procedures', tab:'procedures' },
+  { t:'alcohol wipes methylated spirits sterilise knife spoon', d:'Sub-sample sterile utensils: dip into methylated spirits and flame, or use alcohol wipes. Do not re-contaminate sterilised area before use. Appendix 5.', cat:'Procedures', tab:'procedures' },
+  { t:'Salmonella matrix week day rotation', d:'8-week rolling matrix. Sample on different day each week. Rotate product types and customers weekly. Each site generates its own schedule per production plan. Appendix 6.', cat:'Procedures', tab:'procedures' },
+  // RACI
+  { t:'RACI site technical lead accountable responsible', d:'Implementation and monitoring: R=Site Technical Lead · A=Divisional Technical Controller · C=STL/DTC · I=TLT/KPI reporting', cat:'RACI', tab:'raci' },
+  { t:'RACI sampling testing QA manager', d:'Sampling and testing: R=Checkers/Testers · A=QA Manager · C=Site Technical Lead · I=Site Technical Lead/KPI', cat:'RACI', tab:'raci' },
+  { t:'RACI data input MIMS compliance manager', d:'Input data: R=KPI administrators · A=Compliance Manager · C=Site Technical Lead · I=Site Technical Lead/KPI', cat:'RACI', tab:'raci' },
+  { t:'training record signature employee', d:'Training record: Trainer name+signature, Date/time, Employee name+signature, Interpreter name+signature (if applicable). Signature confirms commitment to follow requirements, not just attendance.', cat:'RACI', tab:'raci' },
+  { t:'procedure objective scope', d:'Objective: micro testing complies with legal requirements, customer specs, and correct frequencies. Consistent sampling methods for reliable results. Scope: ingredients, WIP, finished products, water, air, equipment validation.', cat:'RACI', tab:'raci' },
+  { t:'hygiene manager swab results access record', d:'Site Hygiene Manager must have access to all swab results and must record all actions taken as a result of failures and trends.', cat:'RACI', tab:'raci' },
+  { t:'AWO deputy SHS marker authorise', d:'AWO or deputy must authorise processing of SHS (Salmonella positive) flocks and physically remove the SHS marker before processing begins.', cat:'RACI', tab:'raci' },
+  // DOCUMENT CONTROL
+  { t:'D2.0 changes log ghost batch SE ST escalation', d:'D2.0 (17/10/2025): Added ghost batch wording requirement. Added SE/ST escalation to DTC+TD. Added positive Salmonella escalation (mince/meat preps). Added "fully typed" requirement. Added "at end of life" to Salmonella sampling.', cat:'Document Control', tab:'doccontrol' },
+  { t:'D1.0 changes log warning standard removed 98%', d:'D1.0 (23/05/2025): Warning standard removed from swabs — now Pass/Fail only. Pass rate updated to 98%. Listeria section removed. ATP swabbing references removed. Water testing updated. Ice testing clause added.', cat:'Document Control', tab:'doccontrol' },
+  { t:'version D2.0 17 October 2025 issued authorised', d:'Current version: D2.0 · Date: 17/10/2025 · Issued by: UKP Technical Services Manager · Authorised by: Technical Manager · 19 pages', cat:'Document Control', tab:'doccontrol' },
+  { t:'2SFG-S035 group policy swab pass fail', d:'Group policy statement 2SFG-S035 is the basis for the swab pass rate of 98% and the Pass ≤1000 / Fail >1000 limits introduced in D1.0.', cat:'Document Control', tab:'doccontrol' },
+  { t:'EU Directive 98/83 water potable', d:'Potable water specification standards governed by Retained EU Law — EU Directive 98/83/EC.', cat:'Document Control', tab:'doccontrol' },
+  { t:'ISO 4833 ISO 16649 EN ISO 6579 method references', d:'ISO 4833 = TVC/ACC method. ISO 16649-1 or -2 = E. coli enumeration. EN/ISO 6579 = Salmonella detection. ISO 18593:2018 = Environmental swabbing guidance.', cat:'Document Control', tab:'doccontrol' },
+  { t:'review record annual significant changes', d:'Procedure reviewed annually or after significant changes to process flow or equipment per M3 swabbing RA requirement. Review Record (M9) maintained in live document.', cat:'Document Control', tab:'doccontrol' },
+  // CUSTOMER COPs
+  { t:'COP code of practice full form meaning', d:'COP = Code of Practice. Per-customer microbiological limits documents. These limits are what results are judged against for each retailer — they may be tighter than the internal 2SFG procedure.', cat:'Customer COPs', tab:'cop' },
+  { t:'Aldi pseudomonas limit product', d:'Aldi Pseudomonas: SOL target <5,000 cfu/g · EOL target <10,000,000 cfu/g · Testing: SOL Daily/Weekly/Monthly, EOL Annual. UKAS No.1916.', cat:'Customer COPs', tab:'cop' },
+  { t:'Aldi E coli limit', d:'Aldi E. coli: SOL target <100 cfu/g · EOL target <500 cfu/g · Testing: SOL Daily/Weekly/Monthly, EOL Annual.', cat:'Customer COPs', tab:'cop' },
+  { t:'Aldi campylobacter limit', d:'Aldi Campylobacter: SOL target <500 cfu/g · EOL target <1000 cfu/g · Frequency: Monthly/Annually.', cat:'Customer COPs', tab:'cop' },
+  { t:'Aldi salmonella limit', d:'Aldi Salmonella: Absent in 25g (SOL and EOL) · Frequency: Weekly/Monthly/Annually EOL on each SKU.', cat:'Customer COPs', tab:'cop' },
+  { t:'ASDA pseudomonas limit raw poultry', d:'ASDA Cat 4 & 5 Raw Poultry: Pseudomonas target <10,000 cfu/g · Report limit >1,000,000 cfu/g.', cat:'Customer COPs', tab:'cop' },
+  { t:'ASDA E coli limit', d:'ASDA Cat 4 & 5: E. coli target <100 cfu/g · Report limit >1,000 cfu/g. Cat 2 stuffing: <100, Report >1,000. Due diligence test.', cat:'Customer COPs', tab:'cop' },
+  { t:'ASDA salmonella campylobacter', d:'ASDA: Salmonella Not Detected / Detected. Campylobacter spp/25g Not Detected / Detected; Campylobacter cfu/g target <10, report >1000. Pathogen testing NOT required on first production.', cat:'Customer COPs', tab:'cop' },
+  { t:'ASDA E coli O157 stuffing', d:'ASDA Cat 2 Raw Meat With Stuffing: E. coli O157/25g Not Detected / Detected (red — immediate action).', cat:'Customer COPs', tab:'cop' },
+  { t:'Co-op pseudomonas limit', d:'Co-op Cat 42 Raw Poultry: Pseudomonas <10,000/g target · >10,000,000/g unacceptable · Frequency: Each batch.', cat:'Customer COPs', tab:'cop' },
+  { t:'Co-op E coli limit', d:'Co-op: E. coli <10/g target · >500/g unacceptable · Weekly · 5×25g samples spaced over production run.', cat:'Customer COPs', tab:'cop' },
+  { t:'Co-op campylobacter limit', d:'Co-op: Campylobacter <600 cfu/g target · >1000 cfu/g unacceptable · Monthly.', cat:'Customer COPs', tab:'cop' },
+  { t:'Co-op salmonella', d:'Co-op: Salmonella ND in 25g target · Present in 25g unacceptable · Weekly · 5×25g samples. Shelf life K+20d unless deep chill.', cat:'Customer COPs', tab:'cop' },
+  { t:'Co-op yeasts S aureus marinated coated', d:'Co-op: Yeasts <10,000/g target · >1,000,000/g unacceptable · Weekly. S. aureus <20/g · >100/g unacceptable. Both: marinated/coated products only (^).', cat:'Customer COPs', tab:'cop' },
+  { t:'Co-op do not wash statement packaging', d:'Co-op requires packaging to include a "Do Not Wash" statement — per Co-op Food Cooking & Reheat Guidelines Policy.', cat:'Customer COPs', tab:'cop' },
+  { t:'Iceland pseudomonas limit cutting raw poultry', d:'Iceland Raw Meat & Poultry (cutting): Pseudomonas <10,000 cfu/g target · 1,000,000 cfu/g out of spec · Per batch.', cat:'Customer COPs', tab:'cop' },
+  { t:'Iceland pseudomonas added value flash fried', d:'Iceland Value Added (flash fried, breaded, marinated): Pseudomonas <100,000 cfu/g target · 100,000 cfu/g out of spec · Per batch.', cat:'Customer COPs', tab:'cop' },
+  { t:'Iceland E coli O157 Clostridium perfringens', d:'Iceland: E. coli O157 Not Detected/Detected, Monthly (red meat only). Clostridium perfringens <100 cfu/g / 100 cfu/g, Weekly (long life vacuum packed only).', cat:'Customer COPs', tab:'cop' },
+  { t:'Iceland campylobacter whole bird FSA', d:'Iceland Campylobacter (raw poultry): <10 cfu/g target · 1,000 cfu/g OOS · Monthly. Whole bird monitoring only: FSA guidance, target <10% of whole birds at ≥1000 cfu/g.', cat:'Customer COPs', tab:'cop' },
+  { t:'Iceland salmonella', d:'Iceland: Salmonella Not Detected / Detected · Monthly.', cat:'Customer COPs', tab:'cop' },
+  { t:'KFC TVC enterobacteriaceae limits', d:'KFC: TVC <5×10⁵ target / 1×10⁶ USL each batch. Enterobacteriaceae <1×10⁴ / 1×10⁴ USL each batch. All SPECS & SGS.', cat:'Customer COPs', tab:'cop' },
+  { t:'KFC pseudomonas E coli campylobacter salmonella', d:'KFC: Pseudomonas <5×10³ target / 1×10⁷ USL Monthly. E. coli <5×10² / 5×10² each batch. Campylobacter <1×10³ / 1×10³ Monthly. Salmonella absent in 25g each batch/weekly (EU reg 2073/2005).', cat:'Customer COPs', tab:'cop' },
+  { t:'MS marks spencer pseudomonas daily process hygiene', d:'M&S Test 51: Pseudomonas <10,000 cfu/g target · Action 10⁴–10⁷ · Report >10,000,000 cfu/g · Daily. Trend, investigate and action adverse trends.', cat:'Customer COPs', tab:'cop' },
+  { t:'MS campylobacter FSA BRC quarterly', d:'M&S Test 59: Campylobacter <1,000 cfu/g target · Action 1,000–10,000 · Report >10,000 cfu/g. Protocol defined by FSA. Results submitted to FSA via BRC quarterly (anonymised). Reported on M&S website quarterly.', cat:'Customer COPs', tab:'cop' },
+  { t:'MS salmonella neck skin detection 10g', d:'M&S Test 11/12: Salmonella spp. ND in 25g target · Report: Detected in 10g. If present in 25g → report immediately to M&S IT, set up incident management team, RA may lead to product withdrawal.', cat:'Customer COPs', tab:'cop' },
+  { t:'MS TVC E coli baseline daily', d:'M&S Tests 56 (TVC) and 57 (E. coli): Daily. Establish baseline by product and monitor deviations. No fixed numeric limit — trend-based.', cat:'Customer COPs', tab:'cop' },
+  { t:'Ocado pseudomonas process hygiene EOL', d:'Ocado Pseudomonas (process hygiene): EOL (start, middle, end of life for shelf life validation). Target <10E5 (100,000) cfu/g · Action 10E7 (10,000,000) cfu/g · Each batch.', cat:'Customer COPs', tab:'cop' },
+  { t:'Ocado salmonella campylobacter safety criteria', d:'Ocado Safety criteria: Salmonella ND in 25g / Detected in 25g · Monthly. Campylobacter <1000 cfu/g / ≥1000 cfu/g · Monthly. OOS: Isolate stock, contact Ocado PTM/PT for RA before action.', cat:'Customer COPs', tab:'cop' },
+  { t:'Tesco pseudomonas fresh poultry value added', d:'Tesco Spec 1 (fresh raw): Pseudomonas <5,000/g target · Report 500,000/g · Each batch. Tesco Spec 5 (flash fried/value added): <10,000/g target · Report 100,000/g · Each batch.', cat:'Customer COPs', tab:'cop' },
+  { t:'Tesco ACC aerobic colony count', d:'Tesco Spec 1: ACC <1×10⁵/g · Report 1×10⁶/g · Each batch. Tesco Spec 5: <5×10⁵/g · Report 5×10⁶/g · Each batch.', cat:'Customer COPs', tab:'cop' },
+  { t:'Tesco E coli Staphylococcus anaerobic', d:'Tesco Spec 1: E. coli <50/g · Report 5×10²/g each batch. Anaerobic count <1×10⁵/g each bulk consignment. Spec 5: E. coli <50/g · S. aureus <100/g Monthly (coated/batter products).', cat:'Customer COPs', tab:'cop' },
+  { t:'Tesco testing frequency schedule 1-4 5-10 more than 10', d:'Tesco frequency by number of products supplied: 1–4 products = test each daily/weekly/monthly. 5–10 = rotate coverage. >10 = alternative plan agreed with Tesco Technical Manager.', cat:'Customer COPs', tab:'cop' },
+  { t:'Tesco salmonella campylobacter legislative pathogen reduction', d:'Tesco: Salmonella, Campylobacter, E. coli O157 compliance via pathogen reduction or monitoring scheme. Not required on finished Tesco product but results exceeding legal limits must be reported. Most appropriate sampling site selected (farm, carcass, finished product).', cat:'Customer COPs', tab:'cop' },];
 
 function hl(text, q) {
   if (!q) return text;
@@ -680,7 +1296,7 @@ function goToTab(tabId, title) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tabId).classList.add('active');
   const btns = document.querySelectorAll('.tab-btn');
-  const tabOrder = ['limits','sample','timing','mims','actions'];
+  const tabOrder = ['limits','sample','timing','mims','actions','procedures','raci','doccontrol','cop'];
   const idx = tabOrder.indexOf(tabId);
   if (btns[idx]) btns[idx].classList.add('active');
   results.style.display = 'none';
