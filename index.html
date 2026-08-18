@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2SFG Micro Reference – Scunthorpe</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c26;
+    --border: #252a38;
+    --accent: #3b82f6;
+    --accent2: #22d3ee;
+    --pass: #16a34a;
+    --warn: #ca8a04;
+    --fail: #dc2626;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --label: #94a3b8;
+    --mono: 'Courier New', monospace;
+    --sans: system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 13px; line-height: 1.5; padding: 16px; }
+
+  header { border-bottom: 2px solid var(--accent); padding-bottom: 12px; margin-bottom: 18px; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.04em; color: #fff; }
+  header h1 span { color: var(--accent2); }
+  .meta { font-size: 11px; color: var(--muted); }
+
+  /* Search bar */
+  .search-wrap { position: relative; margin-bottom: 18px; }
+  #globalSearch {
+    width: 100%; padding: 10px 14px 10px 38px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text); font-size: 13px; outline: none;
+    transition: border-color 0.15s;
+  }
+  #globalSearch:focus { border-color: var(--accent); }
+  .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 15px; pointer-events: none; }
+  #searchResults {
+    display: none; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; margin-top: 6px; max-height: 480px; overflow-y: auto;
+  }
+  .sr-section { padding: 6px 12px 2px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); border-top: 1px solid var(--border); }
+  .sr-section:first-child { border-top: none; }
+  .sr-item { padding: 8px 12px; border-bottom: 1px solid var(--border); cursor: pointer; }
+  .sr-item:last-child { border-bottom: none; }
+  .sr-item:hover { background: #1e2535; }
+  .sr-item .sr-title { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .sr-item .sr-sub { font-size: 11px; color: var(--label); }
+  .sr-item .sr-tag { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 10px; font-weight: 700; margin-left: 6px; }
+  .sr-no-results { padding: 14px 12px; color: var(--muted); font-size: 12px; }
+  mark { background: #2563eb44; color: var(--accent2); border-radius: 2px; padding: 0 2px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 18px; }
+  .tab-btn { background: var(--surface); border: 1px solid var(--border); color: var(--label); padding: 6px 13px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; transition: all 0.15s; }
+  .tab-btn:hover { border-color: var(--accent); color: var(--text); }
+  .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); margin: 20px 0 10px; border-left: 3px solid var(--accent2); padding-left: 8px; }
+
+  .tbl-wrap { overflow-x: auto; margin-bottom: 16px; border-radius: 6px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: #1e2433; }
+  thead th { padding: 9px 12px; text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--label); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #1a2030; }
+  td { padding: 8px 12px; vertical-align: top; }
+  td.num { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+  .pill-pass    { background: #14532d; color: #4ade80; }
+  .pill-warn    { background: #422006; color: #fbbf24; }
+  .pill-fail    { background: #450a0a; color: #f87171; }
+  .pill-abs     { background: #1e1b4b; color: #a5b4fc; }
+  .pill-info    { background: #0c2344; color: #60a5fa; }
+  .pill-caution { background: #3b2906; color: #fcd34d; }
+
+  .note { background: #0f1e35; border-left: 3px solid var(--accent); padding: 8px 12px; border-radius: 0 4px 4px 0; margin-bottom: 12px; font-size: 12px; color: var(--label); }
+  .note b { color: var(--text); }
+  .note.warn { background: #1c1400; border-left-color: #ca8a04; }
+  .note.pass { background: #0a1f10; border-left-color: #16a34a; }
+
+  .mims-col { font-family: var(--mono); font-size: 11px; color: var(--accent2); }
+  .code { font-family: var(--mono); font-size: 11px; background: #1e2433; padding: 1px 5px; border-radius: 3px; color: var(--accent2); }
+
+  .timing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .timing-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 12px 14px; }
+  .timing-card .t-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 3px; }
+  .timing-card .t-type { font-weight: 700; color: var(--text); font-size: 13px; margin-bottom: 5px; }
+  .timing-card .t-deadline { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent2); line-height: 1; }
+  .timing-card .t-unit { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .timing-card .t-cond { font-size: 11px; color: var(--label); margin-top: 4px; }
+
+  /* MIMS tab suite grid */
+  .suite-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .suite-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; }
+  .suite-card .sc-code { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--accent2); margin-bottom: 3px; }
+  .suite-card .sc-name { font-size: 12px; color: var(--text); margin-bottom: 2px; }
+  .suite-card .sc-meta { font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>2SFG Scunthorpe · <span>Micro Reference</span></h1>
+  <div class="meta">Procedure D2.0 (17/10/2025) + MIMS Save File context</div>
+</header>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input id="globalSearch" type="search" placeholder="Search organism, limit, suite code, MIMS field, product type…" autocomplete="off">
+  <div id="searchResults"></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('limits',this)">Limits by Organism</button>
+  <button class="tab-btn" onclick="showTab('sample',this)">Sample Types &amp; Frequency</button>
+  <button class="tab-btn" onclick="showTab('timing',this)">Timing &amp; Transport</button>
+  <button class="tab-btn" onclick="showTab('mims',this)">MIMS Fields &amp; Codes</button>
+  <button class="tab-btn" onclick="showTab('actions',this)">Actions on Failure</button>
+</div>
+
+<!-- ═══════════════════════════ TAB 1: LIMITS ═══════════════════════════ -->
+<div id="tab-limits" class="tab-panel active">
+
+  <div class="section-title">Environmental Swabs (Table 4) — cfu/swab</div>
+  <div class="note warn"><b>Warning standard removed D1.0 May 2025.</b> No amber band — strictly Pass / Fail only. Overall site KPI = ≥98% pass rate; action required if it drops below.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Organism</th><th>Pass</th><th>Fail</th><th>MIMS column</th></tr></thead>
+    <tbody>
+      <tr><td>TVC (Total Viable Count)</td><td class="num"><span class="pill pill-pass">0 – 1000</span></td><td class="num"><span class="pill pill-fail">&gt; 1000</span></td><td class="mims-col">TVCF / TP4100</td></tr>
+      <tr><td>Pseudomonas spp.</td><td class="num"><span class="pill pill-pass">0 – 1000</span></td><td class="num"><span class="pill pill-fail">&gt; 1000</span></td><td class="mims-col">PsFc / TP4115</td></tr>
+      <tr><td>Enterobacteriaceae</td><td class="num"><span class="pill pill-pass">&lt; 100</span></td><td class="num"><span class="pill pill-fail">&gt; 100</span></td><td class="mims-col">EntF / TP4103</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Campylobacter Swabs — Live Collection Equipment (Table 5) — cfu/swab</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Result Band</th><th>Range (cfu/swab)</th></tr></thead>
+    <tbody>
+      <tr><td>Absent</td><td class="num"><span class="pill pill-pass">&lt; 10</span></td></tr>
+      <tr><td>Present – Low Level</td><td class="num"><span class="pill pill-info">&lt; 100</span></td></tr>
+      <tr><td>Present – Moderate Level</td><td class="num"><span class="pill pill-warn">100 – 1000</span></td></tr>
+      <tr><td>Present – High Level</td><td class="num"><span class="pill pill-fail">&gt; 1000</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Hand Swabs (Table 6) — cfu/swab</div>
+  <div class="note"><b>Sampled weekly.</b> 5 randomly chosen operatives from production area, taken after hand washing station. Swab ~10×10 cm covering wrist, between fingers, palms, fingertips, nail beds.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Organism</th><th>Pass</th><th>Caution</th><th>Fail</th><th>MIMS column</th></tr></thead>
+    <tbody>
+      <tr><td><i>S. aureus</i> (Coag Pos Staph)</td><td class="num"><span class="pill pill-pass">&lt; 10</span></td><td class="num"><span class="pill pill-caution">10 – 100</span></td><td class="num"><span class="pill pill-fail">&gt; 100</span></td><td class="mims-col">SaFc</td></tr>
+      <tr><td><i>E. coli</i></td><td class="num"><span class="pill pill-pass">&lt; 10</span></td><td class="num"><span class="pill pill-caution">10 – 100</span></td><td class="num"><span class="pill pill-fail">&gt; 100</span></td><td class="mims-col">EcF / TP4133</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Air Quality (Table 3) — cfu/plate</div>
+  <div class="note"><b>Air plates:</b> stored 2–5°C (do not freeze). Stabilise at room temp for 1 hour before exposing. Expose for 1 hour (passive) or ~1 min (active sampler). Deliver within 20 min direct, or refrigerate (&lt;5°C pref, max 8°C) and transport within 24 hrs. Results invalid if received &gt;24 hrs.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Category</th><th>Yeast &amp; Moulds (cfu/plate)</th><th>TVC (cfu/plate)</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill pill-pass">Acceptable</span></td><td class="num">&lt; 10</td><td class="num">&lt; 100</td><td>No action</td></tr>
+      <tr><td><span class="pill pill-warn">Warning</span></td><td class="num">10 – 20</td><td class="num">100 – 1000</td><td>Corrective action + repeat until satisfactory</td></tr>
+      <tr><td><span class="pill pill-fail">Adverse</span></td><td class="num">&gt; 20</td><td class="num">&gt; 1000</td><td>Repeat + investigate + correct</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Water Microbiology (Table 2)</div>
+  <div class="note"><b>Chlorinated water:</b> sodium thiosulphate must be added by lab to neutralise residual chlorine. Tap must run 2 minutes before sampling. Store 2–4°C dark. Target within 6 hrs; hard limit 24 hrs.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Organism / Determinant</th><th>Limit</th><th>Unit</th><th>Action Category</th></tr></thead>
+    <tbody>
+      <tr><td>TVC at 22°C</td><td>No abnormal change*</td><td>—</td><td><span class="pill pill-warn">Low Level / Quality Compliance</span></td></tr>
+      <tr><td>TVC at 37°C</td><td class="num">&lt; 1</td><td>cfu/ml</td><td><span class="pill pill-warn">Low Level / Quality Compliance</span></td></tr>
+      <tr><td>Total Coliforms</td><td class="num">0</td><td>cfu/100ml</td><td><span class="pill pill-warn">Low Level Positive</span> → <span class="pill pill-fail">High Level if ≥3/100ml in 2 consecutive or &gt;5% in a year</span></td></tr>
+      <tr><td><i>E. coli</i></td><td class="num">0</td><td>cfu/100ml</td><td><span class="pill pill-fail">High Level Positive</span></td></tr>
+      <tr><td>Enterococci</td><td class="num">0</td><td>cfu/100ml</td><td><span class="pill pill-fail">High Level Positive</span></td></tr>
+      <tr><td><i>Clostridium perfringens</i> (surface-influenced water only)</td><td class="num">0</td><td>cfu/100ml</td><td><span class="pill pill-fail">High Level Positive</span></td></tr>
+      <tr><td>Sulphite Reducing Clostridia</td><td class="num">0</td><td>cfu/100ml</td><td>Customer specific</td></tr>
+      <tr><td>Faecal Coliforms</td><td class="num">&lt; 1</td><td>cfu/ml</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note" style="margin-top:-8px;">*Abnormal change = deviation from trend identified during routine testing, or considerable deviation from results provided by water supplier or local authority.</div>
+
+  <div class="section-title">Legally Required Finished Product Testing (Table 7) — cfu/g</div>
+  <div class="note"><b>How to read n / c / m / M:</b><br>
+    <b>n</b> = number of sample units taken (always 5 here) &nbsp;·&nbsp;
+    <b>c</b> = max units allowed to fall <i>between</i> m and M before batch fails &nbsp;·&nbsp;
+    <b>m</b> = standard/target — aim to be below this &nbsp;·&nbsp;
+    <b>M</b> = absolute ceiling — ANY unit above M = automatic fail regardless of others.<br><br>
+    <b>Example — Meat Preparations E. coli (the 5000 rule):</b> Take 5 units. Up to 2 may fall between 500–5000 cfu/g (the amber zone). If 3+ fall in that zone OR any single unit exceeds 5000 → batch fails outright. All 5 under 500 = compliant. The "limit" people quote as 5000 is M — the ceiling. The real target (m) is 500.
+  </div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Product Type</th><th>Organism &amp; Method</th><th>n</th><th>c</th><th>m (standard)</th><th>M (ceiling)</th><th>OOS %</th></tr></thead>
+    <tbody>
+      <tr><td>Minced Meat</td><td>Aerobic Colony Count · ISO 4833 · tested without delay</td><td class="num">5</td><td class="num">2</td><td class="num">5×10⁵ cfu/g</td><td class="num">5×10⁶ cfu/g</td><td class="num"><span class="pill pill-fail">&gt;40%</span></td></tr>
+      <tr><td>Minced Meat</td><td><i>E. coli</i> · ISO 16649-1/2 · tested without delay</td><td class="num">5</td><td class="num">2</td><td class="num">50 cfu/g</td><td class="num">500 cfu/g</td><td>—</td></tr>
+      <tr><td>Meat Preparations</td><td><i>E. coli</i> · ISO 16649-1/2 · tested without delay</td><td class="num">5</td><td class="num">2</td><td class="num">500 cfu/g</td><td class="num" style="color:#f87171;font-weight:700;">5000 cfu/g</td><td>—</td></tr>
+      <tr><td>Poultrymeat (portions &amp; wholebirds)</td><td><i>Salmonella</i> Enteritidis (SE) + Typhimurium (ST) · EN/ISO 6579 · tested at EOL</td><td class="num">5</td><td class="num">0</td><td colspan="2"><span class="pill pill-abs">Absence in 25g</span></td><td class="num"><span class="pill pill-fail">&gt; 0%</span></td></tr>
+      <tr><td>Mince, Meat Preps &amp; Meat Products</td><td><i>Salmonella</i> all species · EN/ISO 6579 · tested at EOL</td><td>—</td><td>—</td><td colspan="2"><span class="pill pill-abs">Absence</span></td><td>—</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note pass"><b>Salmonella batch rules:</b> Batch = production run from single slaughter date · Min. 5 cases per batch · Different sampling day each week (rotate to cover all production days over time) · Product types and customers rotated every week · <b>Ghost batch wording mandatory in MIMS OTHER_ID:</b> "Retained batch – not on the market" · All Salmonella positive samples fully typed · Batch retained on site pending result unless sent to a 2SFG cooking site.</div>
+
+  <div class="section-title">Legally Required Neck Skin Testing (Table 8) — Slaughterhouses only</div>
+  <div class="note"><b>Collection rules:</b> Carcasses must be chilled ≥1.5 hrs before sampling · 15 neck skins per session · Pooled as 5 samples of 3 neck skins each · Each pooled sample min. 25g (Salmonella) / min. 10g (Campy) · Store 1–4°C immediately after collection · Salmonella testing commences within 24 hrs.</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Organism</th><th>Sample Plan</th><th>Tolerance (of 50)</th><th>Limit</th></tr></thead>
+    <tbody>
+      <tr><td><i>Salmonella</i></td><td>3×10g (min 25g) · 5/session · 10 consecutive sessions = 50 total</td><td class="num">5 of 50 (if actively reducing)</td><td><span class="pill pill-abs">Absence in 25g pooled</span></td></tr>
+      <tr><td><i>Campylobacter</i></td><td>3×5g (min 10g) · 5/session · 10 consecutive sessions = 50 total</td><td class="num">10 of 50 (if actively reducing)</td><td class="num"><span class="pill pill-fail">&gt; 1000 cfu/g</span></td></tr>
+      <tr><td>Combined Salmonella + Campylobacter</td><td>3×10g (min 26g) · 5/session · 10 consecutive sessions = 50 total</td><td>Per organism above</td><td>Per organism above</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Product Micro — Routine KPI &amp; Special Cases</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Rule</th><th>Threshold</th><th>Consequence</th></tr></thead>
+    <tbody>
+      <tr><td>% results at/below standard limit (m)</td><td class="num"><span class="pill pill-pass">≥ 96%</span></td><td>Compliant</td></tr>
+      <tr><td>% results at/below standard limit (m)</td><td class="num"><span class="pill pill-fail">&lt; 96%</span></td><td>Improvement plan must be in place</td></tr>
+      <tr><td><i>Bacillus</i> spp. detected above limit</td><td>Any</td><td>Speciate: B. cereus / B. subtilis / B. pumilus / B. licheniformis</td></tr>
+      <tr><td><i>B. cereus</i> confirmed</td><td>Any</td><td>Further differentiation from <i>B. thuringiensis</i> required (natural insecticide — not pathogenic)</td></tr>
+      <tr><td>Listeria swabbing — Low Care environment</td><td>—</td><td><span class="pill pill-info">NOT carried out</span> · Low care = raw poultry primary processing. Separate RA needed for sites with high care.</td></tr>
+      <tr><td>Frozen products</td><td>—</td><td>Must be tested <b>prior to freezing</b></td></tr>
+      <tr><td>Campylobacter testing</td><td>—</td><td>Must be <b>enumerated</b> (not just presence/absence)</td></tr>
+    </tbody>
+  </table></div>
+
+</div>
+
+<!-- ═══════════════════════════ TAB 2: SAMPLE TYPES ═══════════════════════════ -->
+<div id="tab-sample" class="tab-panel">
+
+  <div class="section-title">Full Sampling Schedule (Table 1)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Category</th><th>Subject</th><th>Organisms Tested</th><th>Frequency</th><th>Sample Size / Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Water</td><td>Low risk public supply</td><td>TVC (22°C &amp; 37°C), Total Coliforms, E. coli, Enterococci, SRC, Faecal Coliforms</td><td>Min. annually · Weekly if at-risk</td><td>1 × 500ml</td></tr>
+      <tr><td>Air</td><td>Quality — chilled areas</td><td>TVC</td><td>Min. quarterly</td><td>1 plate per chilled area</td></tr>
+      <tr><td>Air</td><td>Spores — pre-chill + ingredient packing</td><td>Yeast &amp; Moulds</td><td>Min. quarterly</td><td>1 plate per pre-chill / ingredient packing area</td></tr>
+      <tr><td>Air</td><td>Compressed air in direct product contact</td><td>—</td><td><b>Twice per year</b></td><td>Must be filtered + tested</td></tr>
+      <tr><td>Swab</td><td>Hand</td><td>Staphylococci, E. coli</td><td>Min. weekly</td><td>5 randomly chosen people from production area</td></tr>
+      <tr><td>Swab</td><td>Environmental – Low Risk</td><td>TVC, Enterobacteriaceae, Pseudomonas</td><td>Daily (all points within 3-month rolling cycle)</td><td>1 swab per location</td></tr>
+      <tr><td>Swab</td><td>Environmental – Investigation</td><td>TVC, Enterobacteriaceae, Pseudomonas</td><td>Per investigation brief</td><td>Per brief</td></tr>
+      <tr><td>Swab</td><td>Campylobacter – Finished product packaging</td><td>Enumerated Campylobacter</td><td>Weekly</td><td>5 swabs from 5 different packs</td></tr>
+      <tr><td>Swab</td><td>Campylobacter – Live collection equipment</td><td>Enumerated Campylobacter</td><td>Weekly</td><td>1 crate + 1 module + 1 trailer (all post-clean)</td></tr>
+      <tr><td>Swab</td><td>Verification — risk assessment support</td><td>TVC, Enterobacteriaceae, Pseudomonas</td><td>Per RA requirement</td><td>Per verification brief</td></tr>
+      <tr><td>Swab</td><td>Pathogen – Crate washers</td><td>Salmonella, E. coli</td><td>Min. monthly</td><td>3 swabs</td></tr>
+      <tr><td>Product</td><td>Raw Material Intake – Wet (exit chiller birds)</td><td>Pseudomonas + E. coli (slaughter sites exit chiller WB only) · Pseudomonas only (receiving sites: fresh WB ≥K+1 + all portions)</td><td>Per batch delivered</td><td>Min. 100g</td></tr>
+      <tr><td>Product</td><td>Raw Material Intake – Dry</td><td>Yeast &amp; Moulds</td><td>Per batch delivered</td><td>Min. 100g</td></tr>
+      <tr><td>Product</td><td>Routine sampling</td><td>Per product specification</td><td>Per specification</td><td>Min. 100g · sealed + gas flushed (where applicable)</td></tr>
+      <tr><td>Product</td><td>Shelf life</td><td>Per shelf life protocol + customer requirements</td><td>Pre-launch + min. annually · Also if packaging format changes</td><td>Per shelf life protocol</td></tr>
+      <tr><td>Product</td><td>Campylobacter – Finished Product</td><td>Enumerated Campylobacter</td><td>Per customer specification</td><td>Per customer specification</td></tr>
+      <tr><td>Product</td><td>Salmonella legally required – Mince, Meat Preps &amp; Meat Products</td><td>EN/ISO 6579 Salmonella · EOL</td><td>Each batch · weekly</td><td>Min. 5 units · min. 200g total</td></tr>
+      <tr><td>Product</td><td>Salmonella legally required – Poultrymeat</td><td>EN/ISO 6579 SE (Gp D) / ST (Gp B) · EOL</td><td>Weekly · different day each week</td><td>Min. 5 units · min. 200g total</td></tr>
+      <tr><td>Product</td><td>TVC + E. coli legally required – Minced Meat</td><td>TVC ISO 4833 + E. coli ISO 16649-1/2 · tested without delay</td><td>Each batch</td><td>Min. 5 units · min. 200g total</td></tr>
+      <tr><td>Product</td><td>E. coli legally required – Meat Preparations</td><td>E. coli ISO 16649-1/2 · tested without delay</td><td>Each batch</td><td>Min. 5 units · min. 200g total</td></tr>
+      <tr><td>Process</td><td>Campylobacter legally required – Pooled PHC Neck Skin</td><td>Enumerated Campylobacter</td><td>Weekly</td><td>5 samples min. 26g each · 3 neck skins per sample (15 birds total)</td></tr>
+      <tr><td>Process</td><td>Salmonella legally required – Pooled PHC Neck Skin</td><td>EN/ISO 6579 SE/ST · tested immediately after primary chilling</td><td>Same sample as Campy above</td><td>—</td></tr>
+      <tr><td>Process</td><td>Campylobacter – Pooled PHC Neck Skin (daily)</td><td>Enumerated Campylobacter</td><td>Daily</td><td>5 samples min. 10g · 3 neck skins per sample (15 birds)</td></tr>
+      <tr><td>Process</td><td>Campylobacter – Pooled Caeca</td><td>Enumerated Campylobacter</td><td>Daily: standard birds = every other house per farm · Oakham Gold = every house per load</td><td>1 × 5 pooled caeca per house</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Swab Zone Distribution — Required Coverage (M3)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Zone</th><th>% of Schedule</th><th>Examples</th></tr></thead>
+    <tbody>
+      <tr><td>Food Contact (Zone 1)</td><td class="num">~50%</td><td>Conveyor belts, forming equipment, WIP trays, in-feed belts</td></tr>
+      <tr><td>Indirect Food Contact (Zone 2)</td><td class="num">~30%</td><td>Rollers on conveyors, hand-contact surfaces, buttons, push plates, fridge door handles, personnel hands</td></tr>
+      <tr><td>Non-Food Contact (Zone 3/4)</td><td class="num">~20%</td><td>Cleaning equipment, trolley wheels, boots, belt scrapers, rollers, engineering equipment, condensers, oven pits, waste routes, condensate, floors, drains, underside of equipment, bins</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Swab Sampling Area Sizes</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Purpose</th><th>Recommended Area</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Detection of microorganisms (presence/absence)</td><td class="num">1000 – 3000 cm²</td><td>Larger area increases probability of detecting contamination</td></tr>
+      <tr><td>Enumeration (counting organisms)</td><td class="num">≤ 100 cm² (10×10 cm)</td><td>Smaller defined area for accurate counts</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">EOL Shelf Life — Temperature &amp; Protocol Rules</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Parameter</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td>Temperature abuse condition</td><td>&gt;8°C for at least 20% of total product life</td></tr>
+      <tr><td>Minimum frequency</td><td>Annually · Can be combined with shelf life testing</td></tr>
+      <tr><td>Organisms to include unless customer excludes</td><td>Salmonella + Campylobacter</td></tr>
+      <tr><td>Transport</td><td>Refrigerated courier · tested within 24 hrs</td></tr>
+      <tr><td>Protocol to use</td><td>2sfg UKP Shelf Life Testing Protocol</td></tr>
+      <tr><td>Suite codes</td><td>Customer-specific suites must be used; generic suite if customer not listed</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Ice Testing Requirements</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Type</th><th>Requirement</th></tr></thead>
+    <tbody>
+      <tr><td>Factory-manufactured ice</td><td>Tested as per water testing · Min. twice annually</td></tr>
+      <tr><td>Purchased ice</td><td>Annual certificate of potability required</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Private Water Supply (e.g. Borehole)</div>
+  <div class="note">Local councils are primarily responsible for monitoring, testing, and enforcing compliance for private water supplies (risk assessments, routine monitoring, enforcements and notices). Sites using private water must maintain site procedures to comply with regulations and customer requirements.</div>
+
+</div>
+
+<!-- ═══════════════════════════ TAB 3: TIMING ═══════════════════════════ -->
+<div id="tab-timing" class="tab-panel">
+
+  <div class="section-title">Sample Transport Deadlines — Per Document</div>
+  <div class="timing-grid">
+    <div class="timing-card">
+      <div class="t-label">Water</div>
+      <div class="t-type">Water Samples</div>
+      <div class="t-deadline">6 hrs</div><div class="t-unit">target</div>
+      <div class="t-cond">Hard limit: 24 hrs. Store 2–4°C dark. Results invalid if received &gt;24 hrs or no date/time provided.</div>
+    </div>
+    <div class="timing-card">
+      <div class="t-label">Air Plates</div>
+      <div class="t-type">Air Sampling Plates</div>
+      <div class="t-deadline">20 min</div><div class="t-unit">direct to lab (max 1 hr without fridge)</div>
+      <div class="t-cond">Refrigerated: &lt;5°C preferred, max 8°C. Hard limit 24 hrs. Results invalid &gt;24 hrs.</div>
+    </div>
+    <div class="timing-card">
+      <div class="t-label">Environmental Swabs</div>
+      <div class="t-type">All Micro Swabs</div>
+      <div class="t-deadline">24 hrs</div><div class="t-unit">hard limit from document</div>
+      <div class="t-cond">Store at 1–4°C after sampling. Results invalid if received &gt;24 hrs. 72 hrs NOT in this document — needs lab agreement.</div>
+    </div>
+    <div class="timing-card">
+      <div class="t-label">Product Samples</div>
+      <div class="t-type">Aseptic Product (Appendix 5)</div>
+      <div class="t-deadline">48 hrs</div><div class="t-unit">hard limit</div>
+      <div class="t-cond">Refrigerated courier. Commence testing within 48 hrs of collection.</div>
+    </div>
+    <div class="timing-card">
+      <div class="t-label">EOL / Routine Micro</div>
+      <div class="t-type">Product EOL &amp; Routine</div>
+      <div class="t-deadline">24 hrs</div><div class="t-unit">hard limit (M4)</div>
+      <div class="t-cond">Collected by refrigerated courier and tested within 24 hrs.</div>
+    </div>
+    <div class="timing-card">
+      <div class="t-label">Neck Skin – Salmonella</div>
+      <div class="t-type">PHC Neck Skin</div>
+      <div class="t-deadline">24 hrs</div><div class="t-unit">from collection</div>
+      <div class="t-cond">0–4°C immediately. Testing commences within 24 hrs. Carcasses must be chilled ≥1.5 hrs first.</div>
+    </div>
+    <div class="timing-card">
+      <div class="t-label">Neck Skin (Table 1)</div>
+      <div class="t-type">PHC Neck Skin Salmonella</div>
+      <div class="t-deadline">Immediately</div><div class="t-unit">after primary chilling</div>
+      <div class="t-cond">Table 1 specifically states "tested immediately after primary chilling."</div>
+    </div>
+    <div class="timing-card">
+      <div class="t-label">MIMS Results</div>
+      <div class="t-type">Lab Reporting to MIMS</div>
+      <div class="t-deadline">1 week</div><div class="t-unit">target</div>
+      <div class="t-cond">OOS results reported immediately by telephone or email. Not within a week — immediately.</div>
+    </div>
+  </div>
+
+  <div class="note warn"><b>72-hour rule:</b> Not stated anywhere in this document. Hard limit for swabs is <b>24 hours</b>. The 72-hr figure exists from swab manufacturer viability data and some external labs — not 2SFG policy. Applying it requires formal lab agreement and documentation.</div>
+
+  <div class="section-title">Storage Temperatures — All Sample Types</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Sample Type</th><th>Storage Temp</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Water bottles (unused / in transit)</td><td>4–25°C (unused) · 2–4°C dark (in transit)</td><td>Within shelf life. Use cool boxes / ice packs in transit.</td></tr>
+      <tr><td>Air plates (unused)</td><td>2–5°C</td><td>Do not freeze. Do not push to back — may freeze. Use before shelf life date.</td></tr>
+      <tr><td>Air plates (after sampling)</td><td>&lt;5°C preferred · max 8°C</td><td>Or deliver direct within 20 min / max 1 hr unrefrigerated</td></tr>
+      <tr><td>Swabs (unused)</td><td>4–10°C</td><td>Use within stated shelf life</td></tr>
+      <tr><td>Swabs (after sampling)</td><td>1–4°C</td><td>Transport within 24 hrs</td></tr>
+      <tr><td>Neck skin samples</td><td>1–4°C</td><td>Transfer to refrigerated container immediately after collection</td></tr>
+      <tr><td>Knife steriliser</td><td>Min. 82°C</td><td>Required for neck skin sampling. Check temp before use.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Control Swabs &amp; Control Plates</div>
+  <div class="note"><b>Control swabs:</b> Must NOT be used to sample. Label, tape up, return with sample swabs. They check sterility, swab integrity, and sampler technique.<br>
+  <b>Control plates:</b> Must NOT be opened. Label, tape up, return with sample plates.<br>
+  Both must always be included with submissions.</div>
+
+</div>
+
+<!-- ═══════════════════════════ TAB 4: MIMS FIELDS ═══════════════════════════ -->
+<div id="tab-mims" class="tab-panel">
+
+  <div class="note"><b>About the MIMS Save File:</b> The MIMS_SAVE_FILE.xls (Submission sheet, 37 columns) is the master submission database used by SampleHub. Every sample entry maps to a MIMS seed row which determines SUITE, PRICE, EOL, SHIFT, and other locked fields. The columns below are exactly what appears in MIMS exports and result returns.</div>
+
+  <div class="section-title">Result Columns — What They Mean</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>MIMS Code</th><th>Full Name</th><th>Unit</th><th>What it tells you</th><th>Limit (where applicable)</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">TVCF / TP4100</td><td>Total Aerobic Colony Count at 30°C</td><td>cfu/g</td><td>General hygiene indicator. Swabs: Pass ≤1000. Product: per spec.</td><td>Swab: <span class="pill pill-fail">&gt;1000 = Fail</span></td></tr>
+      <tr><td class="mims-col">spTVCF50 / TP4145</td><td>Total Aerobic Colony Count at 30°C (variant)</td><td>cfu/g</td><td>Same organism — different method notation. Often same value as TVCF.</td><td>Same as above</td></tr>
+      <tr><td class="mims-col">ColiF / TP4102</td><td>Coliforms (Presumptive)</td><td>cfu/g</td><td>Sanitation effectiveness indicator. Includes E. coli family and related genera.</td><td>Water: 0 cfu/100ml</td></tr>
+      <tr><td class="mims-col">EntF / TP4103</td><td>Enterobacteriaceae (Presumptive)</td><td>cfu/g</td><td>Broader faecal indicator. Includes coliforms + others. Swab limit: &lt;100.</td><td>Swab: <span class="pill pill-fail">&gt;100 = Fail</span></td></tr>
+      <tr><td class="mims-col">YF / TP4109</td><td>Yeasts</td><td>cfu/g</td><td>Spoilage indicator. Dry intake + air testing. Air plate: Warning 10–20, Adverse &gt;20.</td><td>Air: Adverse <span class="pill pill-fail">&gt;20</span></td></tr>
+      <tr><td class="mims-col">MF / TP4109</td><td>Moulds</td><td>cfu/g</td><td>Spoilage indicator. Same column code as Yeasts in some suites.</td><td>Air: Adverse <span class="pill pill-fail">&gt;20</span></td></tr>
+      <tr><td class="mims-col">LacFc / TP4114</td><td>Lactic Acid Bacteria (Presumptive)</td><td>cfu/g</td><td>Spoilage in processed meat. Not a safety indicator but impacts shelf life.</td><td>Per product spec</td></tr>
+      <tr><td class="mims-col">PsFc / TP4115</td><td>Confirmed Pseudomonas spp.</td><td>cfu/g</td><td>Spoilage + hygiene indicator. Swab limit ≤1000 Pass. Intake product — per spec.</td><td>Swab: <span class="pill pill-fail">&gt;1000 = Fail</span></td></tr>
+      <tr><td class="mims-col">SaFc</td><td>Coag Pos Staphylococci (S. aureus)</td><td>cfu/g</td><td>Hand swabs. Caution 10–100, Fail &gt;100.</td><td>Hand: <span class="pill pill-caution">Caution 10–100</span> · <span class="pill pill-fail">Fail &gt;100</span></td></tr>
+      <tr><td class="mims-col">spPsF52c / spPsF50c / TP4150</td><td>Confirmed Pseudomonas spp. (speciated variants)</td><td>cfu/g</td><td>Further speciation of Pseudomonas strains.</td><td>Same as PsFc</td></tr>
+      <tr><td class="mims-col">EcF / TP4133</td><td>Beta-glucuronidase Pos E. coli (Confirmed)</td><td>cfu/g</td><td>Confirmed E. coli — faecal contamination. Safety-relevant. Hand swab: Fail &gt;100.</td><td>Hand: <span class="pill pill-fail">Fail &gt;100</span> · Meat Prep m: 500, M: 5000</td></tr>
+      <tr><td class="mims-col">Campy1Fc / TP4138</td><td>Campylobacter spp. (Confirmed enumeration)</td><td>cfu/g</td><td>Key poultry pathogen. Must be enumerated. Swab: High &gt;1000. Neck skin: Fail &gt;1000.</td><td>Swab: <span class="pill pill-fail">High &gt;1000</span> · Neck skin: <span class="pill pill-fail">&gt;1000 cfu/g Fail</span></td></tr>
+      <tr><td class="mims-col">CampyFnc / TP4138*</td><td>Campylobacter spp. (Presumptive)</td><td>cfu/g</td><td>Preliminary result before full confirmation. Caeca results typically reported here.</td><td>Indicative only</td></tr>
+      <tr><td class="mims-col">Save_RSA / n/a*</td><td>Save_RSA Samples</td><td>—</td><td>Internal flag. RSA = Retained Sample Archive.</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">MIMS Submission Column Reference — All 37 Fields</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Column</th><th>Field Name</th><th>What goes in it</th><th>Notes / Rules</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">PRODUCT</td><td>Product type</td><td>"Product", "Intake", "Swab", "Caeca" etc.</td><td>Determines how lab categorises the sample</td></tr>
+      <tr><td class="mims-col">MATERIAL</td><td>Material category</td><td>e.g. FP Primary Poultry, Investigation Product, Intake Ingredent, FP Primary AV</td><td>From MIMS seed row</td></tr>
+      <tr><td class="mims-col">RISE</td><td>State / chilled status</td><td>"Fresh", "Frozen", "Non-food"</td><td>From MIMS seed. Frozen = tested before freezing.</td></tr>
+      <tr><td class="mims-col">UNIT</td><td>Product unit type</td><td>Drumstick, Skinless B, Caeca, Wing, Trim, Stuffing etc.</td><td>From MIMS seed</td></tr>
+      <tr><td class="mims-col">DESCRIPTN</td><td>Product description</td><td>Full product name e.g. "Chicken Drumstick", "Hand Swab", "Breast Fillet"</td><td>Hand Swab: must say "Hand Swab" NOT room name</td></tr>
+      <tr><td class="mims-col">SIZE</td><td>Pack size / weight</td><td>e.g. "1 kg", "650g", "1 Sample", "Various"</td><td>From product or MIMS seed</td></tr>
+      <tr><td class="mims-col">RETAILER</td><td>Customer / supplier</td><td>Aldi, Tesco, KFC, 2Sisters, 2sisters, Ocado etc.</td><td>From MIMS seed row</td></tr>
+      <tr><td class="mims-col">SHIFT</td><td>Testing frequency</td><td>Daily, Weekly, Monthly, Annually, Bi Annual, Trial, Every hous</td><td>Drives EOL and SUITE selection — critical. Category 1=Daily, 2=Weekly, 3=Monthly.</td></tr>
+      <tr><td class="mims-col">LINE</td><td>Line / location identifier</td><td>Line number, room code, or reference</td><td>For water: REF codes. For swabs: location.</td></tr>
+      <tr><td class="mims-col">OTHER_ID</td><td>Other ID / batch info</td><td>Location (e.g. PMD, Fresh Pack One), CUTTING, batch ref</td><td><b>Salmonella MUST contain "Retained batch – not on the market"</b></td></tr>
+      <tr><td class="mims-col">SUITE</td><td>Test suite code</td><td>e.g. 2SP022, 2SP045, 2SP158, 2SP012, SISBW11, 2SS001, 2SW015</td><td><b>Critical</b> — determines which organisms are tested. Must match correct SHIFT row.</td></tr>
+      <tr><td class="mims-col">PRICE</td><td>Cost per sample (£)</td><td>Numeric, e.g. 10.53, 1.22, 8.05</td><td>Last row in submission = TOTAL price. Price is suite-dependent.</td></tr>
+      <tr><td class="mims-col">BARCODE</td><td>Product barcode (EAN)</td><td>13-digit EAN or internal code</td><td>Variable-weight barcodes use 7-char prefix. Synthetic placeholder barcodes (MIMS_0xxx) should not appear.</td></tr>
+      <tr><td class="mims-col">KILLDATE</td><td>Kill / slaughter date</td><td>Date of slaughter</td><td>Always ≤ SAMDATE</td></tr>
+      <tr><td class="mims-col">PACKDATE</td><td>Pack date</td><td>Date product was packed</td><td>Always ≤ SAMDATE</td></tr>
+      <tr><td class="mims-col">MANUFTIME</td><td>Manufacturing / pack time</td><td>Time of packing e.g. 0723, 1700</td><td>Prompted manually for some product types in SampleHub</td></tr>
+      <tr><td class="mims-col">USE_BY / EOL</td><td>End of life / Use-by date</td><td>Use-by date · EOL = TRUE/FALSE</td><td>EOL TRUE = tested at end of shelf life. Drives correct suite selection.</td></tr>
+      <tr><td class="mims-col">COMMS</td><td>Comments</td><td>Site code (e.g. "2037, Scunthorpe"), special instructions, batch info</td><td>Boilerplate storage instructions suppressed in SampleHub display</td></tr>
+      <tr><td class="mims-col">ORDER</td><td>Category / order ref</td><td>CATEGORY 1, CATEGORY 2, CATEGORY 1 etc.</td><td>Caeca and Neck rows must not be blank here</td></tr>
+      <tr><td class="mims-col">SAMPCOUNT</td><td>Sample sequence number</td><td>Running integer 1, 2, 3…</td><td>Shelf life K+1/K+2 sub-rows intentionally blank — not an error</td></tr>
+      <tr><td class="mims-col">SAMDATE</td><td>Sample date (submission date)</td><td>Date samples submitted to lab</td><td>Uniform for whole file — matches filename date</td></tr>
+      <tr><td class="mims-col">SAMBY</td><td>Sampled by</td><td>Name of person who took/submitted sample e.g. "Birat Gautam"</td><td>—</td></tr>
+      <tr><td class="mims-col">MANUFDATE</td><td>Manufacture / swab date</td><td>Date of actual manufacture or swabbing</td><td>Distinct from SAMDATE — may differ by 1–5 days</td></tr>
+      <tr><td class="mims-col">STARTDATE</td><td>Test start date</td><td>Date lab commenced testing</td><td>—</td></tr>
+      <tr><td class="mims-col">SAMPSTATUS</td><td>Sample status</td><td>APPROVED, ACTIVE</td><td>ACTIVE = still pending / being processed. APPROVED = results accepted.</td></tr>
+      <tr><td class="mims-col">FARM_NO / FLOCK_NO / SHED_NO / PEN_NO</td><td>Farm traceability</td><td>Farm number, flock, shed, pen identifiers</td><td>Used for neck skin and caeca. Farm 367 = Park in your data.</td></tr>
+      <tr><td class="mims-col">LORRY_NO / LOAD_NO</td><td>Transport traceability</td><td>Vehicle and load identifiers</td><td>From Animal Transport Certificate (ATC)</td></tr>
+      <tr><td class="mims-col">CLIENT</td><td>Lab client code</td><td>SIS, or other lab client ref</td><td>—</td></tr>
+      <tr><td class="mims-col">LOCATION</td><td>Location code</td><td>Internal location reference</td><td>—</td></tr>
+      <tr><td class="mims-col">PERIOD / CONDITIONS</td><td>Shelf life period / conditions</td><td>Storage conditions for shelf life testing</td><td>K+1 through K+8 for Amber Foods shelf life sets</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Known Suite Codes (from MIMS Save File)</div>
+  <div class="suite-grid">
+    <div class="suite-card"><div class="sc-code">2SP012</div><div class="sc-name">AMBER Rapid Trim</div><div class="sc-meta">2sisters · Daily · £2.07</div></div>
+    <div class="suite-card"><div class="sc-code">2SP022</div><div class="sc-name">Breast Fillet (Weekly)</div><div class="sc-meta">Tesco · Weekly · £1.22</div></div>
+    <div class="suite-card"><div class="sc-code">2SP040</div><div class="sc-name">External Intake (Investigation)</div><div class="sc-meta">2Sisters · Annually · £5.24</div></div>
+    <div class="suite-card"><div class="sc-code">2SP045</div><div class="sc-name">Caeca testing</div><div class="sc-meta">2Sisters · Every house · £8.05 · Non-UKAS</div></div>
+    <div class="suite-card"><div class="sc-code">2SP053</div><div class="sc-name">Ingredients &amp; Brine (Solids)</div><div class="sc-meta">Bi Annual · £8.21</div></div>
+    <div class="suite-card"><div class="sc-code">2SP079 / 2SP080</div><div class="sc-name">Environmental / hygiene swabs</div><div class="sc-meta">Daily · various prices</div></div>
+    <div class="suite-card"><div class="sc-code">2SP148</div><div class="sc-name">KFC Hot Wings / Frozen AV</div><div class="sc-meta">KFC · Daily · £4.25</div></div>
+    <div class="suite-card"><div class="sc-code">2SP158</div><div class="sc-name">Chicken Drumstick (Monthly)</div><div class="sc-meta">Aldi · Monthly · £10.53</div></div>
+    <div class="suite-card"><div class="sc-code">2SP163</div><div class="sc-name">Product suite variant</div><div class="sc-meta">Various</div></div>
+    <div class="suite-card"><div class="sc-code">SISBW11</div><div class="sc-name">AMBER Trim (Birds Eye)</div><div class="sc-meta">BIRDS EYE · Weekly · £11.94</div></div>
+    <div class="suite-card"><div class="sc-code">2SS001 / 2SS002</div><div class="sc-name">Swab suites</div><div class="sc-meta">Hand / environmental swab variants</div></div>
+    <div class="suite-card"><div class="sc-code">2SW015</div><div class="sc-name">Water testing</div><div class="sc-meta">Water micro suite</div></div>
+  </div>
+  <div class="note warn"><b>Suite code is critical and fatal if wrong.</b> It determines which organisms the lab tests for. An incorrect suite from a wrong SHIFT selection means wrong organisms are tested — results are useless. Always verify suite matches the correct frequency row in MIMS seed.</div>
+
+  <div class="section-title">Notable Results from Recent MIMS Data (Aug 2026)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Sample #</th><th>Description</th><th>Notable Result</th><th>Flag</th></tr></thead>
+    <tbody>
+      <tr><td class="num">17427296 / 17427301</td><td>Caeca – Farm 367, Park</td><td class="num">CampyFnc: &gt;1.5×10⁹ / &gt;150,000,000</td><td><span class="pill pill-fail">Extremely High Campy</span></td></tr>
+      <tr><td class="num">17427297</td><td>Caeca – Shed 4, Farm 367</td><td class="num">CampyFnc: 310,000,000</td><td><span class="pill pill-fail">Very High Campy</span></td></tr>
+      <tr><td class="num">17427298</td><td>Caeca – Shed 7, Farm 367</td><td class="num">CampyFnc: 85,000,000</td><td><span class="pill pill-fail">High Campy</span></td></tr>
+      <tr><td class="num">17427299</td><td>Caeca – Shed 7, Farm 367</td><td class="num">CampyFnc: 650,000</td><td><span class="pill pill-warn">Moderate Campy</span></td></tr>
+      <tr><td class="num">17434823</td><td>Sandy intake p4 (09/08)</td><td class="num">spTVCF50: &gt;4,000,000 · PsFc: &gt;4,000,000</td><td><span class="pill pill-fail">High TVC + Ps — ACTIVE</span></td></tr>
+      <tr><td class="num">17443417</td><td>AMBER Rapid Trim – Trial (13/08)</td><td class="num">EcF: 1,100 cfu/g</td><td><span class="pill pill-fail">E. coli above M for Meat Preps (M=5000, but check spec)</span></td></tr>
+      <tr><td class="num">17417130</td><td>Tesco Breast Fillet weekly (05/08)</td><td class="num">Campy1Fc: 1,100,000</td><td><span class="pill pill-fail">Very High Campy on finished product</span></td></tr>
+      <tr><td class="num">17412763</td><td>Aldi Drumstick 1kg monthly (05/08)</td><td class="num">spPsF52c: 610,000 · EcF: &lt;10 · Campy: &lt;10</td><td><span class="pill pill-warn">Ps elevated — E. coli / Campy clear</span></td></tr>
+      <tr><td class="num">17434820 / 17434822</td><td>Sandy intake p1, p3</td><td>Status: ACTIVE</td><td><span class="pill pill-info">Awaiting results</span></td></tr>
+      <tr><td class="num">17443430 / 17443432</td><td>Stuffing Log ingredients (bi-annual)</td><td class="num">TVCF: T.F · ColiF: 10–40 · EntF: 90 / &lt;10</td><td><span class="pill pill-warn">TVC Too Few — check against ingredient spec</span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>T.F</b> = Too Few to enumerate (below detection threshold, not necessarily zero) &nbsp;·&nbsp; <b>ACTIVE</b> = testing in progress, results not yet returned &nbsp;·&nbsp; <b>APPROVED</b> = results finalised and accepted</div>
+
+</div>
+
+<!-- ═══════════════════════════ TAB 5: ACTIONS ═══════════════════════════ -->
+<div id="tab-actions" class="tab-panel">
+
+  <div class="section-title">Failure Triggers &amp; Required Actions</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Trigger</th><th>Action Required</th><th>Who to Tell</th></tr></thead>
+    <tbody>
+      <tr><td>Any swab point fails 3+ times in 12 months</td><td>Comprehensive investigation + action plan using Root Cause Analysis framework</td><td>Site Hygiene Manager must be involved in all swab location decisions</td></tr>
+      <tr><td>Site swab pass rate drops below 98%</td><td>Action required</td><td>—</td></tr>
+      <tr><td>Water — Low Level Positive</td><td>Re-sample for all faecal indicators</td><td>Site Technical Lead (safety assessment) + Engineering Manager (mechanical investigation)</td></tr>
+      <tr><td>Water — High Level Positive</td><td>Quarantine/isolate outlets · stop production if no potable supply · risk assess affected product · do not use water point until cleared</td><td>Site Technical Lead · Customers if TVC elevated &gt;4 weeks</td></tr>
+      <tr><td>Water point retest fails</td><td>Place/maintain QA hold on water point · only remove if retest confirms potability</td><td>—</td></tr>
+      <tr><td>Environmental swab fail</td><td>Retest at soonest possible time after results available · trend analysis regularly</td><td>Hygiene Manager must have access + record actions taken</td></tr>
+      <tr><td>Confirmed SE or ST — Poultrymeat</td><td>Full traceability · if uncooked: dispose as Cat 2 or heat-treat Cat 3 · notify affected customers · FSA report</td><td><b>Divisional Technical Controller + Technical Director immediately</b></td></tr>
+      <tr><td>Positive Salmonella species — Mince / Meat Preps / Meat Products</td><td>Dispose batch as Cat 2 · notify customers · full traceability · FSA report · RCA</td><td><b>Divisional Technical Controller + Technical Director immediately</b></td></tr>
+      <tr><td>Neck skin Campy or Salmonella exceeds Table 8 limits</td><td>Investigation + action plan for slaughter hygiene · biosecurity review at farms of origin</td><td>On-site OV (results sent weekly)</td></tr>
+      <tr><td>Bacillus spp. above limit</td><td>Speciate: B. cereus / B. subtilis / B. pumilus / B. licheniformis</td><td>If B. cereus: differentiate from B. thuringiensis</td></tr>
+      <tr><td>Product results &lt;96% at standard (m) level</td><td>Improvement plan must be in place</td><td>—</td></tr>
+      <tr><td>SHS flock (Salmonella positive from farm)</td><td>Slaughter last in day · washdown after · SHS marker on first module · do not process until AWO/deputy authorises and removes marker</td><td>AWO or deputy</td></tr>
+      <tr><td>Chiller breakdown during Salmonella flock processing</td><td>Kill via gas stunner or approved method · send to Cat 2 waste</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Corrective Actions — Campylobacter (Neck Skin / Slaughter)</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Action</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>Plucker bank swabbing</td><td>Remove plucker fingers · swab disk where finger was positioned</td></tr>
+      <tr><td>Scald tank pasteurisation</td><td>Pasteurise where possible</td></tr>
+      <tr><td>Plucker acid clean + fog</td><td>Remove all fingers during cleaning · replace with new after · do not replace fingers before cleaning</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title">Reporting Timelines</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Event</th><th>Deadline</th><th>Method</th></tr></thead>
+    <tbody>
+      <tr><td>Normal results published to MIMS</td><td>Within 1 week of samples delivered to lab</td><td>MIMS system</td></tr>
+      <tr><td>Out-of-specification results</td><td><b>Immediately</b></td><td>Telephone or email — not waiting for MIMS</td></tr>
+      <tr><td>Neck skin Salmonella results reviewed + sent to OV</td><td>Weekly</td><td>—</td></tr>
+      <tr><td>TVC water elevated &gt;4 weeks</td><td>Notify customers</td><td>Per relevant customer standard</td></tr>
+      <tr><td>Confirmed SE / ST</td><td>Immediately on confirmation</td><td>FSA food incident portal (England/Wales) or Food Standards Scotland</td></tr>
+      <tr><td>Positive Salmonella species (non-SE/ST)</td><td>Immediately on confirmation</td><td>FSA food incident portal</td></tr>
+    </tbody>
+  </table></div>
+
+</div>
+
+<!-- ═══════════════════════════ SEARCH SCRIPT ═══════════════════════════ -->
+<script>
+// ── Search index ──────────────────────────────────────────────────────────
+const SEARCH_INDEX = [
+  // LIMITS
+  { t:'TVC swab limit', d:'Pass 0–1000 cfu/swab · Fail >1000 · MIMS: TVCF / TP4100', cat:'Limits', tab:'limits' },
+  { t:'Pseudomonas swab limit', d:'Pass 0–1000 cfu/swab · Fail >1000 · MIMS: PsFc / TP4115', cat:'Limits', tab:'limits' },
+  { t:'Enterobacteriaceae swab limit', d:'Pass <100 cfu/swab · Fail >100 · MIMS: EntF / TP4103', cat:'Limits', tab:'limits' },
+  { t:'Hand swab S. aureus limit', d:'Pass <10 · Caution 10–100 · Fail >100 cfu/swab', cat:'Limits', tab:'limits' },
+  { t:'Hand swab E. coli limit', d:'Pass <10 · Caution 10–100 · Fail >100 cfu/swab', cat:'Limits', tab:'limits' },
+  { t:'Campylobacter swab live equipment', d:'Absent <10 · Low <100 · Moderate 100–1000 · High >1000 cfu/swab', cat:'Limits', tab:'limits' },
+  { t:'Air TVC limit', d:'Acceptable <100 · Warning 100–1000 · Adverse >1000 cfu/plate', cat:'Limits', tab:'limits' },
+  { t:'Air yeast mould limit', d:'Acceptable <10 · Warning 10–20 · Adverse >20 cfu/plate', cat:'Limits', tab:'limits' },
+  { t:'Water TVC 37°C', d:'<1 cfu/ml — Low Level / Quality Compliance', cat:'Limits', tab:'limits' },
+  { t:'Water E. coli limit', d:'0 cfu/100ml — High Level Positive', cat:'Limits', tab:'limits' },
+  { t:'Water coliforms limit', d:'0 cfu/100ml — Low Level Positive; High Level if ≥3/100ml in 2 consecutive or >5% in a year', cat:'Limits', tab:'limits' },
+  { t:'Water enterococci', d:'0 cfu/100ml — High Level Positive', cat:'Limits', tab:'limits' },
+  { t:'Water sulphite reducing clostridia', d:'0 cfu/100ml — customer specific action', cat:'Limits', tab:'limits' },
+  { t:'Water faecal coliforms', d:'<1 cfu/ml', cat:'Limits', tab:'limits' },
+  { t:'E. coli meat preparations limit 5000', d:'m=500 cfu/g · M=5000 cfu/g · n=5 · c=2. M is the ceiling — any unit >5000 = automatic fail. Target is below 500.', cat:'Limits', tab:'limits' },
+  { t:'E. coli minced meat limit', d:'m=50 cfu/g · M=500 cfu/g · n=5 · c=2', cat:'Limits', tab:'limits' },
+  { t:'TVC minced meat', d:'m=5×10⁵ cfu/g · M=5×10⁶ cfu/g · n=5 · c=2 · OOS threshold >40%', cat:'Limits', tab:'limits' },
+  { t:'Salmonella poultrymeat limit', d:'Absence in 25g · n=5 · c=0 · any positive = fail', cat:'Limits', tab:'limits' },
+  { t:'Salmonella SE ST', d:'Salmonella Enteritidis Group D and Typhimurium Group B — absence in 25g. Confirmed SE/ST must be escalated to DTC + TD and reported to FSA.', cat:'Limits', tab:'limits' },
+  { t:'Campylobacter neck skin limit', d:'>1000 cfu/g = fail. 10 of 50 tolerance if actively reducing.', cat:'Limits', tab:'limits' },
+  { t:'Salmonella neck skin limit', d:'Absence in 25g pooled sample. 5 of 50 tolerance if actively reducing.', cat:'Limits', tab:'limits' },
+  { t:'96% product KPI rule', d:'96% of results must achieve standard (m) level. If below 96% — improvement plan required.', cat:'Limits', tab:'limits' },
+  { t:'Bacillus cereus speciation', d:'If Bacillus spp. above limit — speciate. If B. cereus — differentiate from B. thuringiensis (natural insecticide, not pathogenic).', cat:'Limits', tab:'limits' },
+  { t:'Listeria low care', d:'Listeria swabbing NOT carried out in low care environment (raw poultry primary). Separate RA needed for sites with high care areas.', cat:'Limits', tab:'limits' },
+  { t:'n c m M sampling plan explained', d:'n=number of units taken · c=max units between m and M before fail · m=standard target · M=absolute ceiling. Any unit above M = automatic fail.', cat:'Limits', tab:'limits' },
+  // SAMPLE TYPES
+  { t:'Water sampling frequency', d:'Min. annually · Weekly if at-risk · 1×500ml bottle per location', cat:'Sample Types', tab:'sample' },
+  { t:'Air plate frequency', d:'Min. quarterly · 1 plate per chilled area (TVC) · 1 plate per pre-chill/ingredient packing (Y&M)', cat:'Sample Types', tab:'sample' },
+  { t:'Compressed air testing', d:'Twice per year minimum if in direct product contact. Must be filtered and tested.', cat:'Sample Types', tab:'sample' },
+  { t:'Hand swab frequency', d:'Min. weekly · 5 randomly chosen people · after hand washing station', cat:'Sample Types', tab:'sample' },
+  { t:'Environmental swab frequency', d:'Daily — covering all points within 3-month rolling cycle · 1 swab per location', cat:'Sample Types', tab:'sample' },
+  { t:'Campylobacter packaging swab', d:'Weekly · 5 swabs from 5 different packs of finished product packaging', cat:'Sample Types', tab:'sample' },
+  { t:'Campylobacter live collection equipment swab', d:'Weekly · 1 crate + 1 module + 1 trailer post-clean', cat:'Sample Types', tab:'sample' },
+  { t:'Crate washer pathogen swab', d:'Min. monthly · 3 swabs · Salmonella + E. coli', cat:'Sample Types', tab:'sample' },
+  { t:'Swab zone distribution 50 30 20', d:'Food contact ~50% · Indirect food contact ~30% · Non-food contact ~20% of schedule', cat:'Sample Types', tab:'sample' },
+  { t:'Swab area size detection', d:'Detection: 1000–3000 cm² (larger = better chance of finding contamination). Enumeration: ≤100 cm² (10×10 cm).', cat:'Sample Types', tab:'sample' },
+  { t:'Raw material intake wet', d:'Per batch · Pseudomonas + E. coli (exit chiller wholebirds, slaughter sites) · Pseudomonas only (receiving sites: fresh WB ≥K+1 + all portions) · Min. 100g', cat:'Sample Types', tab:'sample' },
+  { t:'Shelf life testing', d:'Prior to launch + min. annually (or if packaging format changes) · EOL temp abuse >8°C for ≥20% of product life · Salmonella + Campy included unless customer excludes', cat:'Sample Types', tab:'sample' },
+  { t:'Salmonella poultrymeat sampling', d:'Weekly · different day each week · min. 5 units · min. 200g total · EOL · rotate product types and customers each week', cat:'Sample Types', tab:'sample' },
+  { t:'Caeca testing frequency', d:'Daily · Standard birds = every other house per farm · Oakham Gold = every house per load · 1×5 pooled caeca per house', cat:'Sample Types', tab:'sample' },
+  { t:'Neck skin daily weekly', d:'Daily: 5 samples min. 10g (3 neck skins each) · Weekly legally required: 5 samples min. 26g (3 neck skins each) · 10 consecutive sessions = 50 total', cat:'Sample Types', tab:'sample' },
+  { t:'Ice testing', d:'Factory ice: twice annually min. (same as water testing) · Purchased ice: annual certificate of potability', cat:'Sample Types', tab:'sample' },
+  { t:'Private water borehole', d:'Local councils responsible for monitoring. Sites using private supply must maintain compliance procedures to meet regulations and customer requirements.', cat:'Sample Types', tab:'sample' },
+  { t:'EOL end of life temperature', d:'>8°C for at least 20% of total product life. Min. annually. Salmonella + Campy included in routine unless customer-specific exclusion.', cat:'Sample Types', tab:'sample' },
+  // TIMING
+  { t:'Swab transport time deadline 24 hours', d:'Environmental swabs: store 1–4°C, transport within 24 hrs. Results invalid if received >24 hrs or no date/time on sample.', cat:'Timing', tab:'timing' },
+  { t:'Water sample deadline 6 hours 24 hours', d:'Target within 6 hrs. Hard limit 24 hrs. Store 2–4°C dark. Results invalid if received >24 hrs.', cat:'Timing', tab:'timing' },
+  { t:'Air plate transport time', d:'Direct to lab within 20 min (max 1 hr without refrigeration). Refrigerated <5°C. Hard limit 24 hrs.', cat:'Timing', tab:'timing' },
+  { t:'Product sample 48 hours', d:'Aseptic product samples (Appendix 5): transport within 48 hrs of collection. Refrigerated courier.', cat:'Timing', tab:'timing' },
+  { t:'EOL product 24 hours', d:'EOL and routine micro product samples (M4): refrigerated courier, tested within 24 hrs.', cat:'Timing', tab:'timing' },
+  { t:'Neck skin 24 hours immediately', d:'Salmonella neck skin: 0–4°C, testing within 24 hrs. Table 1: "tested immediately after primary chilling." Carcasses must be chilled ≥1.5 hrs before sampling.', cat:'Timing', tab:'timing' },
+  { t:'72 hours swabs', d:'72 hrs is NOT in this document. Hard limit is 24 hrs. 72 hrs comes from swab manufacturer data and some external labs — needs formal agreement and documentation to use.', cat:'Timing', tab:'timing' },
+  { t:'MIMS results reporting one week', d:'Normal results: within 1 week of delivery. OOS results: reported immediately by telephone or email — not waiting for MIMS.', cat:'Timing', tab:'timing' },
+  { t:'Control swab control plate', d:'Control swabs/plates must NOT be opened/used. Label, tape, return with samples. Check sterility and sampler technique integrity.', cat:'Timing', tab:'timing' },
+  { t:'Swab storage temperature 1 4', d:'Swabs after sampling stored at 1–4°C. Unused swabs stored 4–10°C. Steriliser min. 82°C for neck skin knives.', cat:'Timing', tab:'timing' },
+  // MIMS
+  { t:'TVCF TP4100 TVC column', d:'Total Aerobic Colony Count at 30°C · cfu/g · Swab limit: Fail >1000', cat:'MIMS', tab:'mims' },
+  { t:'EntF TP4103 enterobacteriaceae column', d:'Enterobacteriaceae presumptive · cfu/g · Swab Fail >100', cat:'MIMS', tab:'mims' },
+  { t:'EcF TP4133 E. coli column', d:'Beta-glucuronidase Pos E. coli (confirmed) · Hand swab Fail >100 · Meat Prep m=500 M=5000', cat:'MIMS', tab:'mims' },
+  { t:'Campy1Fc CampyFnc TP4138 campylobacter column', d:'Campylobacter spp. confirmed enumeration (Campy1Fc) and presumptive (CampyFnc) · Neck skin Fail >1000 cfu/g · Swab High >1000', cat:'MIMS', tab:'mims' },
+  { t:'PsFc TP4115 pseudomonas column', d:'Confirmed Pseudomonas spp. · cfu/g · Swab Fail >1000', cat:'MIMS', tab:'mims' },
+  { t:'SaFc staphylococci column', d:'Coag Pos Staphylococci (S. aureus) · Hand swab Caution 10–100 · Fail >100', cat:'MIMS', tab:'mims' },
+  { t:'SUITE code critical fatal', d:'Determines which organisms are tested. Wrong suite = wrong organisms tested = useless results. Must match correct SHIFT row in MIMS seed.', cat:'MIMS', tab:'mims' },
+  { t:'SHIFT category daily weekly monthly', d:'Category 1=Daily · Category 2=Weekly · Category 3=Monthly · Also: Annually, Bi Annual, Trial, Every hous. Drives SUITE and EOL selection.', cat:'MIMS', tab:'mims' },
+  { t:'SAMPSTATUS active approved', d:'ACTIVE = testing in progress / results not yet returned. APPROVED = results finalised and accepted.', cat:'MIMS', tab:'mims' },
+  { t:'OTHER_ID ghost batch salmonella wording', d:'For Salmonella: MUST contain "Retained batch – not on the market" in OTHER_ID. Mandatory wording for ghost batch traceability.', cat:'MIMS', tab:'mims' },
+  { t:'T.F too few meaning', d:'T.F = Too Few to enumerate. Below detection threshold. Not necessarily zero — but count could not be accurately determined.', cat:'MIMS', tab:'mims' },
+  { t:'2SP012 suite amber rapid trim', d:'AMBER Rapid Trim · 2sisters · Daily · £2.07', cat:'MIMS', tab:'mims' },
+  { t:'2SP022 suite breast fillet', d:'Breast Fillet Weekly · Tesco · £1.22', cat:'MIMS', tab:'mims' },
+  { t:'2SP045 suite caeca', d:'Caeca testing · 2Sisters · Every house · £8.05 · Non-UKAS', cat:'MIMS', tab:'mims' },
+  { t:'2SP158 suite drumstick', d:'Chicken Drumstick Monthly · Aldi · £10.53', cat:'MIMS', tab:'mims' },
+  { t:'SISBW11 suite amber trim birds eye', d:'AMBER Trim · BIRDS EYE · Weekly · £11.94', cat:'MIMS', tab:'mims' },
+  { t:'SAMPCOUNT shelf life K+1 blank', d:'K+1 through K+8 shelf life sub-rows intentionally have blank SAMPCOUNT — this is correct, not an error.', cat:'MIMS', tab:'mims' },
+  { t:'MANUFDATE SAMDATE STARTDATE difference', d:'MANUFDATE = actual manufacture/swab date. SAMDATE = date submitted to lab. STARTDATE = date lab started testing. Can differ by 1–5 days.', cat:'MIMS', tab:'mims' },
+  // ACTIONS
+  { t:'Swab fail action retest', d:'Retest at soonest possible time after results available. Trend analysis regularly. Hygiene Manager must have access and record actions.', cat:'Actions', tab:'actions' },
+  { t:'3 failures 12 months swab', d:'3 or more failures at same swab point in 12-month period → comprehensive RCA investigation + action plan.', cat:'Actions', tab:'actions' },
+  { t:'Salmonella SE ST escalation FSA', d:'Confirmed SE/ST: escalate to Divisional Technical Controller + Technical Director immediately. Notify customers. Report to FSA. Full traceability.', cat:'Actions', tab:'actions' },
+  { t:'SHS special health status salmonella flock', d:'SHS = Salmonella positive flock. Slaughter last in day. Washdown after. SHS marker on first module. AWO/deputy must authorise and remove marker before processing.', cat:'Actions', tab:'actions' },
+  { t:'Water high level positive stop production', d:'Quarantine outlets, stop production if no potable supply, risk assess affected product. Do not use water point until retest confirms potability.', cat:'Actions', tab:'actions' },
+  { t:'OOS out of spec results phone email immediate', d:'OOS results must be reported immediately by telephone or email — not waiting for weekly MIMS update.', cat:'Actions', tab:'actions' },
+  { t:'Category 2 waste disposal salmonella positive', d:'Confirmed Salmonella (mince/meat preps): dispose batch as Category 2 material. SE/ST poultrymeat: Cat 2 or heat-treated Cat 3 if not sent to market.', cat:'Actions', tab:'actions' },
+  { t:'96% improvement plan product', d:'If fewer than 96% of routine product results are at or below the standard (m) limit — an improvement plan must be put in place.', cat:'Actions', tab:'actions' },
+];
+
+function hl(text, q) {
+  if (!q) return text;
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+const input = document.getElementById('globalSearch');
+const results = document.getElementById('searchResults');
+
+input.addEventListener('input', () => {
+  const q = input.value.trim().toLowerCase();
+  if (q.length < 2) { results.style.display = 'none'; return; }
+
+  const matches = SEARCH_INDEX.filter(r =>
+    r.t.toLowerCase().includes(q) || r.d.toLowerCase().includes(q)
+  ).slice(0, 30);
+
+  if (!matches.length) {
+    results.innerHTML = '<div class="sr-no-results">No results for "' + input.value + '"</div>';
+    results.style.display = 'block'; return;
+  }
+
+  // Group by category
+  const cats = {};
+  matches.forEach(r => { if (!cats[r.cat]) cats[r.cat] = []; cats[r.cat].push(r); });
+
+  let html = '';
+  for (const [cat, items] of Object.entries(cats)) {
+    html += `<div class="sr-section">${cat}</div>`;
+    items.forEach(r => {
+      html += `<div class="sr-item" onclick="goToTab('${r.tab}','${r.t}')">
+        <div class="sr-title">${hl(r.t, input.value.trim())}</div>
+        <div class="sr-sub">${hl(r.d, input.value.trim())}</div>
+      </div>`;
+    });
+  }
+  results.innerHTML = html;
+  results.style.display = 'block';
+});
+
+function goToTab(tabId, title) {
+  // Switch tab
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  const tabOrder = ['limits','sample','timing','mims','actions'];
+  const idx = tabOrder.indexOf(tabId);
+  if (btns[idx]) btns[idx].classList.add('active');
+  results.style.display = 'none';
+  input.value = '';
+  // Scroll to top of tab
+  window.scrollTo({top: document.querySelector('.tabs').offsetTop - 10, behavior: 'smooth'});
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Close search on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap')) results.style.display = 'none';
+});
+</script>
+</body>
+</html>
