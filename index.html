@@ -63,8 +63,24 @@
   mark { background: #2563eb44; color: var(--accent2); border-radius: 2px; padding: 0 2px; }
 
   /* Tabs */
-  .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 18px; }
-  .tab-btn { background: var(--surface); border: 1px solid var(--border); color: var(--label); padding: 6px 13px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; transition: all 0.15s; }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 14px;
+    min-height: 38px;
+  }
+  .tab-btn { background: var(--surface); border: 1px solid var(--border); color: var(--label); border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; transition: all 0.15s; }
   .tab-btn:hover { border-color: var(--accent); color: var(--text); }
   .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
   .tab-panel { display: none; }
@@ -1868,6 +1884,7 @@ function azAnalyseRow(row) {
     }
 
     // Campylobacter on finished product
+    if (campyS.includes('>4000000')||campyS.includes('>400000000'))
       flags.push({sev:'FAIL', msg:`Product Campylobacter ${campyS} cfu/g — all COP limits exceeded.`});
     else if (azNum(campy)&&campy>1000) flags.push({sev:'FAIL', msg:`Product Campylobacter ${campy.toLocaleString()} cfu/g — >1000 cfu/g (Co-op/Ocado/Iceland COP limit). Immediate attention.`});
     else if (azNum(campy)&&campy>600)  flags.push({sev:'WARN', msg:`Product Campylobacter ${campy.toLocaleString()} cfu/g — exceeds Co-op target 600 cfu/g, approaching 1000 limit.`});
