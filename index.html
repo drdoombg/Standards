@@ -67,13 +67,8 @@
     display: flex;
     gap: 6px;
     margin-bottom: 18px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 4px;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
   }
-  .tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
     flex-shrink: 0;
     white-space: nowrap;
@@ -1999,14 +1994,84 @@ function azFmt(v) {
   return String(v);
 }
 
+function azFmtNum(v) {
+  if (v === null || v === undefined || v === '.' || v === '') return null;
+  const s = String(v).trim();
+  if (['T.F','N/D','I/S'].includes(s)) return null;
+  if (s.startsWith('>') || s.startsWith('<')) {
+    const n = parseFloat(s.slice(1).replace(/,/g,''));
+    return isNaN(n) ? null : n;
+  }
+  const n = parseFloat(s.replace(/,/g,''));
+  return isNaN(n) ? null : n;
+}
+
+function azShelfInfo(row) {
+  // Determine shelf life stage from dates
+  // Kill date = manufacture date. Start date = test date.
+  // SOL = tested within 1-3 days of kill. EOL = 5+ days after kill.
+  const kill = row.KILLDATE instanceof Date ? row.KILLDATE
+    : (row.KILLDATE && row.KILLDATE !== '.' ? new Date(row.KILLDATE) : null);
+  const startd = row.STARTDATE instanceof Date ? row.STARTDATE
+    : (row.STARTDATE && row.STARTDATE !== '.' ? new Date(row.STARTDATE) : null);
+  const useby = row.USE_BY instanceof Date ? row.USE_BY
+    : (row.USE_BY && row.USE_BY !== '.' ? new Date(row.USE_BY) : null);
+
+  if (!kill || !startd || isNaN(kill) || isNaN(startd)) return { stage: '—', dayOfLife: null, shelfDays: null };
+
+  const dayOfLife = Math.round((startd - kill) / 86400000);
+  const shelfDays = useby && !isNaN(useby) ? Math.round((useby - kill) / 86400000) : null;
+
+  let stage;
+  if (dayOfLife <= 3) stage = 'SOL';
+  else if (shelfDays !== null && dayOfLife >= shelfDays - 1) stage = 'EOL';
+  else if (dayOfLife >= 5) stage = 'EOL';
+  else stage = 'MID';
+
+  return { stage, dayOfLife, shelfDays };
+}
+
+function azCategory(row) {
+  const unit = (row.UNIT||'').toLowerCase();
+  const det = (row.DETTYPE||'').toLowerCase();
+  const desc = (row.DESCRIPTN||'').toLowerCase();
+  if (det === 'caeca' || unit === 'caeca') return 'Caeca';
+  if (det === 'swab' || desc.includes('swab') || (row.MATERIAL||'').toLowerCase().includes('swab')) return 'Swab';
+  if (det === 'water') return 'Water';
+  if (unit === 'neck' || desc.includes('neck skin')) return 'Neck Skin';
+  return 'Product';
+}
+
+function azProductName(row) {
+  const retailer = (row.RETAILER||'').trim();
+  const desc = (row.DESCRIPTN||'').trim();
+  // If retailer already appears at start of desc, don't duplicate
+  if (desc.toLowerCase().startsWith(retailer.toLowerCase())) return desc;
+  if (!retailer || retailer === '2Sisters' || retailer === '2sisters') return desc;
+  return `${retailer} — ${desc}`;
+}
+
+function azResultRow(label, value, rawVal, sev) {
+  if (value === null || value === undefined) return '';
+  const s = String(rawVal ?? value);
+  if (s === '.' || s === '') return '';
+  const sevColor = sev === 'FAIL' ? '#ff6b35' : sev === 'CRITICAL' ? '#ff2d55' : sev === 'WARN' ? '#ffd60a' : '#94a3b8';
+  const bg = sev ? `background:${AZ_SEV[sev]?.bg||'transparent'};` : '';
+  return `<tr>
+    <td style="padding:4px 10px;font-size:11px;color:#64748b;white-space:nowrap;">${label}</td>
+    <td style="padding:4px 10px;font-size:12px;font-family:monospace;color:${sev?sevColor:'#cbd5e1'};${bg}font-weight:${sev?'700':'400'}">${s}</td>
+  </tr>`;
+}
+
+const CAT_ICON = { 'Product':'📦', 'Neck Skin':'🔬', 'Caeca':'🐔', 'Swab':'🧹', 'Water':'💧' };
+const CAT_COLOR = { 'Product':'#3b82f6', 'Neck Skin':'#ff6b35', 'Caeca':'#a78bfa', 'Swab':'#22d3ee', 'Water':'#34d399' };
+
 function azRender() {
   const q=(document.getElementById('azSearch')?.value||'').toLowerCase();
 
-  // Counts
   const counts={CRITICAL:0,FAIL:0,WARN:0,CAUTION:0,INFO:0};
   AZ_ROWS.forEach(r=>r._flags.forEach(f=>{if(counts[f.sev]!==undefined)counts[f.sev]++;}));
 
-  // Summary bar
   const bar=document.getElementById('azSummaryBar');
   if(bar){
     bar.innerHTML=['ALL',...Object.keys(AZ_SEV)].map(s=>{
@@ -2022,7 +2087,6 @@ function azRender() {
     }).join('');
   }
 
-  // Filter
   const filtered=AZ_ROWS.filter(r=>{
     const sm=AZ_FILTER==='ALL'||r._flags.some(f=>f.sev===AZ_FILTER);
     const qm=!q||[r.DESCRIPTN,r.RETAILER,r.SAMPNUM,r.MATERIAL,r.UNIT,r._file]
@@ -2031,69 +2095,220 @@ function azRender() {
   });
 
   const cnt=document.getElementById('azCount');
-  if(cnt)cnt.textContent=`Showing ${filtered.length} flagged sample${filtered.length!==1?'s':''} ${AZ_FILTER!=='ALL'?'(filtered: '+AZ_FILTER+')':''}`;
+  if(cnt)cnt.textContent=`Showing ${filtered.length} flagged sample${filtered.length!==1?'s':''} ${AZ_FILTER!=='ALL'?'('+AZ_FILTER+')':''}`;
 
   const res=document.getElementById('azResults');
   if(!res)return;
-
   if(filtered.length===0){
-    res.innerHTML='<div style="padding:30px;text-align:center;color:#475569;font-size:13px;">No flagged results match the current filter.</div>';
+    res.innerHTML='<div style="padding:30px;text-align:center;color:#475569;font-size:13px;">No flagged results match current filter.</div>';
     return;
   }
 
-  res.innerHTML=filtered.map(row=>{
-    const ms=azMaxSev(row._flags);
-    const cfg=AZ_SEV[ms];
-    const uid=row._uid;
-    const expState=window._azExp&&window._azExp[uid];
-    const retailer=row.RETAILER||'—';
-    const desc=row.DESCRIPTN||'—';
-    const snum=row.SAMPNUM||'—';
-    const eolBadge=row.EOL===true?'<span style="background:#1e1b4b;color:#a5b4fc;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px;">EOL</span>':'';
-    const stBadge=row.SAMPSTATUS==='ACTIVE'?'<span style="background:#0c2a0a;color:#4ade80;border-radius:3px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px;">ACTIVE</span>':'';
-    const fileTag=row._file?`<span style="font-size:10px;color:#334155;margin-left:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px;" title="${row._file}">${row._file.replace('SIS_Adverse_Notification_','').replace('.xlsx','')}</span>`:'';
+  // Group by category
+  const groups = {'Neck Skin':[],'Product':[],'Swab':[],'Water':[],'Caeca':[]};
+  filtered.forEach(row => {
+    const cat = azCategory(row);
+    (groups[cat]||groups['Product']).push(row);
+  });
 
-    const flagPills=row._flags.map(f=>{
-      const fc=AZ_SEV[f.sev];
-      return `<div class="az-flag-pill" style="background:${fc.bg};border:1px solid ${fc.color}55;color:${fc.color}">
-        <b>${f.sev}:</b> ${f.msg}</div>`;
-    }).join('');
+  let html = '';
+  Object.entries(groups).forEach(([cat, rows]) => {
+    if (!rows.length) return;
+    const catColor = CAT_COLOR[cat]||'#3b82f6';
+    const icon = CAT_ICON[cat]||'📦';
+    html += `<div style="margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:${catColor};
+        border-left:3px solid ${catColor};padding-left:8px;margin-bottom:8px;">${icon} ${cat} (${rows.length})</div>`;
 
-    let detailHtml='';
-    if(expState){
-      const fields=[
-        ['Sample #',row.SAMPNUM],['Description',row.DESCRIPTN],['Retailer',row.RETAILER],
-        ['Material',row.MATERIAL],['Unit',row.UNIT],['Shift',row.SHIFT],['EOL',String(row.EOL)],
-        ['Suite',row.SUITE],['Status',row.SAMPSTATUS],['Order',row.ORDER],['Other ID',row.OTHER_ID],
-        ['Farm/Load',`Farm ${row.FARM_NO??'—'} · ${row.PEN_NO??'—'} · Load ${row.LOAD_NO??'—'}`],
-        ['Start Date',azFmt(row.STARTDATE)],['Sample Date',azFmt(row.SAMDATE)],['Manuf Date',azFmt(row.MANUFDATE)],
-        ['TVC',azFmt(row.TVCF??row.spTVCF50)],['E. coli',azFmt(row.EcF??row.EcPF)],
-        ['Pseudomonas',azFmt(row.PsFc??row.spPsF50c??row.spPsF52c)],
-        ['Campylobacter',azFmt(row.Campy1Fc??row.CampyFnc)],['Campy Detection (CampyDBc)',azFmt(row.CampyDBc)],['Salmonella 25g',azFmt(row['SOB-25c'])],['Salmonella Serogroup (SOBsp)',azFmt(row.SOBsp)],
-        ['S. aureus',azFmt(row.SaFc)],['Enterobacteriaceae',azFmt(row.EntF)],
-        ['Swab TVC',azFmt(row.TVCS)],['Swab Ent',azFmt(row.EntS)],['Swab Ps',azFmt(row.PsSc)],
-        ['Water TVC 22°C',azFmt(row.TVC22)],['Water TVC 37°C',azFmt(row.TVC37)],
-        ['Water Coliforms',azFmt(row.ColiW)],['Water E. coli',azFmt(row.EcW)],
-        ['Caeca Campy',azFmt(row.CampyFnc)],['ID',azFmt(row.ID)],
-        ['Det Type',row.DETTYPE],['Retest',String(row.RETEST)],['Sampled By',row.SAMBY],['File',row._file],
-      ];
-      detailHtml=`<div class="az-detail">${fields.map(([l,v])=>`
-        <div class="az-detail-item"><div class="az-dl">${l}</div><div class="az-dv" title="${v??''}">${v??'—'}</div></div>`).join('')}</div>`;
+    // For Caeca — group by kill date and show as compact table
+    if (cat === 'Caeca') {
+      // Group by kill date
+      const byDate = {};
+      rows.forEach(r => {
+        const kd = r.KILLDATE instanceof Date ? r.KILLDATE.toLocaleDateString('en-GB') : String(r.KILLDATE||'').split('T')[0];
+        if (!byDate[kd]) byDate[kd] = [];
+        byDate[kd].push(r);
+      });
+      Object.entries(byDate).forEach(([kd, krows]) => {
+        const allCampy = krows.map(r => {
+          const cs = String(r.CampyFnc??'');
+          if (cs.includes('>150000000')) return {val:'>150M',n:150000001,str:'>150M cfu/g'};
+          const n = azFmtNum(r.CampyFnc);
+          if (n===null) return null;
+          const label = n>=1e9?`${(n/1e9).toFixed(1)}B`:n>=1e6?`${Math.round(n/1e6)}M`:n>=1e3?`${Math.round(n/1000)}K`:`${n}`;
+          return {val:label,n,str:`${label} cfu/g`};
+        }).filter(Boolean);
+
+        const maxN = allCampy.length ? Math.max(...allCampy.map(c=>c.n)) : 0;
+        const highRisk = maxN >= 1e8;
+        const badgeColor = maxN >= 5e8 ? '#ff2d55' : maxN >= 1e8 ? '#ff6b35' : '#ffd60a';
+
+        // Sort by count desc
+        const sorted = [...krows].map((r,i) => ({r, c:allCampy[i]})).filter(x=>x.c).sort((a,b)=>b.c.n-a.c.n);
+
+        html += `<div style="background:#0a0e18;border:1px solid #1e2d45;border-left:3px solid ${badgeColor};border-radius:6px;margin-bottom:8px;overflow:hidden;">
+          <div style="padding:8px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #0f1520;">
+            <span style="font-size:10px;font-weight:800;letter-spacing:.07em;background:${badgeColor}22;color:${badgeColor};padding:2px 8px;border-radius:3px;">${highRisk?'HIGH RISK':'MODERATE'}</span>
+            <span style="font-size:12px;color:#cbd5e1;font-weight:600;">Kill ${kd}</span>
+            <span style="font-size:11px;color:#64748b;">${krows.length} sheds · max ${sorted[0]?.c?.str||'—'}</span>
+            <span style="font-size:11px;color:#475569;margin-left:auto;">${krows[0]?._file?.replace('SIS_Adverse_Notification_','').replace('.xlsx','')||''}</span>
+          </div>
+          <div style="padding:8px 12px;display:flex;flex-wrap:wrap;gap:5px;">
+            ${sorted.map(({r,c}) => {
+              const bc = c.n>=5e8?'#ff2d55':c.n>=1e8?'#ff6b35':c.n>=1e7?'#ffd60a':'#64748b';
+              return `<span style="background:${bc}22;border:1px solid ${bc}55;color:${bc};border-radius:4px;padding:2px 8px;font-size:11px;font-family:monospace;" title="#${r.SAMPNUM}">${c.str}</span>`;
+            }).join('')}
+          </div>
+        </div>`;
+      });
+
+    } else {
+      // Standard rows — clean card per sample
+      rows.forEach(row => {
+        const ms = azMaxSev(row._flags);
+        const cfg = AZ_SEV[ms];
+        const uid = row._uid;
+        const exp = window._azExp && window._azExp[uid];
+        const name = azProductName(row);
+        const snum = row.SAMPNUM||'—';
+        const shelf = azShelfInfo(row);
+        const fileTag = row._file?.replace('SIS_Adverse_Notification_','').replace('.xlsx','')||'';
+
+        // Shelf life badge
+        let shelfBadge = '';
+        if (cat === 'Product' && shelf.stage !== '—') {
+          const sc = shelf.stage==='SOL'?'#22d3ee':shelf.stage==='EOL'?'#a78bfa':'#64748b';
+          const dayLabel = shelf.dayOfLife !== null ? ` · Day ${shelf.dayOfLife}${shelf.shelfDays?` of ${shelf.shelfDays}d life`:''}` : '';
+          shelfBadge = `<span style="background:${sc}22;border:1px solid ${sc}55;color:${sc};border-radius:3px;padding:1px 7px;font-size:10px;font-weight:700;">${shelf.stage}${dayLabel}</span>`;
+        }
+
+        // Resolve key result values for the table
+        const ps = [row.PsFc,row.spPsF50c,row.spPsF52c,row.spPsF53c].map(v=>String(v??'.')).find(s=>s!=='.')||'—';
+        const ec = (() => {
+          const ef=String(row.EcF??'.'), ep=String(row.EcPF??'.');
+          const efn=azFmtNum(row.EcF), epn=azFmtNum(row.EcPF);
+          if(efn!==null&&epn!==null) return epn>=efn?`${ep} (EcPF)`:`${ef} (EcF)`;
+          if(epn!==null) return `${ep} (EcPF)`;
+          if(efn!==null) return `${ef} (EcF)`;
+          return ef!=='.'?ef:ep!=='.'?ep:'—';
+        })();
+        const tvc = String(row.TVCF??row.spTVCF50??'.');
+        const campy = String(row.Campy1Fc??row.CampyFnc??row.CampyDBc??'—');
+        const salm = String(row['SOB-25c']??'—');
+        const ent = String(row.EntF??'—');
+        const sa = String(row.SaFc??'—');
+
+        // Flag severity for each value
+        const psSev = (() => { const n=azFmtNum(ps); if(!n)return null; return n>1e7?'FAIL':n>1e5?'WARN':null; })();
+        const ecSev = (() => { const n=azFmtNum(ec); if(!n)return null; return n>5000?'FAIL':n>500?'WARN':null; })();
+        const campySev = (() => { const s=campy; if(s==='Pos')return 'FAIL'; const n=azFmtNum(campy); if(!n)return null; return n>1000?'FAIL':n>600?'WARN':null; })();
+        const salmSev = (salm==='Pos'||salm==='Hold')?'CRITICAL':null;
+        const entSev = (() => { const n=azFmtNum(ent); if(!n)return null; return n>1e4?'WARN':null; })();
+        const saSev = (() => { const n=azFmtNum(sa); if(!n)return null; return n>100?'FAIL':n>=10?'CAUTION':null; })();
+
+        // Swab-specific values
+        const tvcs=String(row.TVCS??'—'), ents=String(row.EntS??'—'), pss=String(row.PsSc??'—');
+        const tvcsSev=(()=>{const n=azFmtNum(row.TVCS);if(!n)return null;return n>1000?'FAIL':null;})();
+        const entsSev=(()=>{const n=azFmtNum(row.EntS)||0;return n>100?'FAIL':null;})();
+        // EntS string like '>1500' should also flag
+        const entsSevStr=String(row.EntS??'').startsWith('>')?'FAIL':entsSev;
+
+        // Water values
+        const t37=String(row.TVC37??'—'), t22=String(row.TVC22??'—');
+        const t37n=azFmtNum(row.TVC37);
+        const t37Sev=t37n&&t37n>=1?'WARN':null;
+        const t37SevFull=t37n&&t37n>1000?'FAIL':t37Sev;
+
+        // Neck skin
+        const nkCampy=String(row.Campy1Fc??'—');
+        const nkCampyN=azFmtNum(row.Campy1Fc)||(nkCampy.includes('>4500')?4501:0);
+        const nkCampySev=nkCampyN>1000?'FAIL':null;
+        const nkSalm=String(row['SOB-25c']??'—');
+        const nkSalmSev=nkSalm==='Pos'||nkSalm==='Hold'?'CRITICAL':null;
+
+        const cardDiv = document.createElement('div');
+        let cardHtml = '<div class="az-card" style="border:1px solid '+cfg.color+'44;border-left:3px solid '+cfg.color+';margin-bottom:7px;">';
+        cardHtml += '<div class="az-card-hdr" onclick="if(!window._azExp)window._azExp={};window._azExp[\''+uid+'\']=!window._azExp[\''+uid+'\'];azRender()">';
+        cardHtml += '<span class="az-sev-pill" style="background:'+cfg.bg+';color:'+cfg.color+'">'+ms+'</span>';
+        cardHtml += '<span style="font-size:13px;font-weight:600;color:#e2e8f0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+name+'</span>';
+        cardHtml += shelfBadge;
+        cardHtml += '<span style="font-size:11px;color:#475569;white-space:nowrap;margin-left:6px;">#'+snum+'</span>';
+        cardHtml += '<span style="font-size:10px;color:#334155;white-space:nowrap;margin-left:8px;max-width:110px;overflow:hidden;text-overflow:ellipsis;">'+fileTag+'</span>';
+        cardHtml += '<span style="color:#475569;font-size:13px;margin-left:8px;">'+(exp?'▲':'▼')+'</span>';
+        cardHtml += '</div>';
+
+
+          if (exp) {
+            cardHtml += '<div style="border-top:1px solid #0f1520;display:grid;grid-template-columns:1fr 1fr;gap:0;">';
+            cardHtml += '<div style="border-right:1px solid #0f1520;padding:8px 0;">';
+            cardHtml += '<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;padding:0 12px 6px;">Results</div>';
+            cardHtml += '<table style="width:100%;border-collapse:collapse;">';
+            if (cat==='Swab') {
+              cardHtml += azResultRow('Swab TVC',tvcs,row.TVCS,tvcsSev);
+              cardHtml += azResultRow('Swab Ent',ents,row.EntS,entsSevStr);
+              cardHtml += azResultRow('Swab Ps',pss,row.PsSc,null);
+              cardHtml += azResultRow('S. aureus',sa,row.SaFc,saSev);
+              cardHtml += azResultRow('E. coli',ec,null,ecSev);
+            } else if (cat==='Water') {
+              cardHtml += azResultRow('TVC 22C',t22,row.TVC22,null);
+              cardHtml += azResultRow('TVC 37C',t37,row.TVC37,t37SevFull);
+              cardHtml += azResultRow('Coliforms',String(row.ColiW||'—'),row.ColiW,null);
+              cardHtml += azResultRow('E. coli',String(row.EcW||'—'),row.EcW,null);
+              cardHtml += azResultRow('Enterococci',String(row.EntWc||'—'),row.EntWc,null);
+            } else if (cat==='Neck Skin') {
+              cardHtml += azResultRow('Campylobacter',nkCampy,row.Campy1Fc,nkCampySev);
+              cardHtml += azResultRow('Salmonella 25g',nkSalm,row['SOB-25c'],nkSalmSev);
+              cardHtml += azResultRow('Serogroup',String(row.SOBsp||'—'),null,nkSalmSev);
+            } else {
+              cardHtml += azResultRow('Pseudomonas',ps,null,psSev);
+              cardHtml += azResultRow('E. coli',ec,null,ecSev);
+              cardHtml += azResultRow('TVC',tvc==='.'?'—':tvc,null,null);
+              cardHtml += azResultRow('Campylobacter',campy,null,campySev);
+              cardHtml += azResultRow('Campy Detect',String(row.CampyDBc||'—'),null,row.CampyDBc==='Pos'?'FAIL':null);
+              cardHtml += azResultRow('Salmonella 25g',salm,null,salmSev);
+              cardHtml += azResultRow('Serogroup',String(row.SOBsp||'—'),null,salmSev);
+              cardHtml += azResultRow('Enterobact.',ent,null,entSev);
+              cardHtml += azResultRow('S. aureus',sa,null,saSev);
+              cardHtml += azResultRow('Coliforms',String(row.ColiF||'—'),null,null);
+            }
+            cardHtml += '</table></div>';
+            cardHtml += '<div style="padding:8px 0;">';
+            cardHtml += '<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;padding:0 12px 6px;">Sample Info</div>';
+            cardHtml += '<table style="width:100%;border-collapse:collapse;">';
+            var kd = row.KILLDATE instanceof Date ? row.KILLDATE.toLocaleDateString('en-GB') : String(row.KILLDATE||'—').split('T')[0];
+            var sd2 = row.STARTDATE instanceof Date ? row.STARTDATE.toLocaleDateString('en-GB') : String(row.STARTDATE||'—').split('T')[0];
+            var ub = row.USE_BY instanceof Date ? row.USE_BY.toLocaleDateString('en-GB') : String(row.USE_BY||'—').split('T')[0];
+            var farmLoad = [row.FARM_NO&&row.FARM_NO!=='.'?'Farm '+row.FARM_NO:'',row.LOAD_NO&&row.LOAD_NO!=='.'?'Load '+row.LOAD_NO:''].filter(Boolean).join(' · ')||'—';
+            cardHtml += azResultRow('Sample #',snum,null,null);
+            cardHtml += azResultRow('Kill / Mfr Date',kd,null,null);
+            cardHtml += azResultRow('Test Start Date',sd2,null,null);
+            cardHtml += azResultRow('Use By / EOL',ub,null,null);
+            var shelfLabel = shelf.stage + (shelf.dayOfLife!==null ? ' (Day '+shelf.dayOfLife+(shelf.shelfDays?' of '+shelf.shelfDays+'d':'')+ ')' : '');
+            cardHtml += azResultRow('Shelf Stage',shelfLabel,null,shelf.stage==='EOL'?'INFO':null);
+            cardHtml += azResultRow('Suite',String(row.SUITE||'—'),null,null);
+            cardHtml += azResultRow('Status',String(row.SAMPSTATUS||'—'),null,row.SAMPSTATUS==='ACTIVE'?'INFO':null);
+            cardHtml += azResultRow('Frequency',String(row.SHIFT||'—'),null,null);
+            cardHtml += azResultRow('Farm / Load',farmLoad,null,null);
+            cardHtml += azResultRow('Sampled By',String(row.SAMBY||'—'),null,null);
+            cardHtml += azResultRow('File',fileTag,null,null);
+            cardHtml += '</table></div></div>';
+            cardHtml += '<div style="padding:6px 12px 10px;border-top:1px solid #0f1520;">';
+            cardHtml += '<div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#475569;margin-bottom:5px;">Flags</div>';
+            cardHtml += '<div style="display:flex;flex-wrap:wrap;gap:5px;">';
+            row._flags.forEach(function(f){var fc=AZ_SEV[f.sev];cardHtml+='<div style="background:'+fc.bg+';border:1px solid '+fc.color+'55;color:'+fc.color+';border-radius:4px;padding:3px 10px;font-size:11px;"><b>'+f.sev+':</b> '+f.msg+'</div>';});
+            cardHtml += '</div></div>';
+          } else {
+            cardHtml += '<div style="padding:4px 12px 8px;display:flex;flex-wrap:wrap;gap:4px;">';
+            row._flags.forEach(function(f){var fc=AZ_SEV[f.sev];cardHtml+='<div style="background:'+fc.bg+';border:1px solid '+fc.color+'44;color:'+fc.color+';border-radius:3px;padding:2px 8px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;"><b>'+f.sev+':</b> '+f.msg+'</div>';});
+            cardHtml += '</div>';
+          }
+          html += cardHtml + '</div>';
+      });
     }
+    html += '</div>';
+  });
 
-    return `<div class="az-card" style="border:1px solid ${cfg.color}44;border-left:3px solid ${cfg.color}">
-      <div class="az-card-hdr" onclick="if(!window._azExp)window._azExp={};window._azExp['${uid}']=!window._azExp['${uid}'];azRender()">
-        <span class="az-sev-pill" style="background:${cfg.bg};color:${cfg.color}">${ms}</span>
-        <span style="font-size:13px;font-weight:600;color:#e2e8f0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${desc}</span>
-        <span style="font-size:11px;color:#64748b;white-space:nowrap;">${retailer}</span>
-        <span style="font-size:11px;color:#475569;white-space:nowrap;">#${snum}</span>
-        ${eolBadge}${stBadge}${fileTag}
-        <span style="color:#475569;font-size:13px;margin-left:6px;">${expState?'▲':'▼'}</span>
-      </div>
-      <div class="az-flags">${flagPills}</div>
-      ${detailHtml}
-    </div>`;
-  }).join('');
+  res.innerHTML = html;
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
