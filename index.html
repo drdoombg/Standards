@@ -1726,8 +1726,8 @@ function azAnalyseRow(row) {
           coliF=azVal(row.ColiW44), ecw=azVal(row.EcW), ent=azVal(row.EntWc), src=azVal(row.SRClW);
     if (azNum(t37)&&t37>=1)   flags.push({sev:'WARN',    msg:`Water TVC 37°C ${t37} cfu/ml ≥1 (limit: <1). Low Level Positive — re-sample.`});
     if (azNum(t22)&&t22>100)  flags.push({sev:'WARN',    msg:`Water TVC 22°C ${t22.toLocaleString()} cfu/ml — abnormal change. Investigate.`});
-    if (azNum(coli)&&coli>0)  flags.push({sev:'FAIL',    msg:`Water Total Coliforms ${coli} MPN/100ml detected. High Level Positive — quarantine outlet.`});
-    if (azNum(coliF)&&coliF>0)flags.push({sev:'FAIL',    msg:`Water Faecal Coliforms ${coliF} MPN/100ml detected. High Level Positive.`});
+    if (azNum(coli)&&coli>=1)  flags.push({sev:'FAIL',    msg:'Water Total Coliforms '+coli.toFixed(0)+' MPN/100ml detected. High Level Positive — quarantine outlet.'});
+    if (azNum(coliF)&&coliF>=1)flags.push({sev:'FAIL',    msg:'Water Faecal Coliforms '+coliF.toFixed(0)+' MPN/100ml detected. High Level Positive.'});
     if (azNum(ecw)&&ecw>0)    flags.push({sev:'CRITICAL',msg:`Water E. coli ${ecw} MPN/100ml — High Level Positive. Stop use. Production risk.`});
     if (azNum(ent)&&ent>0)    flags.push({sev:'CRITICAL',msg:`Water Enterococci ${ent} cfu/100ml — High Level Positive.`});
     if (azNum(src)&&src>0)    flags.push({sev:'WARN',    msg:`Water SR Clostridia ${src} cfu/100ml — customer specific action.`});
@@ -1804,6 +1804,21 @@ function azAnalyseRow(row) {
               : (azNum(_ecfN) ? _ecfN : (azNum(_ecpfN) ? _ecpfN : null));
     const ecfCol = (azNum(_ecpfN) && (!azNum(_ecfN) || _ecpfN >= _ecfN)) ? 'EcPF/TP4167' : 'EcF/TP4133';
 
+    // TVCF / spTVCF50 as string ">3000" / ">4000000" etc — parse manually
+    const _tvcStr = String(row.TVCF ?? row.spTVCF50 ?? '');
+    if (_tvcStr.startsWith('>')) {
+      const _tvcv = parseFloat(_tvcStr.replace('>','').replace(/,/g,''));
+      if (!isNaN(_tvcv) && _tvcv >= 500000)
+        flags.push({sev:'FAIL', msg:'Product TVC '+_tvcStr+' cfu/g — very high. Check against spec.'});
+      else if (!isNaN(_tvcv) && _tvcv >= 100000)
+        flags.push({sev:'WARN', msg:'Product TVC '+_tvcStr+' cfu/g — elevated. Monitor.'});
+    }
+
+    // Ingredients/stuffing — flag high LAB (Lactic Acid Bacteria) and Enterobacteriaceae
+    const _lab = azVal(row.LacFc);
+    if (azNum(_lab) && _lab > 1000)
+      flags.push({sev:'WARN', msg:'Ingredient Lactic Acid Bacteria (LacFc) '+_lab.toLocaleString()+' cfu/g — elevated. Check against ingredient spec.'});
+
     // EcPF as string ">15000" etc — parse manually
     const _ecpfStr = String(row.EcPF ?? '');
     if (!azNum(_ecpfN) && _ecpfStr.startsWith('>')) {
@@ -1851,6 +1866,19 @@ function azAnalyseRow(row) {
     if (isMince && azNum(tvc)) {
       if (tvc>5e6) flags.push({sev:'FAIL', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} cfu/g — >M (5×10⁶). Automatic fail.`});
       else if(tvc>5e5) flags.push({sev:'WARN', msg:`Legal: Minced Meat TVC ${tvc.toLocaleString()} cfu/g — between m(5×10⁵)–M(5×10⁶).`});
+    }
+
+    // General S. aureus on product — KFC style (SaFc column on finished product)
+    const _saf = azVal(row.SaFc);
+    if (azNum(_saf)) {
+      if (_saf > 100) flags.push({sev:'FAIL', msg:'Product S. aureus (SaFc) '+_saf.toLocaleString()+' cfu/g — very high. Check against customer spec.'});
+      else if (_saf > 20) flags.push({sev:'WARN', msg:'Product S. aureus (SaFc) '+_saf.toLocaleString()+' cfu/g — above target of <20 (ASDA/Co-op COP). Monitor.'});
+    }
+    // SaFc as string ">3000"
+    const _safStr = String(row.SaFc ?? '');
+    if (_safStr.startsWith('>')) {
+      const _safv = parseFloat(_safStr.replace('>','').replace(/,/g,''));
+      if (!isNaN(_safv) && _safv >= 100) flags.push({sev:'FAIL', msg:'Product S. aureus (SaFc) '+_safStr+' cfu/g — very high. Check against spec.'});
     }
 
     // General high E. coli (non-mince/non-meat-prep rows like external intake, AMBER Skin)
@@ -2045,10 +2073,26 @@ function azCategory(row) {
 function azProductName(row) {
   const retailer = (row.RETAILER||'').trim();
   const desc = (row.DESCRIPTN||'').trim();
-  // If retailer already appears at start of desc, don't duplicate
-  if (desc.toLowerCase().startsWith(retailer.toLowerCase())) return desc;
-  if (!retailer || retailer === '2Sisters' || retailer === '2sisters') return desc;
-  return `${retailer} — ${desc}`;
+  // Build base name
+  let base;
+  if (desc.toLowerCase().startsWith(retailer.toLowerCase())) base = desc;
+  else if (!retailer || retailer === '2Sisters' || retailer === '2sisters') base = desc;
+  else base = retailer + ' — ' + desc;
+  // Append useful context from COMMS, OTHER_ID, BATCH — suppress generic/boilerplate values
+  const genericPat = /^(2037|scunthorpe|2037.*scunthorpe|fresh pack|batch info|\.|-|n\/a)$/i;
+  const extras = [];
+  [row.OTHER_ID, row.COMMS, row.BATCH].forEach(function(v) {
+    if (!v || v === '.' || v === '') return;
+    const s = String(v).trim();
+    if (!s || s === '.' || genericPat.test(s)) return;
+    // Suppress if it just says the retailer or description again
+    if (s.toLowerCase() === retailer.toLowerCase()) return;
+    // Suppress long boilerplate storage/instruction strings
+    if (s.length > 80) return;
+    extras.push(s);
+  });
+  if (extras.length) base += ' · ' + extras.join(' · ');
+  return base;
 }
 
 function azResultRow(label, value, rawVal, sev) {
@@ -2146,21 +2190,25 @@ function azRender() {
         // Sort by count desc
         const sorted = [...krows].map((r,i) => ({r, c:allCampy[i]})).filter(x=>x.c).sort((a,b)=>b.c.n-a.c.n);
 
-        html += `<div style="background:#0a0e18;border:1px solid #1e2d45;border-left:3px solid ${badgeColor};border-radius:6px;margin-bottom:8px;overflow:hidden;">
-          <div style="padding:8px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #0f1520;">
-            <span style="font-size:10px;font-weight:800;letter-spacing:.07em;background:${badgeColor}22;color:${badgeColor};padding:2px 8px;border-radius:3px;">${highRisk?'HIGH RISK':'MODERATE'}</span>
-            <span style="font-size:12px;color:#cbd5e1;font-weight:600;">Kill ${kd}</span>
-            <span style="font-size:11px;color:#64748b;">${krows.length} sheds · max ${sorted[0]?.c?.str||'—'}</span>
-            <span style="font-size:11px;color:#475569;margin-left:auto;">${krows[0]?._file?.replace('SIS_Adverse_Notification_','').replace('.xlsx','')||''}</span>
-          </div>
-          <div style="padding:8px 12px;display:flex;flex-wrap:wrap;gap:5px;">
-            ${sorted.map(({r,c}) => {
-              const bc = c.n>=5e8?'#ff2d55':c.n>=1e8?'#ff6b35':c.n>=1e7?'#ffd60a':'#64748b';
-              return `<span style="background:${bc}22;border:1px solid ${bc}55;color:${bc};border-radius:4px;padding:2px 8px;font-size:11px;font-family:monospace;" title="#${r.SAMPNUM}">${c.str}</span>`;
-            }).join('')}
-          </div>
-        </div>`;
-      });
+        var cBlock = '<div style="background:#0a0e18;border:1px solid #1e2d45;border-left:3px solid '+badgeColor+';border-radius:6px;margin-bottom:8px;overflow:hidden;">';
+        cBlock += '<div style="padding:8px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #0f1520;flex-wrap:wrap;">';
+        cBlock += '<span style="font-size:10px;font-weight:800;letter-spacing:.07em;background:'+badgeColor+'22;color:'+badgeColor+';padding:2px 8px;border-radius:3px;">'+(highRisk?'HIGH RISK':'MODERATE')+'</span>';
+        cBlock += '<span style="font-size:12px;color:#cbd5e1;font-weight:600;">Kill '+kd+'</span>';
+        cBlock += '<span style="font-size:11px;color:#64748b;">'+krows.length+' sheds · max '+(sorted[0]?sorted[0].c.str:'—')+'</span>';
+        var fileTagC = krows[0]&&krows[0]._file ? krows[0]._file.replace('SIS_Adverse_Notification_','').replace('.xlsx','') : '';
+        cBlock += '<span style="font-size:11px;color:#475569;margin-left:auto;">'+fileTagC+'</span>';
+        cBlock += '</div>';
+        cBlock += '<div style="padding:6px 12px 6px;display:flex;flex-wrap:wrap;gap:4px;">';
+        sorted.forEach(function(item){
+          var bc = item.c.n>=5e8?'#ff2d55':item.c.n>=1e8?'#ff6b35':item.c.n>=1e7?'#ffd60a':'#64748b';
+          cBlock += '<span style="background:'+bc+'22;border:1px solid '+bc+'55;color:'+bc+';border-radius:4px;padding:2px 8px;font-size:11px;font-family:monospace;" title="#'+item.r.SAMPNUM+'">'+item.c.str+'</span>';
+        });
+        cBlock += '</div>';
+        cBlock += '<div style="padding:2px 12px 7px;font-size:10px;color:#334155;font-style:italic;">Context only — no legal limit on caeca counts. High counts (&gt;100M) predict neck skin positives. Ref: 2SFG D2.0 Table 1 · Campy prevalence programme.</div>';
+        cBlock += '</div>';
+        html += cBlock;
+
+      }); // end byDate
 
     } else {
       // Standard rows — clean card per sample
@@ -2217,7 +2265,7 @@ function azRender() {
         const t37=String(row.TVC37??'—'), t22=String(row.TVC22??'—');
         const t37n=azFmtNum(row.TVC37);
         const t37Sev=t37n&&t37n>=1?'WARN':null;
-        const t37SevFull=t37n&&t37n>1000?'FAIL':t37Sev;
+        const t37SevFull=t37Sev; // TVC 37C: always WARN if >=1, no FAIL threshold in Table 2
 
         // Neck skin
         const nkCampy=String(row.Campy1Fc??'—');
