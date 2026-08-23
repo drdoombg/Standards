@@ -156,6 +156,30 @@
   .suite-card .sc-code { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--accent2); margin-bottom: 3px; }
   .suite-card .sc-name { font-size: 12px; color: var(--text); margin-bottom: 2px; }
   .suite-card .sc-meta { font-size: 11px; color: var(--muted); }
+
+  /* ── Procedures Supertab ── */
+  .tab-btn-procedures { background: #1e1035; border-color: #7c3aed; color: #c4b5fd; }
+  .tab-btn-procedures:hover { border-color: #a78bfa; color: #ede9fe; }
+  .tab-btn-procedures.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+
+  .proc-header { margin-bottom: 14px; padding: 14px 16px; background: #130d24; border: 1px solid #4c1d95; border-radius: 8px; }
+  .proc-title-row { font-size: 15px; font-weight: 700; color: #c4b5fd; letter-spacing: 0.04em; margin-bottom: 2px; }
+  .proc-meta { font-size: 11px; color: #6d28d9; }
+
+  .proc-tabs {
+    display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 16px;
+    background: #0d0a1a; border: 1px solid #2d1f5e; border-radius: 6px; padding: 8px;
+  }
+  .proc-btn {
+    padding: 7px 13px; min-height: 34px; border: 1px solid #2d1f5e;
+    background: #130d24; color: #7c3aed; border-radius: 4px;
+    cursor: pointer; font-size: 11px; font-weight: 600; letter-spacing: 0.03em;
+    transition: all 0.15s; white-space: nowrap; flex-shrink: 0;
+  }
+  .proc-btn:hover { border-color: #7c3aed; color: #c4b5fd; }
+  .proc-btn.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .proc-panel { display: none; }
+  .proc-panel.active { display: block; }
 </style>
 </head>
 <body>
@@ -173,18 +197,16 @@
 </div>
 
 <!-- TABS -->
-<div class="tabs">
-  <button class="tab-btn active" onclick="showTab('limits',this)">Limits by Organism</button>
-  <button class="tab-btn" onclick="showTab('sample',this)">Sample Types &amp; Frequency</button>
-  <button class="tab-btn" onclick="showTab('timing',this)">Timing &amp; Transport</button>
-  <button class="tab-btn" onclick="showTab('mims',this)">MIMS Fields &amp; Codes</button>
-  <button class="tab-btn" onclick="showTab('actions',this)">Actions on Failure</button>
-  <button class="tab-btn" onclick="showTab('procedures',this)">Procedures &amp; Methods</button>
-  <button class="tab-btn" onclick="showTab('raci',this)">RACI &amp; Responsibilities</button>
-  <button class="tab-btn" onclick="showTab('doccontrol',this)">Document Control</button>
-  <button class="tab-btn" onclick="showTab('cop',this)">Customer COPs</button>
-  <button class="tab-btn" onclick="showTab('analyser',this)">⚠ Result Analyser</button>
-  <button class="tab-btn" onclick="showTab('bacteria',this)">🧫 Bacteria Guide</button>
+<div class="tabs" id="main-tabs">
+  <button class="tab-btn active" onclick="showMainTab('limits',this)">Limits by Organism</button>
+  <button class="tab-btn" onclick="showMainTab('sample',this)">Sample Types &amp; Frequency</button>
+  <button class="tab-btn" onclick="showMainTab('timing',this)">Timing &amp; Transport</button>
+  <button class="tab-btn" onclick="showMainTab('mims',this)">MIMS Fields &amp; Codes</button>
+  <button class="tab-btn" onclick="showMainTab('actions',this)">Actions on Failure</button>
+  <button class="tab-btn tab-btn-procedures" onclick="showMainTab('proc-super',this)">📋 Procedures</button>
+  <button class="tab-btn" onclick="showMainTab('cop',this)">Customer COPs</button>
+  <button class="tab-btn" onclick="showMainTab('analyser',this)">⚠ Result Analyser</button>
+  <button class="tab-btn" onclick="showMainTab('bacteria',this)">🧫 Bacteria Guide</button>
 </div>
 
 <!-- ═══════════════════════════ TAB 1: LIMITS ═══════════════════════════ -->
@@ -604,320 +626,711 @@
 </div>
 
 <!-- ═══════════════════════════ TAB 6: PROCEDURES & METHODS ═══════════════════════════ -->
-<div id="tab-procedures" class="tab-panel">
+<!-- ═══════════════════════════ SUPERTAB: PROCEDURES ═══════════════════════════ -->
+<div id="tab-proc-super" class="tab-panel">
+  <div class="proc-header">
+    <div class="proc-title-row">📋 Procedures Library</div>
+    <div class="proc-meta">2SFG Scunthorpe · Site Procedure Reference · 11 documents</div>
+  </div>
+  <!-- Sub-tab bar -->
+  <div class="proc-tabs" id="proc-tabs">
+    <button class="proc-btn active" onclick="showProcTab('pmethods',this)">🧫 Micro Methods</button>
+    <button class="proc-btn" onclick="showProcTab('praci',this)">👥 RACI</button>
+    <button class="proc-btn" onclick="showProcTab('pdoccontrol',this)">📄 Doc Control</button>
+    <button class="proc-btn" onclick="showProcTab('pcomplaints',this)">⚠ Complaints</button>
+    <button class="proc-btn" onclick="showProcTab('ppest',this)">🐀 Pest Control</button>
+    <button class="proc-btn" onclick="showProcTab('prca',this)">🔍 Root Cause</button>
+    <button class="proc-btn" onclick="showProcTab('pstock',this)">📦 Stock Control</button>
+    <button class="proc-btn" onclick="showProcTab('pvisitors',this)">🪪 Visitors</button>
+    <button class="proc-btn" onclick="showProcTab('pabp',this)">🐾 Animal By-Products</button>
+    <button class="proc-btn" onclick="showProcTab('partwork',this)">🏷 Artwork Approval</button>
+    <button class="proc-btn" onclick="showProcTab('pscald',this)">🌡 Secondary Scalding</button>
+  </div>
 
-  <div class="note"><b>These are the physical step-by-step collection methods from the document appendices.</b> All procedures require hands washed as per handwashing procedure before handling any sample material at any stage.</div>
+  <!-- ── SUB-TAB: MICRO METHODS (previously tab-procedures) ── -->
+  <div id="proc-pmethods" class="proc-panel active">
+    <div class="note"><b>Source: Inspection and Testing Procedure — Microbiology D2.0 (17/10/2025)</b><br>These are the physical step-by-step collection methods from the document appendices. All procedures require hands washed as per handwashing procedure before handling any sample material at any stage.</div>
 
-  <div class="section-title">Appendix 1 — Water Sampling Method</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
-    <tbody>
-      <tr><td class="num">1</td><td>Order bottles from lab</td><td>Sodium thiosulphate-dosed bottles required for chlorinated water (all tap water). Order only lab-supplied or approved vendor bottles.</td></tr>
-      <tr><td class="num">2</td><td>Store bottles</td><td>4–25°C. Use within shelf life stated on bottle.</td></tr>
-      <tr><td class="num">3</td><td>Label the bottle</td><td>Record a legible, permanent ID number. Record on submission form along with source description, date, and time of sampling.</td></tr>
-      <tr><td class="num">4</td><td>Prepare the tap</td><td>Tap must be clean — no attachments, no grease, no cleaning agents. <b>Run tap for 2 minutes before sampling.</b></td></tr>
-      <tr><td class="num">5</td><td>Fill the bottle</td><td>Do not contaminate bottle neck, inside, or lid. Do not put cap on any surface. Fill to top mark. Avoid splashing. Leave small air gap at top.</td></tr>
-      <tr><td class="num">6</td><td>Reseal</td><td>Replace cap without touching the inner contact surfaces. If accidental contamination occurs — discard and use a new sterile bottle.</td></tr>
-      <tr><td class="num">7</td><td>Store and transport</td><td>Store 2–4°C in dark. Use cool boxes and ice packs. Transport containers must be clean. Target: within 6 hours. Hard limit: 24 hours.</td></tr>
-      <tr><td class="num">8</td><td>Submit</td><td>Include submission form (or send electronically ahead of samples). Use UKAS testing suite for potable/drinking water. Non-UKAS suite acceptable for other water types.</td></tr>
-      <tr><td class="num">9</td><td>Validity</td><td>Results invalid if received >24 hrs after sampling OR if no date/time of sampling provided. Lab will add disclaimer on the report.</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">Appendix 1 — Water Sampling Method</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Order bottles from lab</td><td>Sodium thiosulphate-dosed bottles required for chlorinated water (all tap water). Order only lab-supplied or approved vendor bottles.</td></tr>
+        <tr><td class="num">2</td><td>Store bottles</td><td>4–25°C. Use within shelf life stated on bottle.</td></tr>
+        <tr><td class="num">3</td><td>Label the bottle</td><td>Record a legible, permanent ID number. Record on submission form along with source description, date, and time of sampling.</td></tr>
+        <tr><td class="num">4</td><td>Prepare the tap</td><td>Tap must be clean — no attachments, no grease, no cleaning agents. <b>Run tap for 2 minutes before sampling.</b></td></tr>
+        <tr><td class="num">5</td><td>Fill the bottle</td><td>Do not contaminate bottle neck, inside, or lid. Do not put cap on any surface. Fill to top mark. Avoid splashing. Leave small air gap at top.</td></tr>
+        <tr><td class="num">6</td><td>Reseal</td><td>Replace cap without touching the inner contact surfaces. If accidental contamination occurs — discard and use a new sterile bottle.</td></tr>
+        <tr><td class="num">7</td><td>Store and transport</td><td>Store 2–4°C in dark. Use cool boxes and ice packs. Transport containers must be clean. Target: within 6 hours. Hard limit: 24 hours.</td></tr>
+        <tr><td class="num">8</td><td>Submit</td><td>Include submission form (or send electronically ahead of samples). Use UKAS testing suite for potable/drinking water. Non-UKAS suite acceptable for other water types.</td></tr>
+        <tr><td class="num">9</td><td>Validity</td><td>Results invalid if received &gt;24 hrs after sampling OR if no date/time of sampling provided. Lab will add disclaimer on the report.</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Appendix 2 — Air Sampling Method</div>
-  <div class="note">Two methods: <b>Passive (Exposure)</b> — plate left open for 1 hour. <b>Active (Air Sampler Unit)</b> — device samples for ~1 minute. Plates must stabilise at room temperature for 1 hour before exposure. Always include a control plate — must NOT be opened.</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
-    <tbody>
-      <tr><td class="num">1</td><td>Order plates from lab</td><td>Correct agar for organism under test. Always include a control plate with each submission.</td></tr>
-      <tr><td class="num">2</td><td>Store plates</td><td>2–5°C refrigerated. Do NOT push to back — may freeze and become unusable. Use within shelf life.</td></tr>
-      <tr><td class="num">3</td><td>Stabilise at room temperature</td><td>Allow plates to reach room temperature — <b>1 hour stabilisation before exposing.</b></td></tr>
-      <tr><td class="num">4</td><td>Label the plate</td><td>Number on lid. Record number on submission form with location, date, time.</td></tr>
-      <tr><td class="num">5a</td><td>Passive method</td><td>Remove lid (do not contaminate inside surface or lid). Expose agar for <b>1 hour</b> (or specified period). Temperature, airflow and humidity affect performance — record conditions. Replace lid. Tape up.</td></tr>
-      <tr><td class="num">5b</td><td>Active method (air sampler)</td><td>Remove device lid → unscrew top section → insert plate with agar facing up → remove plate lid (do not touch media) → screw top back on → press "Yes" until device operates → samples ~1 min → device powers down → remove top → remove plate → replace lid. Tape up. Device will not start if top is not screwed correctly or needs charging.</td></tr>
-      <tr><td class="num">6</td><td>Control plate</td><td>Do NOT open. Label, tape up, return with all sample plates.</td></tr>
-      <tr><td class="num">7</td><td>Transport</td><td>Direct to lab within <b>20 min</b> (max 1 hr without refrigeration). Or refrigerate: preferably &lt;5°C, max 8°C. Transport within 24 hrs. Results invalid if received &gt;24 hrs or no date/time provided.</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">Appendix 2 — Air Sampling Method</div>
+    <div class="note">Two methods: <b>Passive (Exposure)</b> — plate left open for 1 hour. <b>Active (Air Sampler Unit)</b> — device samples for ~1 minute. Plates must stabilise at room temperature for 1 hour before exposure. Always include a control plate — must NOT be opened.</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Order plates from lab</td><td>Correct agar for organism under test. Always include a control plate with each submission.</td></tr>
+        <tr><td class="num">2</td><td>Store plates</td><td>2–5°C refrigerated. Do NOT push to back — may freeze and become unusable. Use within shelf life.</td></tr>
+        <tr><td class="num">3</td><td>Stabilise at room temperature</td><td>Allow plates to reach room temperature — <b>1 hour stabilisation before exposing.</b></td></tr>
+        <tr><td class="num">4</td><td>Label the plate</td><td>Number on lid. Record number on submission form with location, date, time.</td></tr>
+        <tr><td class="num">5a</td><td>Passive method</td><td>Remove lid (do not contaminate inside surface or lid). Expose agar for <b>1 hour</b> (or specified period). Temperature, airflow and humidity affect performance — record conditions. Replace lid. Tape up.</td></tr>
+        <tr><td class="num">5b</td><td>Active method (air sampler)</td><td>Remove device lid → unscrew top section → insert plate with agar facing up → remove plate lid (do not touch media) → screw top back on → press "Yes" until device operates → samples ~1 min → device powers down → remove top → remove plate → replace lid. Tape up.</td></tr>
+        <tr><td class="num">6</td><td>Control plate</td><td>Do NOT open. Label, tape up, return with all sample plates.</td></tr>
+        <tr><td class="num">7</td><td>Transport</td><td>Direct to lab within <b>20 min</b> (max 1 hr without refrigeration). Or refrigerate: preferably &lt;5°C, max 8°C. Transport within 24 hrs. Results invalid if received &gt;24 hrs or no date/time provided.</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Appendix 4 — Environmental Microbiological Swabs</div>
-  <div class="note">Sampling locations, areas, timing, and technique must follow risk-based principles. Reference standard: <b>ISO 18593:2018.</b> Hygiene swabs must be physically separated from other sample categories to prevent cross-contamination.</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
-    <tbody>
-      <tr><td class="num">1</td><td>Order swabs from lab</td><td>Request correct type for area and organism. Include a control swab in the order — must be submitted and returned with test swabs.</td></tr>
-      <tr><td class="num">2</td><td>Store swabs</td><td>Unopened: 4–10°C. Use within shelf life stated on packaging.</td></tr>
-      <tr><td class="num">3</td><td>Prepare outside production area</td><td>Prepare hygienically outside production — prevents foreign body risks and false contamination. Wash hands before handling.</td></tr>
-      <tr><td class="num">4</td><td>Label and record</td><td>Legible, permanent ID number on swab. Record on submission form: location, date, time.</td></tr>
-      <tr><td class="num">5</td><td>Choose sampling area</td><td><b>Detection:</b> 1000–3000 cm² (as large as possible). <b>Enumeration:</b> ≤100 cm² (10 cm × 10 cm).</td></tr>
-      <tr><td class="num">6a</td><td>Stick swab — transport type</td><td>Check seal is intact. Open pouch with pull tabs. Remove lid from tube and discard. Dip swab into tube to moisten. Sample defined area: swab in all directions, rotating swab to use entire surface. Return to tube, seal properly.</td></tr>
-      <tr><td class="num">6b</td><td>Stick swab — jumbo type</td><td>Check seal. Remove from tube (pre-moistened). Same swabbing technique as above.</td></tr>
-      <tr><td class="num">6c</td><td>Sponge swab</td><td><b>Open bag and pull back over your hand, grasping the sponge through the bag.</b> Do not touch the sponge directly. <b>Using the bag as a glove</b>, collect sample over defined area. Pull the bag back over the sponge and seal.</td></tr>
-      <tr><td class="num">7</td><td>Control swab</td><td>Do NOT use to sample. Label, tape up, return with sample swabs.</td></tr>
-      <tr><td class="num">8</td><td>If pre-soaked transit swabs not used</td><td>Pre-soak swab tips with sterile chemical to neutralise cleaning agents + surfactant to remove more debris.</td></tr>
-      <tr><td class="num">9</td><td>Store and transport</td><td>Store at <b>1–4°C</b>. Transport within <b>24 hours</b>. Results invalid if received &gt;24 hrs or no date/time provided.</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">Appendix 4 — Environmental Microbiological Swabs</div>
+    <div class="note">Sampling locations, areas, timing, and technique must follow risk-based principles. Reference standard: <b>ISO 18593:2018.</b> Hygiene swabs must be physically separated from other sample categories to prevent cross-contamination.</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Order swabs from lab</td><td>Request correct type for area and organism. Include a control swab in the order — must be submitted and returned with test swabs.</td></tr>
+        <tr><td class="num">2</td><td>Store swabs</td><td>Unopened: 4–10°C. Use within shelf life stated on packaging.</td></tr>
+        <tr><td class="num">3</td><td>Prepare outside production area</td><td>Prevents foreign body risks and false contamination. Wash hands before handling.</td></tr>
+        <tr><td class="num">4</td><td>Label and record</td><td>Legible, permanent ID number on swab. Record on submission form: location, date, time.</td></tr>
+        <tr><td class="num">5</td><td>Choose sampling area</td><td><b>Detection:</b> 1000–3000 cm² (as large as possible). <b>Enumeration:</b> ≤100 cm² (10 cm × 10 cm).</td></tr>
+        <tr><td class="num">6a</td><td>Stick swab — transport type</td><td>Check seal is intact. Open pouch. Remove lid from tube and discard. Dip swab into tube to moisten. Sample defined area in all directions, rotating swab. Return to tube, seal properly.</td></tr>
+        <tr><td class="num">6b</td><td>Stick swab — jumbo type</td><td>Check seal. Remove from tube (pre-moistened). Same technique as above.</td></tr>
+        <tr><td class="num">6c</td><td>Sponge swab</td><td><b>Open bag and pull back over your hand, grasping the sponge through the bag.</b> Using the bag as a glove, collect sample over defined area. Pull bag back over sponge and seal.</td></tr>
+        <tr><td class="num">7</td><td>Control swab</td><td>Do NOT use to sample. Label, tape up, return with sample swabs.</td></tr>
+        <tr><td class="num">8</td><td>Store and transport</td><td>Store at <b>1–4°C</b>. Transport within <b>24 hours</b>. Results invalid if received &gt;24 hrs or no date/time provided.</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Appendix 4 — Hand Swab Method</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Step</th><th>Instruction</th></tr></thead>
-    <tbody>
-      <tr><td class="num">1</td><td>Follow all preparatory steps from the Environmental Microbiological Swabs method above.</td></tr>
-      <tr><td class="num">2</td><td>Select operatives randomly from production area on a weekly basis — swab <b>after</b> hand washing station.</td></tr>
-      <tr><td class="num">3</td><td>Label the casing with the name or clock number of the person being swabbed, plus other traceability information.</td></tr>
-      <tr><td class="num">4</td><td>Swab approximately <b>10 cm × 10 cm</b> covering: wrist, between fingers, palms, fingertips, and nail beds.</td></tr>
-      <tr><td class="num">5</td><td>Return swab to its casing. Store in refrigerated environment after sampling.</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">Appendix 4 — Hand Swab Method</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Instruction</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Follow all preparatory steps from the Environmental Swabs method above.</td></tr>
+        <tr><td class="num">2</td><td>Select operatives randomly from production area on a weekly basis — swab <b>after</b> hand washing station.</td></tr>
+        <tr><td class="num">3</td><td>Label casing with name or clock number of person being swabbed, plus traceability information.</td></tr>
+        <tr><td class="num">4</td><td>Swab approximately <b>10 cm × 10 cm</b> covering: wrist, between fingers, palms, fingertips, and nail beds.</td></tr>
+        <tr><td class="num">5</td><td>Return swab to its casing. Store in refrigerated environment after sampling.</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Appendix 5 — Aseptic Product Sampling Method (6 Steps)</div>
-  <div class="note">Core principle: <b>nothing must touch the inside of the sample bag</b> at any point except the product being sampled. The bag is used as a sterile barrier.</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Step</th><th>Action</th><th>Critical Rule</th></tr></thead>
-    <tbody>
-      <tr><td class="num">1</td><td>Wash hands. Take a sample bag.</td><td>Standard handwashing procedure first.</td></tr>
-      <tr><td class="num">2</td><td>Open the bag.</td><td>Nothing must touch the inside of the bag.</td></tr>
-      <tr><td class="num">3</td><td>Hold the bag by the bottom seam.</td><td>—</td></tr>
-      <tr><td class="num">4</td><td><b>Turn the bag inside out.</b></td><td>Nothing must touch the inside of the bag. Your hand is now on the outside of the inside surface — this is the sterile grip.</td></tr>
-      <tr><td class="num">5</td><td><b>Pick up the product.</b></td><td>Hand on the outside of the (now inverted) bag. Product goes onto the inside (sterile) surface.</td></tr>
-      <tr><td class="num">6</td><td><b>Pull the bag back the right way.</b> Seal and label.</td><td>Do not touch inside during inversion. Seal fully. Label for complete traceability.</td></tr>
-    </tbody>
-  </table></div>
-  <div class="note">For sub-samples: wipe exterior packaging with alcohol wipes before opening. Utensils (knives/spoons) must be sterile — sterilise by dipping into methylated spirits and flaming, or use alcohol wipes. Do not re-contaminate sterilised area before use. Liquid samples: use sterile dip pots. Pre-packed small containers: do not open — supply sufficient packs to meet the required weight. Transport within <b>48 hours</b>.</div>
+    <div class="section-title">Appendix 5 — Aseptic Product Sampling Method (6 Steps)</div>
+    <div class="note">Core principle: <b>nothing must touch the inside of the sample bag</b> at any point except the product being sampled. The bag is used as a sterile barrier.</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Action</th><th>Critical Rule</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Wash hands. Take a sample bag.</td><td>Standard handwashing procedure first.</td></tr>
+        <tr><td class="num">2</td><td>Open the bag.</td><td>Nothing must touch the inside of the bag.</td></tr>
+        <tr><td class="num">3</td><td>Hold the bag by the bottom seam.</td><td>—</td></tr>
+        <tr><td class="num">4</td><td><b>Turn the bag inside out.</b></td><td>Nothing must touch the inside of the bag. Your hand is now on the outside of the inside surface — this is the sterile grip.</td></tr>
+        <tr><td class="num">5</td><td><b>Pick up the product.</b></td><td>Hand on the outside of the (now inverted) bag. Product goes onto the inside (sterile) surface.</td></tr>
+        <tr><td class="num">6</td><td><b>Pull the bag back the right way.</b> Seal and label.</td><td>Do not touch inside during inversion. Seal fully. Label for complete traceability.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note">For sub-samples: wipe exterior packaging with alcohol wipes before opening. Utensils must be sterile. Do not re-contaminate sterilised area before use. Transport within <b>48 hours</b>.</div>
 
-  <div class="section-title">Appendix 7 — Pooled Neck Skin Sample Collection (Salmonella &amp; Campylobacter)</div>
-  <div class="note"><b>PPE required:</b> Slash gloves + blue nitrile gloves (clean). Probe wipes available. Steriliser temp confirmed at <b>min. 82°C</b> before starting. Carcasses must have been chilled for <b>at least 1.5 hours</b> before sampling.</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
-    <tbody>
-      <tr><td class="num">1</td><td>Prepare sample label before collecting</td><td>Information from <b>Animal Transport Certificate (ATC)</b> — if Daily Production Schedule is used, it must be verified against ATC for that load.</td></tr>
-      <tr><td class="num">2</td><td>Check PPE and equipment</td><td>Slash glove + blue nitrile gloves, clean. Probe wipes available. Knives sterile. Steriliser temp ≥82°C confirmed.</td></tr>
-      <tr><td class="num">3</td><td>Wear all required PPE</td><td>As per procedure.</td></tr>
-      <tr><td class="num">4</td><td>Harvest the neck flap</td><td><b>Grab the neck flap with the slash-glove hand</b> and remove using a sterile knife.</td></tr>
-      <tr><td class="num">5</td><td>Prepare the sample bag as a sterile sleeve</td><td><b>Grip the bag at the bottom seam and fold it back over your hand so the bag is inside out.</b> The sterile inside of the bag holds the neck flaps, preventing cross-contamination to and from your glove.</td></tr>
-      <tr><td class="num">6</td><td>Continue harvesting</td><td>Harvest until correct number of neck flaps collected — per Table 8 (3 neck skins per pooled sample, 5 pooled samples per session = 15 birds per session).</td></tr>
-      <tr><td class="num">7</td><td>Between batches</td><td>Change and/or clean and sterilise gloves and knives between each batch.</td></tr>
-      <tr><td class="num">8</td><td>Seal and transfer</td><td>Confirm label is correct. Seal the sample bag. Transfer immediately to refrigerated container. Store 1–4°C.</td></tr>
-      <tr><td class="num">9</td><td>After sampling</td><td>Clean knives and return to steriliser.</td></tr>
-      <tr><td class="num">10</td><td>If contamination detected</td><td>If neck skin is contaminated (crops or other contamination) — dispose samples, sanitise all equipment, re-take samples.</td></tr>
-      <tr><td class="num">11</td><td>Transport and testing</td><td>Immediately to refrigerated container (0–4°C). Salmonella testing commences within 24 hrs of collection.</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">Appendix 7 — Pooled Neck Skin (Salmonella &amp; Campylobacter)</div>
+    <div class="note"><b>PPE required:</b> Slash gloves + blue nitrile gloves (clean). Steriliser temp confirmed at <b>min. 82°C</b> before starting. Carcasses must have been chilled for <b>at least 1.5 hours</b> before sampling.</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Prepare sample label before collecting</td><td>Information from Animal Transport Certificate (ATC).</td></tr>
+        <tr><td class="num">2</td><td>Check PPE and equipment</td><td>Slash glove + blue nitrile gloves. Knives sterile. Steriliser ≥82°C confirmed.</td></tr>
+        <tr><td class="num">3–4</td><td>Harvest the neck flap</td><td><b>Grab the neck flap with the slash-glove hand</b> and remove using a sterile knife.</td></tr>
+        <tr><td class="num">5</td><td>Prepare bag as sterile sleeve</td><td><b>Grip bag at bottom seam and fold back over hand so bag is inside out.</b> Sterile inside holds neck flaps.</td></tr>
+        <tr><td class="num">6</td><td>Continue harvesting</td><td>3 neck skins per pooled sample, 5 pooled samples per session = 15 birds per session (Table 8).</td></tr>
+        <tr><td class="num">7</td><td>Between batches</td><td>Change and/or clean and sterilise gloves and knives between each batch.</td></tr>
+        <tr><td class="num">8–9</td><td>Seal and transfer</td><td>Confirm label. Seal. Transfer immediately to refrigerated container (0–4°C). Salmonella testing commences within 24 hrs of collection.</td></tr>
+        <tr><td class="num">10</td><td>If contamination detected</td><td>Dispose samples, sanitise all equipment, re-take samples.</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Appendix 8 — Listeria Risk Assessment (Primary Sites Summary)</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Point</th><th>Detail</th></tr></thead>
-    <tbody>
-      <tr><td>Risk to humans</td><td><i>Listeria monocytogenes</i> causes listeriosis — serious infection primarily affecting pregnant women, newborns, and immunocompromised adults. Symptoms: fever, muscle aches, GI symptoms; can spread to nervous system causing headache, stiff neck, confusion, loss of balance, convulsions. In pregnancy: miscarriage, stillbirth, premature delivery, neonatal infection.</td></tr>
-      <tr><td>Sources</td><td>Soil and water. Vegetables from contaminated soil or manure. Animals can carry without symptoms and contaminate meats and dairy. Found in raw meats, vegetables, and processed foods contaminated post-processing (e.g. soft cheeses, deli meats).</td></tr>
-      <tr><td>Key fact for raw poultry</td><td>Listeria is killed by pasteurisation and cooking. Raw poultry is sold raw and must be cooked before consumption — Listeria is therefore <b>considered low risk in low care (primary processing) environments</b>.</td></tr>
-      <tr><td>Policy for low care sites</td><td><b>Listeria is NOT routinely tested in low care facilities.</b> Use-by date and cooking instructions must be clearly printed on all product sold directly to consumers.</td></tr>
-      <tr><td>Sites with high care areas</td><td>Separate Listeria risk assessment and testing programme required.</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">Appendix 8 — Listeria Risk Summary (Primary Sites)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Point</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Risk to humans</td><td><i>Listeria monocytogenes</i> causes listeriosis — serious infection primarily affecting pregnant women, newborns, and immunocompromised adults.</td></tr>
+        <tr><td>Key fact for raw poultry</td><td>Listeria is killed by cooking. Raw poultry is low-risk in low care (primary processing) environments.</td></tr>
+        <tr><td>Policy for low care sites</td><td><b>Listeria is NOT routinely tested in low care facilities.</b> Use-by date and cooking instructions must be clearly printed on all product sold directly to consumers.</td></tr>
+        <tr><td>Sites with high care areas</td><td>Separate Listeria risk assessment and testing programme required.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
 
-  <div class="section-title">Appendix 6 — Salmonella Sample Collection Matrix</div>
-  <div class="note">A rolling week-by-week matrix is used to ensure Salmonella finished product sampling is spread across different days. Samples must be collected on different days each week to encompass every processing day over time. Product types and customers must be rotated weekly. The document provides a blank 8-week × 7-day grid — each site must generate its own site-specific version according to their production schedule.</div>
+  <!-- ── SUB-TAB: RACI (previously tab-raci) ── -->
+  <div id="proc-praci" class="proc-panel">
+    <div class="note"><b>Source: Inspection and Testing Procedure — Microbiology D2.0 (17/10/2025)</b><br>
+    <b>Policy Objective:</b> Product.<br>
+    <b>Procedure Objectives:</b> (1) Ensure microbiological testing is completed to comply with legal requirements, customer specifications, and appropriate frequencies. (2) Ensure consistent methods of sampling and reporting for reliable results.<br>
+    <b>Scope:</b> All ingredients, WIP, finished products, water, air, and equipment validation/verification.</div>
 
-</div>
+    <div class="section-title">RACI Matrix — Microbiology Procedure</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Responsibility Area</th><th>R — Responsible</th><th>A — Accountable</th><th>C — Consulted</th><th>I — Informed</th></tr></thead>
+      <tbody>
+        <tr><td>Implementation and monitoring</td><td>Site Technical Lead (STL)</td><td>Divisional Technical Controller (DTC)</td><td>STL / DTC</td><td>TLT / KPI reporting</td></tr>
+        <tr><td>Sampling and testing</td><td>Checkers / Testers</td><td>QA Manager</td><td>Site Technical Lead</td><td>Site Technical Lead / KPI reporting</td></tr>
+        <tr><td>Input data (MIMS entry)</td><td>KPI administrators</td><td>Compliance Manager</td><td>Site Technical Lead</td><td>Site Technical Lead / KPI reporting</td></tr>
+      </tbody>
+    </table></div>
 
-<!-- ═══════════════════════════ TAB 7: RACI & RESPONSIBILITIES ═══════════════════════════ -->
-<div id="tab-raci" class="tab-panel">
+    <div class="section-title">Role Definitions &amp; Duties</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Role</th><th>Key Duties</th></tr></thead>
+      <tbody>
+        <tr><td><b>Site Technical Lead (STL)</b></td><td>Owns implementation and monitoring · Must be informed of all water failures · Consulted on all sampling decisions · First point of escalation</td></tr>
+        <tr><td><b>Divisional Technical Controller (DTC)</b></td><td>Accountable at divisional level · Must be notified <b>immediately</b> of confirmed SE/ST results · Must be notified of any positive Salmonella species</td></tr>
+        <tr><td><b>Technical Director (TD)</b></td><td>Must be notified immediately alongside DTC for confirmed SE/ST and positive Salmonella species</td></tr>
+        <tr><td><b>QA Manager</b></td><td>Accountable for sampling and testing activities · Oversight of sample collection, submission, and result management</td></tr>
+        <tr><td><b>Compliance Manager</b></td><td>Accountable for data input into MIMS and databases · Ensures KPI data is accurate and entered correctly</td></tr>
+        <tr><td><b>KPI Administrators</b></td><td>Responsible for data input into MIMS and reporting databases · Must enter routine micro results for trend analysis</td></tr>
+        <tr><td><b>Checkers / Testers</b></td><td>Responsible for physical sampling and testing activities · Must be suitably trained · Independent monitoring required</td></tr>
+        <tr><td><b>Site Hygiene Manager</b></td><td>Must be involved in determining swabbing locations · Must have access to all swab results · Must record all actions taken</td></tr>
+        <tr><td><b>Engineering Manager</b></td><td>Must be informed of water failures (mechanical investigation duty)</td></tr>
+        <tr><td><b>On-site OV</b></td><td>Receives neck skin Salmonella results weekly · Legally required recipient of process hygiene monitoring results</td></tr>
+        <tr><td><b>AWO / Deputy</b></td><td>Must authorise processing of SHS flocks · Must physically remove SHS marker before processing begins</td></tr>
+        <tr><td><b>Food Standards Agency (FSA)</b></td><td>Must be notified of confirmed SE/ST results · Must be notified of positive Salmonella species · Any withdrawal/recall must comply with microbiological criteria regulations</td></tr>
+        <tr><td><b>Customers / Customer Technologists</b></td><td>Must be notified of confirmed SE/ST affecting their product · Must agree any alternative testing strategies in writing</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="note"><b>Policy Objective:</b> Product.<br>
-  <b>Procedure Objectives:</b><br>
-  1. To ensure that microbiological testing is completed to comply with legal requirements, customer specifications, and to appropriate frequencies.<br>
-  2. To ensure consistent methods of sampling and reporting to obtain reliable results for the purpose of analysis, action, and continuous improvement.<br>
-  <b>Scope:</b> All ingredients, WIP, finished products, water, air, and equipment validation/verification, as identified by risk assessments and customer requirements. For general requirements and laboratories, refer to the Inspection &amp; Testing Management Procedure.</div>
+    <div class="section-title">Training Record Fields (M7)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th>Required Entry</th></tr></thead>
+      <tbody>
+        <tr><td>Trainer Name / Signature</td><td>Name and signature of the person delivering the training</td></tr>
+        <tr><td>Date / Time (from – to)</td><td>Training session date and duration</td></tr>
+        <tr><td>Employee Name / Signature</td><td>Name and signature confirming understanding and commitment</td></tr>
+        <tr><td>Interpreter Name / Signature</td><td>If applicable — name and signature of interpreter present</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note warn">Training records must be completed and retained. The signature confirms the employee commits to following the requirements — not just that they attended.</div>
+  </div>
 
-  <div class="section-title">RACI Matrix</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Responsibility Area</th><th>R — Responsible (does the work)</th><th>A — Accountable (owns the outcome)</th><th>C — Consulted</th><th>I — Informed</th></tr></thead>
-    <tbody>
-      <tr><td>Implementation and monitoring</td><td>Site Technical Lead (STL)</td><td>Divisional Technical Controller (DTC)</td><td>STL / DTC</td><td>TLT / KPI reporting</td></tr>
-      <tr><td>Sampling and testing</td><td>Checkers / Testers</td><td>QA Manager</td><td>Site Technical Lead</td><td>Site Technical Lead / KPI reporting</td></tr>
-      <tr><td>Input data (MIMS entry)</td><td>KPI administrators</td><td>Compliance Manager</td><td>Site Technical Lead</td><td>Site Technical Lead / KPI reporting</td></tr>
-    </tbody>
-  </table></div>
+  <!-- ── SUB-TAB: DOCUMENT CONTROL (previously tab-doccontrol) ── -->
+  <div id="proc-pdoccontrol" class="proc-panel">
+    <div class="note"><b>Document Reference:</b> Inspection and Testing Procedure – Microbiology &nbsp;·&nbsp; <b>Current Version:</b> D2.0 &nbsp;·&nbsp; <b>Date:</b> 17/10/2025 &nbsp;·&nbsp; <b>Issued by:</b> UKP Technical Services Manager &nbsp;·&nbsp; <b>Authorised by:</b> Technical Manager</div>
 
-  <div class="section-title">Role Definitions &amp; Duties (Derived from Procedure)</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Role</th><th>Key Duties from This Procedure</th></tr></thead>
-    <tbody>
-      <tr><td><b>Site Technical Lead (STL)</b></td><td>
-        · Owns implementation and monitoring of the full micro testing programme<br>
-        · Must be informed of all water failures (safety assessment duty)<br>
-        · Consulted on all sampling and testing decisions<br>
-        · Must have access to swab results and record of actions<br>
-        · First point of escalation for site-level technical decisions<br>
-        · Involved in determining swabbing locations alongside Hygiene Manager
-      </td></tr>
-      <tr><td><b>Divisional Technical Controller (DTC)</b></td><td>
-        · Accountable for implementation and monitoring at divisional level<br>
-        · Must be notified <b>immediately</b> of confirmed SE / ST results<br>
-        · Must be notified <b>immediately</b> of any positive Salmonella species<br>
-        · Consulted at divisional level
-      </td></tr>
-      <tr><td><b>Technical Director (TD)</b></td><td>
-        · Must be notified immediately alongside DTC for confirmed SE / ST and positive Salmonella species
-      </td></tr>
-      <tr><td><b>QA Manager</b></td><td>
-        · Accountable for sampling and testing activities<br>
-        · Oversight of sample collection, submission, and result management
-      </td></tr>
-      <tr><td><b>Compliance Manager</b></td><td>
-        · Accountable for data input into MIMS and databases<br>
-        · Ensures KPI data is accurate and entered correctly
-      </td></tr>
-      <tr><td><b>KPI Administrators</b></td><td>
-        · Responsible for data input into MIMS and reporting databases<br>
-        · Must enter routine micro results onto database for trend analysis<br>
-        · Reporting feeds into site, division, and group KPI reporting
-      </td></tr>
-      <tr><td><b>Checkers / Testers</b></td><td>
-        · Responsible for physical sampling and testing activities<br>
-        · Must be suitably trained individuals<br>
-        · Independent monitoring must be carried out by an independent person
-      </td></tr>
-      <tr><td><b>Site Hygiene Manager</b></td><td>
-        · Must be involved in determining swabbing locations<br>
-        · Must have access to all swab results<br>
-        · Must record all actions taken as a result of failures and trends
-      </td></tr>
-      <tr><td><b>Engineering Manager</b></td><td>
-        · Must be informed of water failures (mechanical investigation duty)
-      </td></tr>
-      <tr><td><b>On-site OV (Official Veterinarian)</b></td><td>
-        · Receives neck skin Salmonella results weekly<br>
-        · Legally required recipient of process hygiene monitoring results (slaughterhouses)
-      </td></tr>
-      <tr><td><b>AWO / Deputy</b></td><td>
-        · Must authorise processing of SHS (Special Health Status) flocks<br>
-        · Must physically remove the SHS marker from the first module before processing begins
-      </td></tr>
-      <tr><td><b>Food Standards Agency (FSA)</b></td><td>
-        · Must be notified of confirmed SE/ST results (England/Wales: food.gov.uk incident portal)<br>
-        · Must be notified of positive Salmonella species (Scotland: foodstandards.gov.scot)<br>
-        · Any withdrawal or recall must comply with microbiological criteria regulations
-      </td></tr>
-      <tr><td><b>Customers / Customer Technologists</b></td><td>
-        · Must be notified of confirmed SE/ST affecting their product<br>
-        · Must be notified of positive Salmonella affecting their product<br>
-        · Must agree any alternative testing strategies in writing on product specification<br>
-        · Customer-specific KPI reporting requirements apply per customer code of practice
-      </td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">Changes Log (M8)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Issue No.</th><th>Date</th><th>Section(s) Amended</th><th>Detail of Change</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>04/07/2019</td><td>All</td><td>Inspection &amp; Testing Procedure broken down into separate procedures: Chemical &amp; Microbiological, and Physical Testing.</td></tr>
+        <tr><td class="num">D1.0</td><td>23/05/2025</td><td>Multiple sections</td><td><b>M3p:</b> Listeria swabbing exclusion added. <b>M3k:</b> Swab segregation requirement added. <b>Scope:</b> References to ATP swabbing removed. <b>RACI:</b> References to TM &amp; HOT amended to "Site Technical Lead". <b>Table 1:</b> Campy Pooled Neck Skin amended to 5 samples of 3 pooled neck skins each. <b>Table 1:</b> Raw Material Intake updated. Former Listeria section removed. Environmental swab pass rate updated to 98%.</td></tr>
+        <tr><td class="num">D2.0</td><td>17/10/2025</td><td>Multiple sections</td><td><b>M5c1a &amp; M5c2a:</b> "at the end of life" added to Salmonella sampling requirements. <b>M5c1e &amp; M5c2d:</b> New clause on "ghost" batches — mandatory MIMS wording: "Retained batch – not on the market". <b>M5c1h:</b> Amended to "All Salmonella positive samples are fully typed." <b>M5c1k:</b> SE/ST escalation to Technical Controller and Technical Director added. Confirmed SE/ST terminology specified throughout.</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Training Record (M7)</div>
-  <div class="note">The following confirmation must be signed by all personnel who are required to follow this procedure. The record confirms the person has read, understood, and commits to following the requirements.</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Field</th><th>Required Entry</th></tr></thead>
-    <tbody>
-      <tr><td>Trainer Name</td><td>Name of the person delivering the training</td></tr>
-      <tr><td>Trainer Signature</td><td>Signed by trainer</td></tr>
-      <tr><td>Date / Time (from – to)</td><td>Training session date and duration</td></tr>
-      <tr><td>Employee Name</td><td>Name of employee being trained</td></tr>
-      <tr><td>Employee Signature</td><td>Signed by employee confirming understanding and commitment</td></tr>
-      <tr><td>Interpreter Name</td><td>If applicable — name of interpreter present</td></tr>
-      <tr><td>Interpreter Signature</td><td>If applicable — signed by interpreter</td></tr>
-    </tbody>
-  </table></div>
-  <div class="note warn">Training records must be completed and retained. The signature confirms the employee commits to following the requirements — not just that they attended.</div>
+    <div class="section-title">Document Footer Reference</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Field</th><th>D1.0</th><th>D2.0 (Current)</th></tr></thead>
+      <tbody>
+        <tr><td>Reference</td><td colspan="2">Inspection and Testing Procedure – Microbiology</td></tr>
+        <tr><td>Version No.</td><td>D1.0</td><td><b>D2.0</b></td></tr>
+        <tr><td>Date</td><td>23/05/2025</td><td><b>17/10/2025</b></td></tr>
+        <tr><td>Issued by</td><td colspan="2">UKP Technical Services Manager</td></tr>
+        <tr><td>Authorised by</td><td colspan="2">Technical Manager</td></tr>
+      </tbody>
+    </table></div>
 
-</div>
+    <div class="section-title">Key Regulatory &amp; Standard References</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Reference</th><th>What it covers</th></tr></thead>
+      <tbody>
+        <tr><td>Retained EU Law – EU Directive 98/83/EC</td><td>Potable water specification standards</td></tr>
+        <tr><td>EN/ISO 6579</td><td>Salmonella detection method</td></tr>
+        <tr><td>ISO 4833</td><td>TVC / Aerobic Colony Count method (Minced Meat)</td></tr>
+        <tr><td>ISO 16649-1 or -2</td><td>E. coli enumeration method</td></tr>
+        <tr><td>ISO 18593:2018</td><td>Environmental swabbing — locations, areas, times, technique</td></tr>
+        <tr><td>2SFG-S035</td><td>Group policy — swab pass rate 98%, Pass/Fail limits</td></tr>
+        <tr><td>Microbiological Criteria for Foodstuffs (UK Regs)</td><td>Governs actions (withdrawal, recall) for unsatisfactory results</td></tr>
+      </tbody>
+    </table></div>
+  </div>
 
-<!-- ═══════════════════════════ TAB 8: DOCUMENT CONTROL ═══════════════════════════ -->
-<div id="tab-doccontrol" class="tab-panel">
+  <!-- ── SUB-TAB: COMPLAINTS ── -->
+  <div id="proc-pcomplaints" class="proc-panel">
+    <div class="note"><b>Source: Complaints Procedure (2SFG UKP)</b><br>
+    <b>Objective:</b> To ensure all complaints are prioritised by risk assessment and then fully investigated, with resulting actions effectively applied, communicated and documented.<br>
+    <b>Scope:</b> All internal and external complaints from products provided by 2SFG UK Poultry division — including inter-company, retailers, food service providers, manufacturing customers, and 3rd party bodies.<br>
+    <b>Responsibility:</b> Technical Manager implements and monitors. Technical team maintains databases and trend data.</div>
 
-  <div class="note"><b>Document Reference:</b> Inspection and Testing Procedure – Microbiology &nbsp;·&nbsp; <b>Current Version:</b> D2.0 &nbsp;·&nbsp; <b>Date:</b> 17/10/2025 &nbsp;·&nbsp; <b>Issued by:</b> UKP Technical Services Manager &nbsp;·&nbsp; <b>Authorised by:</b> Technical Manager</div>
+    <div class="section-title">M1 — Complaint Sources</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Consumers directly (including social media and 2sfg website)</td></tr>
+        <tr><td>Internal 2sfg business</td></tr>
+        <tr><td>Local Authorities / Law Enforcement Agencies</td></tr>
+        <tr><td>Manufacturing Customers</td></tr>
+        <tr><td>Pet food and by-product processors / customers</td></tr>
+        <tr><td>Retailer customer complaints teams — 2sfg Branded product</td></tr>
+        <tr><td>Retailer customer complaints teams — Retailer Brand product</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Changes Log (M8)</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Issue No.</th><th>Date</th><th>Section(s) Amended</th><th>Detail of Change</th></tr></thead>
-    <tbody>
-      <tr>
-        <td class="num">1</td><td>04/07/2019</td><td>All</td>
-        <td>Inspection &amp; Testing Procedure broken down into separate procedures: Chemical &amp; Microbiological, and Physical Testing.</td>
-      </tr>
-      <tr>
-        <td class="num">D1.0</td><td>23/05/2025</td><td>Multiple sections</td>
-        <td>
-          <b>M3p:</b> "…in low care environment." added (Listeria swabbing exclusion).<br>
-          <b>M3k:</b> Swab segregation requirement added (hygiene swabs physically separated from other categories).<br>
-          <b>Scope:</b> References to ATP swabbing removed throughout — no longer used.<br>
-          <b>RACI:</b> References to TM &amp; HOT amended to "Site Technical Lead" throughout.<br>
-          <b>Table 1:</b> Campy Pooled Neck Skin amended to 5 samples, each consisting of 3 pooled neck skins.<br>
-          <b>Table 1:</b> Raw Material Intake updated to current regime: Pseudomonas + E. coli for Exit Chiller Wholebirds (Slaughter Sites only); Pseudomonas only for Intake Fresh Wholebirds ≥K+1 and All Portions (Receiving Sites).<br>
-          <b>Header:</b> 2sfg logo updated.<br>
-          <b>M4g:</b> Amended to "For distinct customer requirements…refer to the relevant Customer codes of practice."<br>
-          <b>Former M6:</b> Listeria section removed along with all references to Listeria product testing, swabbing, RTE, and high risk. Sections renumbered throughout.<br>
-          <b>M3 / S1:</b> Section name amended from M3 to S1 to allow site amends of water TVC limits to reflect ambient levels.<br>
-          <b>S1:</b> Water testing requirements updated.<br>
-          <b>Former M13b:</b> Campy Finished Product Assessment (Retail Sites Only) removed — no longer in place.<br>
-          <b>M3n + Table 1:</b> References to pre-clean Campy swabs on live collection equipment removed.<br>
-          <b>Table 4, App 4:</b> Environmental swab pass rate updated to 98%. Warning standard removed — now strictly Pass ≤1000 / Fail >1000 in line with group policy statement 2SFG-S035.<br>
-          <b>Appendix 3:</b> Environmental Swabbing Risk Assessment decision tree reworded (Q on lairage/EV).<br>
-          <b>S1f:</b> New clause added on ice testing requirements.<br>
-          <b>M3b:</b> New clause added on review of RA and RCA/investigation requirement if 3 or more failures in a 12-month period.<br>
-          <b>New Appendix:</b> Campylobacter Pooled Neck Skin Sample Collection Method (now Appendix 7).
-        </td>
-      </tr>
-      <tr>
-        <td class="num">D2.0</td><td>17/10/2025</td><td>Multiple sections</td>
-        <td>
-          <b>M5c1a &amp; M5c2a:</b> "at the end of life" added to Salmonella sampling requirements.<br>
-          <b>M5c1e &amp; M5c2d:</b> New clause on "ghost" batches added — mandatory wording: "Retained batch – not on the market" in MIMS OTHER_ID.<br>
-          <b>M5c1h:</b> Amended to "All Salmonella positive samples are fully typed."<br>
-          <b>M5c1k:</b> New clause on confirmed SE/ST escalation to Technical Controller and Technical Director (Poultrymeat).<br>
-          <b>M5c1l ii &amp; iii:</b> Unsatisfactory results amended to specifically name "Confirmed Salmonella Enteritidis (SE) and Salmonella Typhimurium (ST)."<br>
-          <b>M5c2g:</b> New clause on positive Salmonella species escalation to Technical Controller and Technical Director (Mince, Meat Preparations and Meat Products).<br>
-          <b>M5c2h ii &amp; iii:</b> Unsatisfactory results amended to "positive Salmonella species."<br>
-          <b>M3p:</b> Appendix 9 reference amended to Appendix 8.<br>
-          <b>M5c1:</b> Sub-section header amended to "Poultrymeat (portions and wholebirds)."<br>
-          <b>M5c1d:</b> Amendment to "Product types and customers are to be rotated every week."<br>
-          <b>M5c4:</b> Reworded and amended to include "2 Agriculture" in SHS flock identification context.
-        </td>
-      </tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">M2 — Logging Consumer Complaints</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Log Type</th><th>Complaint Types</th><th>Email Distribution</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill pill-fail">Red Alert</span></td><td>Glass, Serious Foreign Body, Politically/Media sensitive, allergen, pathogen, serious illness, date coding error, EHO</td><td>[sitename].RedAlert@2sfg.com</td></tr>
+        <tr><td><span class="pill pill-warn">Non-Red Alert</span></td><td>Any other non-critical complaints</td><td>[sitename].Complaints@2sfg.com</td></tr>
+        <tr><td><span class="pill pill-info">Escalation</span></td><td>Used to raise significance where response was unsatisfactory</td><td>[sitename].Escalation@2sfg.com</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Review Record (M9)</div>
-  <div class="note">The review record table is maintained in the live document. Fields: Date Reviewed · Reviewed By · Comments. The procedure must be reviewed annually or after significant changes to the process flow or equipment (per M3 swabbing RA requirement).</div>
+    <div class="section-title">M4 — Complaint Handling Roles</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Role</th><th>Responsibilities</th></tr></thead>
+      <tbody>
+        <tr><td><b>Complainant</b></td><td>Person affected by the alleged complaint</td></tr>
+        <tr><td><b>Complaint Originator</b></td><td>Person who raised the complaint</td></tr>
+        <tr><td><b>Complaint Receiver</b></td><td>Receives complaint, extracts information, scans/attaches documentation</td></tr>
+        <tr><td><b>Complaint Administrator</b></td><td>Coordinates complaints process, compiles reports and trend analysis</td></tr>
+        <tr><td><b>Complaint Investigator</b></td><td>Investigates circumstances — examines documentation, items (e.g. foreign bodies), multi-disciplinary where appropriate</td></tr>
+        <tr><td><b>Action Approver</b></td><td>Coordinates RCA and actions, reports on progress</td></tr>
+        <tr><td><b>Contributor</b></td><td>Advises investigator on sources or circumstances</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Document Footer Reference</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Field</th><th>D1.0</th><th>D2.0 (Current)</th></tr></thead>
-    <tbody>
-      <tr><td>Reference</td><td colspan="2">Inspection and Testing Procedure – Microbiology</td></tr>
-      <tr><td>Version No.</td><td>D1.0</td><td><b>D2.0</b></td></tr>
-      <tr><td>Date</td><td>23/05/2025</td><td><b>17/10/2025</b></td></tr>
-      <tr><td>Issued by</td><td colspan="2">UKP Technical Services Manager</td></tr>
-      <tr><td>Authorised by</td><td colspan="2">Technical Manager</td></tr>
-      <tr><td>Total pages</td><td colspan="2">19</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">M5 iii — Risk Assessment Severity Guide</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Severity</th><th>Upper Hierarchy</th><th>Lower Hierarchy / Types</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill pill-fail">Major</span></td><td>Any</td><td>Technical Red Alert Complaints, Clear trends</td></tr>
+        <tr><td><span class="pill pill-fail">Major</span></td><td>Off</td><td>Alleged Illness</td></tr>
+        <tr><td><span class="pill pill-fail">Major</span></td><td>Foreign Body</td><td>EV, feather or bone, Ceramic, Contamination, Gall Bladder, Glass, Hair, Insect, Intestine, Lung, Maggot, Metal, Vegetable Matter, Wood</td></tr>
+        <tr><td><span class="pill pill-fail">Major</span></td><td>Quality</td><td>Labelling, Packaging, Plastic, Taste, Texture, Wooden breast, Worm</td></tr>
+        <tr><td><span class="pill pill-warn">Minor</span></td><td>Off</td><td>Off Condition, Off Odour</td></tr>
+        <tr><td><span class="pill pill-warn">Minor</span></td><td>Foreign Body</td><td>Gizzard, Liver</td></tr>
+        <tr><td><span class="pill pill-warn">Minor</span></td><td>Quality</td><td>Blood, Bruising, Haemorrhaging, Butchery, Dissatisfaction, Fat/Skin, Hockburn, Presentation, Print Quality</td></tr>
+      </tbody>
+    </table></div>
 
-  <div class="section-title">Key Regulatory &amp; Standard References in the Document</div>
-  <div class="tbl-wrap"><table>
-    <thead><tr><th>Reference</th><th>What it covers</th></tr></thead>
-    <tbody>
-      <tr><td>Retained EU Law – EU Directive 98/83/EC</td><td>Potable water specification standards</td></tr>
-      <tr><td>EN/ISO 6579</td><td>Salmonella detection method (finished product and neck skin)</td></tr>
-      <tr><td>ISO 4833</td><td>TVC / Aerobic Colony Count method (Minced Meat)</td></tr>
-      <tr><td>ISO 16649-1 or -2</td><td>E. coli enumeration method (Minced Meat and Meat Preparations)</td></tr>
-      <tr><td>ISO 18593:2018</td><td>Environmental swabbing — guidance on sampling locations, areas, times, and technique</td></tr>
-      <tr><td>2SFG-S035</td><td>Group policy statement — basis for swab pass rate 98% and Pass/Fail limits</td></tr>
-      <tr><td>2sfg UKP Shelf Life Testing Protocol</td><td>Shelf life testing schedule and results recording</td></tr>
-      <tr><td>Microbiological Criteria for Foodstuffs (UK Regulations)</td><td>Governs actions (withdrawal, recall) for unsatisfactory results</td></tr>
-      <tr><td>FSA Food Incident Reporting Portal (England/Wales)</td><td>food.gov.uk/contact/businesses/report-safety-concern/report-a-food-safety-incident</td></tr>
-      <tr><td>FSA Food Incident Reporting (Scotland)</td><td>foodstandards.gov.scot/business-and-industry/scottish-food-crime-and-incidents-unit/food-incidents/report-a-food-incident</td></tr>
-    </tbody>
-  </table></div>
+    <div class="section-title">M8 — Technical Red Alert Complaints</div>
+    <div class="note warn">Red Alert complaints must be escalated immediately. Triggers: Glass · Serious Foreign Body · Politically/Media sensitive · Allergen related · Pathogen related · Serious illness or injury (NHS involved) · Date coding error · EHO involvement.</div>
 
-</div>
+    <div class="section-title">Key Timelines</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Requirement</th><th>Timeframe</th></tr></thead>
+      <tbody>
+        <tr><td>Contact with store after complaint receipt</td><td>Within <b>3 days</b></td></tr>
+        <tr><td>Minimum time before closing complaint</td><td>At least <b>4 weeks after response is sent</b></td></tr>
+        <tr><td>System URL</td><td>http://webapps.2sfg.net/Complaints/</td></tr>
+      </tbody>
+    </table></div>
+  </div>
 
+  <!-- ── SUB-TAB: PEST CONTROL ── -->
+  <div id="proc-ppest" class="proc-panel">
+    <div class="note"><b>Source: Pest Control Procedure (2SFG UKP)</b><br>
+    <b>Objective:</b> To ensure the site has a comprehensive pest control program to prevent, as far as practicable, the introduction of pests onto the site and reduce conditions that may encourage their presence.<br>
+    <b>Scope:</b> All pest control at the site. Covers Regulation (EC) 178/2002 and (EC) 852/2004.<br>
+    <b>Zero-tolerance attitude</b> to all pest activity.</div>
+
+    <div class="section-title">M1 — General Requirements</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Requirement</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Pest control contractor</td><td>Must be competent and registered. Current contractor: <b>Rentokil</b></td></tr>
+        <tr><td>Site coordinator</td><td>A nominated employee must be in charge and trained in basics of pest control</td></tr>
+        <tr><td>Contract scope</td><td>Must cover all areas including perimeter. Risk-assessment based programme. Material safety data sheets for all chemicals.</td></tr>
+        <tr><td>Toxic baits</td><td>Must NOT be used routinely. Only where infestation or evidence of ongoing risk (e.g. actual sightings, recent droppings)</td></tr>
+        <tr><td>Bait boxes</td><td>Must be tamper-resistant, numbered, secured in position. Missing boxes to be recorded, reviewed, and investigated</td></tr>
+        <tr><td>Customer notification</td><td>Continual or persistent pest activity must be reported to customers and accreditation bodies where customer requirements are in place</td></tr>
+        <tr><td>Review meetings</td><td>Twice per year between site and pest contractor</td></tr>
+        <tr><td>Internal audits</td><td>Pest control must be included in the internal auditing schedule</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M3 — Minimum Contract Requirements</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Inspection Type</th><th>Frequency</th><th>Standard</th></tr></thead>
+      <tbody>
+        <tr><td>Routine Inspection</td><td>8 per year</td><td>Spaced evenly, interspersed with Biologist inspections to ensure coverage each month</td></tr>
+        <tr><td>Biologist Inspection</td><td>4 per year</td><td>Spaced evenly, interspersed with Routine inspections</td></tr>
+        <tr><td>Fly Control Inspection</td><td>4 per year</td><td>Spaced evenly throughout the year</td></tr>
+        <tr><td>EFK Tube Change</td><td>Once per year</td><td>Completed <b>March – May</b>. Outside this window requires documented justification</td></tr>
+        <tr><td>Pheromone Bait Change</td><td>4 per year (every 3 months)</td><td>Spaced evenly throughout the year</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M6 — Fly Activity Limits</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Activity Level</th><th>Count</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill pill-pass">Low</span></td><td>Total Count &lt;50</td><td>No immediate action required</td></tr>
+        <tr><td><span class="pill pill-warn">Medium</span></td><td>Total Count 50–100</td><td>Counts shown at Medium for at least 2 quarters should be assessed for proofing disciplines and detector locations</td></tr>
+        <tr><td><span class="pill pill-fail">High</span></td><td>Total Count &gt;100</td><td>Risk assessments required, additional detectors, further measures to reduce ingress</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M4 — Follow-up Requirements</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Scenario</th><th>Follow-up Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>Internal infestations / significant external activity</td><td>Follow-ups must continue at appropriate frequency over <b>3 weeks</b>. If live infestation still detected after <b>7 days</b> — riddance programme must be implemented and relevant customers notified.</td></tr>
+        <tr><td>Cockroach infestations</td><td>German cockroaches: first follow-up after <b>2 clear weeks</b>. Oriental cockroaches: after <b>6 clear weeks</b>. Continue for at least <b>4 months</b>.</td></tr>
+        <tr><td>Insect detector issues</td><td>Weekly follow-up inspections after deep clean or replacement</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M9 — Training Requirements</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Role</th><th>Training Required</th></tr></thead>
+      <tbody>
+        <tr><td>Pest Control Coordinator</td><td>Pest Awareness Training · Pest Control Management System training (online and paper)</td></tr>
+        <tr><td>Pest Control Technicians</td><td>Minimum RSPH L2 Certificate in pest control or equivalent. RSPH Level 2 Award in Safe Use of Rodenticides for rodenticide use.</td></tr>
+        <tr><td>Field Biologists</td><td>Level 2 RSPH in Pest Management · Advanced Technician in Pest Management · RSPH Level 3 in Food Safety · 1 year experience as Pest Controller</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ── SUB-TAB: ROOT CAUSE ANALYSIS ── -->
+  <div id="proc-prca" class="proc-panel">
+    <div class="note"><b>Source: Root Cause Analysis Procedure — Version 1 (30/04/2019)</b><br>
+    <b>Objective:</b> To enable effective root cause analysis to be carried out, leading to effective preventative measures.<br>
+    <b>Scope:</b> UK Poultry and AV Sites.<br>
+    <b>Accountability:</b> Site Director is accountable for time and resources to carry out RCA.</div>
+
+    <div class="section-title">M3 — When RCA is Required (Minimum)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Trigger</th></tr></thead>
+      <tbody>
+        <tr><td>Any GFSI/BRC Audit Non-conformances — each NC must have a separate RCA</td></tr>
+        <tr><td>Any serious complaint — each must have a separate RCA</td></tr>
+        <tr><td>Any incident or non-conformity which places safety, legality or quality at risk</td></tr>
+        <tr><td>Adverse KPI trends: Complaints · Product/Water/Air Microbiology · Environmental Swabbing · Product Quality · Internal Audit NC rate · External Audit NC</td></tr>
+        <tr><td>Any Major Incident, Recall or Withdrawal — each must have a separate RCA</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M4 — 5-Step Root Cause Toolkit</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Activity</th><th>Key Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Define the Problem</td><td>Collect information, immediate data, pictures, affected materials, customer information, measurements. What is known now?</td></tr>
+        <tr><td class="num">2</td><td>Select Multi-disciplinary Team</td><td>Cross-functional: affected area rep, Engineering, Technical, Logistics, Production, Subject Matter Expert (SME). Set date/time/venue.</td></tr>
+        <tr><td class="num">3</td><td>Analyse — Go See + Fishbone</td><td>"Go See" to collect data (photos, drawings, data, testimony, physical evidence). Use Fishbone (Ishikawa) across: <b>People, Methods/Process, Machine, Materials, Measurements, Environment.</b></td></tr>
+        <tr><td class="num">4</td><td>Action Plan</td><td>Identify root cause(s). Assign personal responsibility for <b>Interim Corrective Actions (ICA)</b> and <b>Permanent Preventative Actions</b>.</td></tr>
+        <tr><td class="num">5</td><td>Review Effectiveness</td><td>After sufficient time post-action, assess effectiveness. May need to restart from Step 1 if wrong root causes were identified.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">Appendix 1 — 5 Whys Method</div>
+    <div class="note">The 5 Whys approach asks "why did the process fail?" rather than simply "why?" — this steers toward actionable process-level root causes rather than classic dead-ends like "not enough time" or "not enough manpower".</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Why #</th><th>Answer (Example: Sealer won't start)</th></tr></thead>
+      <tbody>
+        <tr><td class="num">Problem</td><td>The sealer will not start.</td></tr>
+        <tr><td class="num">Why 1</td><td>The power supply is dead.</td></tr>
+        <tr><td class="num">Why 2</td><td>The power supply is not functioning.</td></tr>
+        <tr><td class="num">Why 3</td><td>The rubber band has broken.</td></tr>
+        <tr><td class="num">Why 4</td><td>The rubber band was well beyond its useful service life and not replaced.</td></tr>
+        <tr><td class="num">Why 5 ✓</td><td><b>The sealer was not maintained according to the recommended service schedule.</b> → Root cause. Solution: implement maintenance schedule.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">Appendix 2 — Ishikawa (Fishbone) Diagram Categories</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Category</th><th>Key Questions</th></tr></thead>
+      <tbody>
+        <tr><td><b>Environment</b></td><td>Pest control adequate? Building fabrication maintained? Temperature control adequate? Lighting sufficient? Waste managed properly?</td></tr>
+        <tr><td><b>People</b></td><td>Appropriate PPE worn correctly? Properly supervised? Personal hygiene maintained? Operators trained and competent?</td></tr>
+        <tr><td><b>Equipment</b></td><td>In good working order? Food grade lubricants used? Positioned for easy maintenance/cleaning? Any temporary repairs that could have caused the issue?</td></tr>
+        <tr><td><b>Procedures</b></td><td>Procedures in place? Up to date? Easy to use format, appropriate languages? Being followed as documented?</td></tr>
+        <tr><td><b>Information</b></td><td>Available at workstation? Sufficiently detailed? Operator has enough info? Up to date?</td></tr>
+        <tr><td><b>Materials</b></td><td>Stock rotation in place? Handled correctly? Correct specification? Stored correctly?</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ── SUB-TAB: STOCK CONTROL ── -->
+  <div id="proc-pstock" class="proc-panel">
+    <div class="note"><b>Source: Stock Control Procedure (2SFG UKP) — Version D1.0</b><br>
+    <b>Objective:</b> To ensure stocks are controlled and rotated to maximise shelf life, highlight short-coded stock, maintain traceability, control rework, and manage surplus stock in line with legal and customer requirements.<br>
+    <b>Scope:</b> All raw materials and finished product on site.<br>
+    <b>Responsibility:</b> Site Technical Manager implements and monitors. Shift Managers/Supervisors ensure traceability and procedure compliance.</div>
+
+    <div class="section-title">M1 — General Labelling Requirements</div>
+    <div class="note">All raw materials, WIP, or finished products must include as a minimum: <b>Site of origin · Kill date · Kill time (where possible) · Product description · 3rd Party/Customer approvals</b></div>
+
+    <div class="section-title">M3 — Segregation Controls</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Only <b>one kill date</b> must be run on any ACM or manual cut line at any one time</td></tr>
+        <tr><td>Mixed Kill dates must not be used on any line at any one time</td></tr>
+        <tr><td>A line break/clearance of <b>at least 2 minutes</b> must be left between: different kill dates · different supply sites · different bird types · different accreditation schemes</td></tr>
+        <tr><td>Records of breaks/clearances between kill dates must be clear, complete, and on file</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M4 — Stock Taking</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Requirement</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Daily stock take</td><td>Accurate stock take of all product every morning. Results available to Head of Operations/Site Director, Site Technical Lead, and relevant technical personnel.</td></tr>
+        <tr><td>Short-coded product</td><td>Must be isolated using Hold &amp; Release Procedure. Must be documented and brought to attention of Head of Operations/Site Director and Site Technical Lead. Concessions to release must be agreed and documented prior to despatch.</td></tr>
+        <tr><td>Product accumulation</td><td>Must be returned to the line within maximum <b>30 minutes</b> unless temperature is compromised</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M5 — Intake / M6 — WIP / M7 — Finished Product Stock Rotation Rules</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Category</th><th>Rotation Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Intake (raw materials)</td><td>Oldest slaughter/durability date used first — unless breed/marketing/accreditation requirements dictate otherwise (e.g., organic stock processed first even if later dates)</td></tr>
+        <tr><td>WIP</td><td>Oldest slaughter/durability date used first. Same exceptions apply. WIP must be kept to minimum. Chill movements must be recorded fully.</td></tr>
+        <tr><td>Finished Product / Despatch</td><td>Oldest durability date despatched first. All products segregated by product, customer, and durability date until picked.</td></tr>
+        <tr><td>Packaging (perishable)</td><td>Oldest durability date issued first. Mark with durability indicator on intake.</td></tr>
+        <tr><td>Packaging (non-perishable)</td><td>First in, first out (FIFO)</td></tr>
+        <tr><td>Ingredients</td><td>Oldest durability date first. Allergen-containing ingredients stored separately.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M10 — Rework Rules</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Repacking must be completed within the product's production run, provided temperature not compromised and no foreign body risk arises</td></tr>
+        <tr><td>All rework must maintain the same Kill date and meat supplier information throughout processing</td></tr>
+        <tr><td>Rework through allergen control areas must not be re-processed outside allergen-controlled areas</td></tr>
+        <tr><td>Line must be cleared of all labels and packaging at end of each production run before next product starts</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M13 — Conditions That Require Waste Disposal (NOT Site B)</div>
+    <div class="note warn">The following require disposal at source — do NOT send to Site B:<br>
+    · <b>Food safety</b> — Microbiological, chemical, or foreign body contamination<br>
+    · <b>Legal temperature</b> — Exceeds 4°C<br>
+    · <b>Labelling</b> — Inadequate traceability, out of date, no supplying site health mark</div>
+  </div>
+
+  <!-- ── SUB-TAB: VISITORS ── -->
+  <div id="proc-pvisitors" class="proc-panel">
+    <div class="note"><b>Source: Visitors Procedure — Version 8 (21/05/2018)</b><br>
+    <b>Objective:</b> To ensure all visitors and contractors to the site are appropriately screened and managed during their time on site.<br>
+    <b>Scope:</b> All visitors visiting the site.<br>
+    <b>Responsibility:</b> Security, Reception, Engineering, Other hosts are Responsible. Site Director/General Manager is Accountable.</div>
+
+    <div class="section-title">M1 — Visitor Requirements on Arrival</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>Report to site security</td></tr>
+        <tr><td>Present <b>2 forms of Identification</b> — one must be photographic ID</td></tr>
+        <tr><td>Confirm who or which department they are visiting, and whether announced or unannounced</td></tr>
+        <tr><td>Read and follow 2sfg Health and Safety Rules and 2sfg Site Rules</td></tr>
+        <tr><td>Leave photographic and audio recording equipment at reception/security</td></tr>
+        <tr><td>Complete visitor documentation and sign in</td></tr>
+        <tr><td>Contractors must fully comply with Contractor Control Standards</td></tr>
+        <tr><td>Sign out at reception or security and hand in badge</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M2 — Host / Reception / Security Instructions</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Situation</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Visitor requires photographic/audio equipment in factory</td><td>Must be authorised by General Manager or Technical Manager. Host must monitor usage.</td></tr>
+        <tr><td>Visitor answers yes to any illness or visited farms/been abroad in last 10 days</td><td>Technical department must be informed prior to authorising entry to factory. Use Appendix 3a guidance.</td></tr>
+        <tr><td>Badge</td><td>Must be given on access and worn at all times on site</td></tr>
+        <tr><td>Non-compliance</td><td>Hold at security/reception and call Senior Manager on site to assess and recommend course of action</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">Appendix 3a — Health Screening: Entry Guidance</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Symptom / Situation</th><th>Allowed Entry?</th><th>Key Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Typhoid Fever</td><td><span class="pill pill-fail">NO</span></td><td>Extremely contagious. Negative faecal test required — may take 3+ months.</td></tr>
+        <tr><td>Paratyphoid Fever</td><td><span class="pill pill-fail">NO</span></td><td>As above. Negative faecal test required.</td></tr>
+        <tr><td>Diarrhoea</td><td><span class="pill pill-fail">NO</span></td><td><b>SEVERE FOOD SAFETY RISK.</b> Must show no symptoms for at least <b>48 hours</b> before returning.</td></tr>
+        <tr><td>Nausea and Vomiting</td><td><span class="pill pill-fail">NO</span></td><td><b>SEVERE FOOD SAFETY RISK.</b> Must show no symptoms for at least <b>48 hours</b>.</td></tr>
+        <tr><td>Cough with Phlegm</td><td><span class="pill pill-fail">NO</span></td><td>Small droplets may contaminate food or surfaces. 48hr symptom-free before return.</td></tr>
+        <tr><td>Runny Ear / Sticky or Sore Eyes</td><td><span class="pill pill-fail">NO</span></td><td>Cannot be adequately bandaged. Discharge risk to product.</td></tr>
+        <tr><td>Acne, Boils, Carbuncles</td><td><span class="pill pill-pass">YES</span></td><td>Infected area must be completely covered with permeable bandage. Gloves worn when handling produce. Regular hand washing.</td></tr>
+        <tr><td>Septic Cuts and Sores</td><td><span class="pill pill-pass">YES</span></td><td>Same as above — cover completely, gloves, regular handwashing.</td></tr>
+        <tr><td>Visited Farms or Been Overseas</td><td><span class="pill pill-warn">YES if no adverse symptoms</span></td><td>If thought to be ill or visited a country with an outbreak — do not allow in. Routine UK farm visits: record and allow if no symptoms present.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">Appendix 2 — Key Site Rules</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Factory-approved PPE must be worn at all times in production areas (whether or not production is in progress)</td></tr>
+        <tr><td>Smoking/Vaping and Eating are only allowed in <b>designated areas</b></td></tr>
+        <tr><td>No food of any sort onto site — particularly foods containing allergens such as nuts</td></tr>
+        <tr><td>No photographic equipment past reception. Mobile phone use restricted to office areas — NOT in any production area.</td></tr>
+        <tr><td>No jewellery except a plain wedding ring in production areas. No false nails, nail polish, or small personal items.</td></tr>
+        <tr><td>Hands must be washed with soap, dried, and followed by alcohol rinse</td></tr>
+        <tr><td>No glass, hard plastic, or ceramic items in production areas</td></tr>
+        <tr><td>Factory-approved pens must be used in production areas and associated storage rooms</td></tr>
+        <tr><td><b>THIS IS A NUT AND SESAME FREE SITE</b> — no nut or seed products onto site</td></tr>
+        <tr><td>Animals and Children are NOT PERMITTED on company premises</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ── SUB-TAB: ANIMAL BY-PRODUCTS ── -->
+  <div id="proc-pabp" class="proc-panel">
+    <div class="note"><b>Source: Animal By-Products Procedure — Version 1 (01/08/2025)</b><br>
+    <b>Objective:</b> To ensure Animal By-Products are handled and despatched from 2SFG Sites in accordance with Animal By-Products (Enforcement) Regulations and Regulation (EC) 1069/2009.<br>
+    <b>Scope:</b> Handling and storage of ABP, identification and labelling, documentation for domestic and international movement, reconciliation process.<br>
+    <b>Responsibility:</b> FLM is Responsible. Operations Manager is Accountable. 2SFG T/A Amber Foods ABPM Technical is Consulted. Site Technical is Informed.</div>
+
+    <div class="section-title">M1 — Handling, Labelling &amp; Storage</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>ABP must be collected and stored in <b>leak-proof, impervious receptacles</b></td></tr>
+        <tr><td>Each receptacle must be lined with the corresponding <b>colour-coded liner</b> for the category of product</td></tr>
+        <tr><td>Each receptacle must have a clearly identified <b>label of category</b> with required traceability attached</td></tr>
+        <tr><td>Receptacle used for ABP cannot be labelled or taped with oval health mark</td></tr>
+        <tr><td>Full receptacles must be covered by a solid lid or additional liner (taped)</td></tr>
+        <tr><td>Clear physical segregation between product for human consumption and ABP in storage area</td></tr>
+        <tr><td>Dolavs going to export: labelled with <b>"RAW MATERIAL FOR PET FOOD ONLY"</b> plus full destination address</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M2 — Loading &amp; Despatch Rules</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Situation</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td>Mixing of ABP and human consumption product in trailer</td><td>Human consumption product must be <b>downgraded to the ABP category</b> it was mixed with</td></tr>
+        <tr><td>Mixing of 2 ABP categories in trailer</td><td>Product must be downgraded to the <b>lowest ABP category</b></td></tr>
+        <tr><td>Category 2 ABP</td><td>Must be <b>dyed by the approved dye</b> before despatch from site</td></tr>
+        <tr><td>Hauliers</td><td>Only <b>approved hauliers</b> can transport the category they are approved for</td></tr>
+        <tr><td>Destinations</td><td>ABP can only be despatched to <b>approved destination</b> depending on category</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M3 — Record Keeping: Domestic Movement</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Requirement</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>ABP Commercial Document</td><td>Required for each Category 2 or 3 consignment. Generated in at least <b>triplicate</b>: 1 copy accompanies consignment to final destination (retained by receiver) · 1 copy retained by producer · 1 copy retained by carrier (haulier)</td></tr>
+        <tr><td>Signatures</td><td>All copies must be signed by the person filling them and by the driver before they leave site</td></tr>
+        <tr><td>Returns process</td><td>Return copy scanned by customer and sent to shared inbox (2sfgabpreturns@2sfg.com) and uploaded to SharePoint. Copies retained for <b>2 years</b></td></tr>
+        <tr><td>ABP Movement Log</td><td>Kept by each site for all consignments. Updated on <b>daily basis</b>. Stored in H drive shared folder. Records: date, category, product, destination, haulier, kill date info, whether return copy received.</td></tr>
+        <tr><td>Discrepancies</td><td>Weight difference &gt;1T between sent and received, or incorrectly filled section 3: communicate without delay to amberncrreport@2sfg.com</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M3 — Record Keeping: International Movement</div>
+    <div class="note">Export OV must attend inspection and loading. <b>Export Health Certificate 8311</b> (for Category 3 ABP for pet food) must accompany the load until the border control post. EHC reference details provided by 2SFG T/A Amber Foods technical team. Veterinary service provider retains EHCs for 2 years.</div>
+  </div>
+
+  <!-- ── SUB-TAB: ARTWORK APPROVAL ── -->
+  <div id="proc-partwork" class="proc-panel">
+    <div class="note"><b>Source: Artwork Approval Procedure — Version 1 (19/10/2022)</b><br>
+    <b>Objective:</b> To ensure retail labels are designed and approved consistently and in line with legal requirements, Customer specifications, Customer Codes of Practice, approval schemes, and best practice frameworks.<br>
+    <b>Scope:</b> All pack labels designed for retail products at all 2sfg poultry sites — artwork design approval and printer file approval stages.</div>
+
+    <div class="section-title">RACI — Artwork Approval</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Responsibility Area</th><th>R — Responsible</th><th>A — Accountable</th><th>C — Consulted</th><th>I — Informed</th></tr></thead>
+      <tbody>
+        <tr><td>Pack copy generation</td><td>Divisional Specification Co-ordinator</td><td>Technical Account Manager</td><td>Customer/Site/Third Party</td><td>Divisional Technical Controller</td></tr>
+        <tr><td>Recipe development and approval</td><td>NPD Manager</td><td>Head of NPD</td><td>Customer/Site/Suppliers</td><td>Divisional Specification Team</td></tr>
+        <tr><td>Artwork design approval</td><td>Divisional Artwork Co-ordinator</td><td>Divisional Technical Controller</td><td>Customer/Site/Third Party</td><td>Site/Commercial</td></tr>
+        <tr><td>Printer file approval</td><td>Site Technical</td><td>Site Technical Lead</td><td>Central Technical</td><td>Site Director/Stores Manager</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M2 — Artwork Lifecycle: Three Stages</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Stage</th><th>Who</th><th>Key Activities</th></tr></thead>
+      <tbody>
+        <tr><td><b>1. Artwork Inputs Approval</b></td><td>Internal and external stakeholders</td><td>Recipe confirmed by NPD · Raw material specs via SASSi · Commercial information from Commercial Managers (barcodes, marketing name, pack weight, case size, supplying site) · Cutters via Packaging Design Manager · Pack copy collated by divisional spec team and approved by Customer</td></tr>
+        <tr><td><b>2. Artwork Design Approval</b></td><td>Divisional spec and artwork team</td><td>Collaboration with retail customers/brand owners/third parties/design houses. Final approval on behalf of 2sfg: <b>Divisional Artwork Co-ordinator</b>. Approved artwork file released to printer (FTP).</td></tr>
+        <tr><td><b>3. Printer File Approval</b></td><td>Printer and Site Technical</td><td>Final approved file issued in printer format to site. Approved by nominated and trained site technical artwork approver. Includes practical printing details (winding direction, core size, etc.)</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M3 — When Artwork Must Be Reviewed</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Trigger for Artwork Review</th></tr></thead>
+      <tbody>
+        <tr><td>Changes to the product recipe</td></tr>
+        <tr><td>Changes to raw materials or their supplier</td></tr>
+        <tr><td>Changes to country of origin of raw materials</td></tr>
+        <tr><td>Changes to legislation</td></tr>
+        <tr><td>Any other product/process change, factory operation, or supply chain information affecting product claims or statements</td></tr>
+        <tr><td>When scheme logos are applied to pack (e.g. Soil Association, RSPCA) — scheme owner approval required before internal approval</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M3 — Artwork Checklist Scope (Minimum)</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Checklist Area</th><th>Items Covered</th></tr></thead>
+      <tbody>
+        <tr><td>General Setup &amp; Layout</td><td>Fonts · Printable Areas · On-line printer capability · Colours · Images · Barcodes</td></tr>
+        <tr><td>Label Information</td><td>Claims &amp; Logos · Speciality Logos · List of Ingredients · Food Additives &amp; Enzymes · Allergen and Intolerance Information · QUID · Storage Conditions · Cooking Instructions · Country of Origin · Disposal &amp; Environment · Nutritional Declaration · Additional Particulars</td></tr>
+        <tr><td>Final</td><td>Sense Check</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">Artwork Approval Contacts</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Role</th><th>Name / Contact</th></tr></thead>
+      <tbody>
+        <tr><td>Pack copy generation</td><td>UKP Specification Team — UKPSpecsArtwork@2sfg.com</td></tr>
+        <tr><td>Cutter development and approval</td><td>Iain Neal — iain.neal@2sfg.com</td></tr>
+        <tr><td>Artwork Design Approval</td><td>Gurpinder Kumar — UKPSpecsArtwork@2sfg.com</td></tr>
+        <tr><td>Printer File Approval — Site</td><td>[Insert name and email at site level]</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ── SUB-TAB: SECONDARY SCALDING ── -->
+  <div id="proc-pscald" class="proc-panel">
+    <div class="note"><b>Source: Secondary Scalding Operating Procedure — Version 4 (27/04/2017)</b><br>
+    <b>Objective:</b> To ensure the secondary scalding unit is operating correctly within the set parameters.<br>
+    <b>Scope:</b> The secondary scalding unit — subject of an R&amp;D project to reduce Campylobacter. This is an R&amp;D procedure liable to change — always use the latest issue.<br>
+    <b>Responsibility:</b> Site Engineering, Technical &amp; Operations.</div>
+
+    <div class="section-title">Operating Steps</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Step</th><th>Instruction</th><th>Key Detail</th></tr></thead>
+      <tbody>
+        <tr><td class="num">M1</td><td>Start-of-day hygiene check</td><td>Before processing any birds, ensure unit has been cleaned per hygiene procedure and is clean and free of debris prior to switching on.</td></tr>
+        <tr><td class="num">M2</td><td>Fill and heat up</td><td>Engineering fills unit and switches on, ensuring unit is heating. <b>Production must not commence until at operating temperature.</b></td></tr>
+        <tr><td class="num">M3</td><td>Temperature monitoring</td><td>Control panel temperature control display must show <b>75°C</b>. Alarms will sound if temperature falls below parameters. Regular monitoring required.</td></tr>
+        <tr><td class="num">M4</td><td>Cooling spray booth</td><td>Ensure cooling spray booth is functional before processing. Lever-type taps on each side — turn to <b>half position (45° angle)</b>. Both sides required.</td></tr>
+        <tr><td class="num">M5</td><td>In-process temperature monitoring</td><td>In addition to continual monitoring technology, QA or Engineering/Machine Minders must maintain regular checks throughout processing.</td></tr>
+        <tr><td class="num">M8</td><td>End of processing day</td><td>Stop the system (turns off heating and water refill). Open drain valve at bottom of tank to empty. Turn off taps on cooling spray booth. Once empty, hygiene operations can commence.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M6 — Line Stoppage Procedure</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Point</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td>Birds in tank during stoppage</td><td>Up to <b>9 carcasses</b> may be wholly or partially submerged in hot water</td></tr>
+        <tr><td>On restart</td><td>These carcasses continue out of the hot water tank, through the cooling tunnel, onto the EV line</td></tr>
+        <tr><td>Post-evisceration inspection</td><td>All birds subjected to Poultry Meat Inspection. Birds affected by the line stoppage are to be <b>removed and disposed of as Category 2 material</b> at this point.</td></tr>
+        <tr><td>Normal line stoppages</td><td>Same PMI process as primary scald — Poultry Meat Inspectors remove affected carcasses at post-de-feathering inspection point</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title">M7 — Unit Failure</div>
+    <div class="note warn">If water will not reach temperature: <b>unit must be drained</b> so processed birds are not passing through water below the required temperature. If the carousel fails: must be repaired before continuation of processing — no alternative.</div>
+
+    <div class="section-title">M9 — Temperature Drop Below 75°C (Critical Response)</div>
+    <div class="note warn"><b>If secondary scalder drops below 75°C:</b><br>
+    1. Engineering and Business Unit Manager must be informed immediately by the QC in the department.<br>
+    2. Temperature must be recorded <b>every 5 minutes</b> by the QC Supervisor until temperature returns to 75°C and is stable for 5 minutes.<br>
+    3. Shift Manager/Factory Manager &amp; General Manager must be made aware.<br>
+    4. <b>MUST ensure no Retail Whole Birds are packed</b> from when the secondary scalder temperature reduced until it was restored.<br>
+    5. Technical Director, Managing Director, and Operations Director for Poultry <b>MUST be informed</b> when temperature drops below 75°C (by General Manager or deputy).</div>
+
+    <div class="section-title">M10 — Engineering Requirements</div>
+    <div class="note">The Steam valve <b>MUST</b> be risk assessed and included on the engineering PPM schedule. <b>MUST</b> also be included on the site Internal Audits.</div>
+  </div>
+
+</div><!-- end proc-super supertab -->
 <!-- ═══════════════════════════ TAB 9: CUSTOMER COPs ═══════════════════════════ -->
 <div id="tab-cop" class="tab-panel">
 
@@ -1613,10 +2026,10 @@ input.addEventListener('input', () => {
 function goToTab(tabId, title) {
   // Switch tab
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#main-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + tabId).classList.add('active');
-  const btns = document.querySelectorAll('.tab-btn');
-  const tabOrder = ['limits','sample','timing','mims','actions','procedures','raci','doccontrol','cop','analyser','bacteria'];
+  const btns = document.querySelectorAll('#main-tabs .tab-btn');
+  const tabOrder = ['limits','sample','timing','mims','actions','proc-super','cop','analyser','bacteria'];
   const idx = tabOrder.indexOf(tabId);
   if (btns[idx]) btns[idx].classList.add('active');
   results.style.display = 'none';
@@ -1625,10 +2038,20 @@ function goToTab(tabId, title) {
   window.scrollTo({top: document.querySelector('.tabs').offsetTop - 10, behavior: 'smooth'});
 }
 
-function showTab(id, btn) {
+function showMainTab(id, btn) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#main-tabs .tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Legacy alias for any lingering showTab calls
+function showTab(id, btn) { showMainTab(id, btn); }
+
+function showProcTab(id, btn) {
+  document.querySelectorAll('.proc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#proc-tabs .proc-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('proc-' + id).classList.add('active');
   btn.classList.add('active');
 }
 
