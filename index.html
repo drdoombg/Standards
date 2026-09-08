@@ -161,6 +161,9 @@
   .tab-btn-procedures { background: #1e1035; border-color: #7c3aed; color: #c4b5fd; }
   .tab-btn-procedures:hover { border-color: #a78bfa; color: #ede9fe; }
   .tab-btn-procedures.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+  .tab-btn-analyser { background: #1a1600; border-color: #a16207; color: #fbbf24; }
+  .tab-btn-analyser:hover { border-color: #fbbf24; color: #fef08a; }
+  .tab-btn-analyser.active { background: #ca8a04; border-color: #ca8a04; color: #000; }
 
   .proc-header { margin-bottom: 14px; padding: 14px 16px; background: #130d24; border: 1px solid #4c1d95; border-radius: 8px; }
   .proc-title-row { font-size: 15px; font-weight: 700; color: #c4b5fd; letter-spacing: 0.04em; margin-bottom: 2px; }
@@ -198,15 +201,14 @@
 
 <!-- TABS -->
 <div class="tabs" id="main-tabs">
+  <button class="tab-btn" onclick="showMainTab('bacteria',this)">🧫 Bacteria Guide</button>
   <button class="tab-btn active" onclick="showMainTab('limits',this)">Limits by Organism</button>
-  <button class="tab-btn" onclick="showMainTab('sample',this)">Sample Types &amp; Frequency</button>
-  <button class="tab-btn" onclick="showMainTab('timing',this)">Timing &amp; Transport</button>
+  <button class="tab-btn" onclick="showMainTab('cop',this)">Customer COPs</button>
+  <button class="tab-btn" onclick="showMainTab('sample',this)">Sample Logistics</button>
   <button class="tab-btn" onclick="showMainTab('mims',this)">MIMS Fields &amp; Codes</button>
   <button class="tab-btn" onclick="showMainTab('actions',this)">Actions on Failure</button>
   <button class="tab-btn tab-btn-procedures" onclick="showMainTab('proc-super',this)">📋 Procedures</button>
-  <button class="tab-btn" onclick="showMainTab('cop',this)">Customer COPs</button>
-  <button class="tab-btn" onclick="showMainTab('analyser',this)">⚠ Result Analyser</button>
-  <button class="tab-btn" onclick="showMainTab('bacteria',this)">🧫 Bacteria Guide</button>
+  <button class="tab-btn tab-btn-analyser" onclick="showMainTab('analyser',this)">⚠ Result Analyser</button>
 </div>
 
 <!-- ═══════════════════════════ TAB 1: LIMITS ═══════════════════════════ -->
@@ -319,7 +321,7 @@
 
 </div>
 
-<!-- ═══════════════════════════ TAB 2: SAMPLE TYPES ═══════════════════════════ -->
+<!-- ═══════════════════════════ TAB: SAMPLE LOGISTICS ═══════════════════════════ -->
 <div id="tab-sample" class="tab-panel">
 
   <div class="section-title">Full Sampling Schedule (Table 1)</div>
@@ -396,11 +398,6 @@
 
   <div class="section-title">Private Water Supply (e.g. Borehole)</div>
   <div class="note">Local councils are primarily responsible for monitoring, testing, and enforcing compliance for private water supplies (risk assessments, routine monitoring, enforcements and notices). Sites using private water must maintain site procedures to comply with regulations and customer requirements.</div>
-
-</div>
-
-<!-- ═══════════════════════════ TAB 3: TIMING ═══════════════════════════ -->
-<div id="tab-timing" class="tab-panel">
 
   <div class="section-title">Sample Transport Deadlines — Per Document</div>
   <div class="timing-grid">
@@ -540,21 +537,124 @@
     </tbody>
   </table></div>
 
-  <div class="section-title">Known Suite Codes (from MIMS Save File)</div>
-  <div class="suite-grid">
-    <div class="suite-card"><div class="sc-code">2SP012</div><div class="sc-name">AMBER Rapid Trim</div><div class="sc-meta">2sisters · Daily · £2.07</div></div>
-    <div class="suite-card"><div class="sc-code">2SP022</div><div class="sc-name">Breast Fillet (Weekly)</div><div class="sc-meta">Tesco · Weekly · £1.22</div></div>
-    <div class="suite-card"><div class="sc-code">2SP040</div><div class="sc-name">External Intake (Investigation)</div><div class="sc-meta">2Sisters · Annually · £5.24</div></div>
-    <div class="suite-card"><div class="sc-code">2SP045</div><div class="sc-name">Caeca testing</div><div class="sc-meta">2Sisters · Every house · £8.05 · Non-UKAS</div></div>
-    <div class="suite-card"><div class="sc-code">2SP053</div><div class="sc-name">Ingredients &amp; Brine (Solids)</div><div class="sc-meta">Bi Annual · £8.21</div></div>
-    <div class="suite-card"><div class="sc-code">2SP079 / 2SP080</div><div class="sc-name">Environmental / hygiene swabs</div><div class="sc-meta">Daily · various prices</div></div>
-    <div class="suite-card"><div class="sc-code">2SP148</div><div class="sc-name">KFC Hot Wings / Frozen AV</div><div class="sc-meta">KFC · Daily · £4.25</div></div>
-    <div class="suite-card"><div class="sc-code">2SP158</div><div class="sc-name">Chicken Drumstick (Monthly)</div><div class="sc-meta">Aldi · Monthly · £10.53</div></div>
-    <div class="suite-card"><div class="sc-code">2SP163</div><div class="sc-name">Product suite variant</div><div class="sc-meta">Various</div></div>
-    <div class="suite-card"><div class="sc-code">SISBW11</div><div class="sc-name">AMBER Trim (Birds Eye)</div><div class="sc-meta">BIRDS EYE · Weekly · £11.94</div></div>
-    <div class="suite-card"><div class="sc-code">2SS001 / 2SS002</div><div class="sc-name">Swab suites</div><div class="sc-meta">Hand / environmental swab variants</div></div>
-    <div class="suite-card"><div class="sc-code">2SW015</div><div class="sc-name">Water testing</div><div class="sc-meta">Water micro suite</div></div>
-  </div>
+  <div class="section-title">IFP Suite Limits — Alert &amp; Fail Thresholds (from Microbiological Suites &amp; Limits Agreement)</div>
+  <div class="note">Grouped by suite category. <b>Alert</b> = investigate, increase monitoring. <b>Fail</b> = quarantine / notify / NCR. <span class="pill pill-abs">Pos/Pos</span> = presence is immediate Fail. <code>—</code> = no numeric limit set for that determinand in that suite.</div>
+
+  <div class="section-title" style="margin-top:14px">🌿 Scunthorpe Site — Ingredients &amp; Brine</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Suite</th><th>Title</th><th>Det</th><th>Organism</th><th>Units</th><th>Alert</th><th>Fail</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">2SP053</td><td>Ingredients &amp; Brine – Product</td><td>TVCF</td><td>Total Viable Count</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">10</span></td></tr>
+      <tr><td class="mims-col">2SP053</td><td></td><td>EntF</td><td>Enterobacteriaceae</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">10</span></td></tr>
+      <tr><td class="mims-col">2SP053</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">10</span></td></tr>
+      <tr><td class="mims-col">2SP053</td><td></td><td>SaF</td><td>Coag+ Staphylococci</td><td>cfu/g</td><td class="num">20</td><td class="num"><span class="pill pill-fail">20</span></td></tr>
+      <tr><td class="mims-col">2SP053</td><td></td><td>YF / MF</td><td>Yeasts / Moulds</td><td>cfu/g</td><td class="num">20</td><td class="num"><span class="pill pill-fail">20</span></td></tr>
+      <tr><td class="mims-col">2SP053</td><td></td><td>LacF</td><td>Lactic Acid Bacteria</td><td>cfu/g</td><td class="num">20</td><td class="num"><span class="pill pill-fail">20</span></td></tr>
+      <tr><td class="mims-col">2SP053</td><td></td><td>ColiF / PsF</td><td>Coliforms / Pseudomonas</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">10</span></td></tr>
+      <tr><td class="mims-col">2SP053L</td><td>Ingredients &amp; Brine – Liquid</td><td>All as above</td><td>Same panel</td><td>cfu/ml</td><td class="num">10–20</td><td class="num"><span class="pill pill-fail">10–20</span></td></tr>
+      <tr><td class="mims-col">2SP054</td><td>Macedonia – Scunthorpe Product</td><td>spPsF52</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">5,000</td><td class="num"><span class="pill pill-fail">10,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP054</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">500</td><td class="num"><span class="pill pill-fail">5,000</span></td></tr>
+      <tr><td class="mims-col">2SP054</td><td></td><td>Campy1F</td><td>Campylobacter</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-top:14px">⚖️ Legal Microbiological Criteria</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Suite</th><th>Title</th><th>Det</th><th>Organism</th><th>Units</th><th>Alert</th><th>Fail</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">2SL001</td><td>PHC Neck Skins</td><td>SOB-25</td><td>Salmonella</td><td>25g</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+      <tr><td class="mims-col">2SL001</td><td></td><td>Campy1F</td><td>Campylobacter</td><td>cfu/g</td><td class="num">1,000</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SL002</td><td>Fresh Poultry Meat</td><td>SOB-25</td><td>Salmonella</td><td>25g</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+      <tr><td class="mims-col">2SL003</td><td>Meat Preparations</td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">500</td><td class="num"><span class="pill pill-fail">5,000</span></td></tr>
+      <tr><td class="mims-col">2SL003</td><td></td><td>SOB-25</td><td>Salmonella</td><td>25g</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+      <tr><td class="mims-col">2SL004S</td><td>Minced Meat – SOL</td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">50</td><td class="num"><span class="pill pill-fail">500</span></td></tr>
+      <tr><td class="mims-col">2SL004S</td><td></td><td>spTVCF53</td><td>TVC</td><td>cfu/g</td><td class="num">500,000</td><td class="num"><span class="pill pill-fail">5,000,000</span></td></tr>
+      <tr><td class="mims-col">2SL005</td><td>MSM</td><td>SOB-10</td><td>Salmonella (10g)</td><td>10g</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+      <tr><td class="mims-col">2SL005</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">50</td><td class="num"><span class="pill pill-fail">500</span></td></tr>
+      <tr><td class="mims-col">2SL005</td><td></td><td>spTVCF53</td><td>TVC</td><td>cfu/g</td><td class="num">500,000</td><td class="num"><span class="pill pill-fail">5,000,000</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-top:14px">🐔 Primary / Slaughter Product</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Suite</th><th>Title</th><th>Det</th><th>Organism</th><th>Units</th><th>Alert</th><th>Fail</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">2SP001</td><td>Exit Chiller Wholebirds</td><td>PsF</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP001</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">50</td><td class="num"><span class="pill pill-fail">500</span></td></tr>
+      <tr><td class="mims-col">2SP002</td><td>Intake WB K+1</td><td>spPsF50</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">1,000</td><td class="num"><span class="pill pill-fail">5,000</span></td></tr>
+      <tr><td class="mims-col">2SP004</td><td>Product – Campylobacter</td><td>Campy1F</td><td>Campylobacter</td><td>cfu/g</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP045</td><td>Caeca (Farm Performance)</td><td>CampyFnu</td><td>Campylobacter (presumptive)</td><td>cfu/g</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP093</td><td>Daily – TVC, Ps, EcF</td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP093</td><td></td><td>spPsF52</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">10,000</td><td class="num"><span class="pill pill-fail">100,000</span></td></tr>
+      <tr><td class="mims-col">2SP093</td><td></td><td>spTVCF52</td><td>TVC</td><td>cfu/g</td><td class="num">100,000</td><td class="num"><span class="pill pill-fail">10,000,000</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-top:14px">🏪 Retail &amp; Customer-Specific Product</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Suite</th><th>Customer</th><th>Det</th><th>Organism</th><th>Units</th><th>Alert</th><th>Fail</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">2SP012 / 2SP014</td><td>Retail Daily / Monthly</td><td>spPsF50</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">10,000</td><td class="num"><span class="pill pill-fail">50,000</span></td></tr>
+      <tr><td class="mims-col">2SP012 / 2SP014</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">100</span></td></tr>
+      <tr><td class="mims-col">2SP059 / 2SP061</td><td>Asda Daily / EOL Monthly</td><td>spPsF50/52</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">10,000</td><td class="num"><span class="pill pill-fail">100,000–1,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP059 / 2SP061</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP061</td><td></td><td>Campy1F</td><td>Campylobacter</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP189 / 2SP190</td><td>Asda Raw SOL/EOL</td><td>spPsF50</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">10,000</td><td class="num"><span class="pill pill-fail">1,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP189 / 2SP190</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP190</td><td></td><td>SOB-25 / Campy1F</td><td>Salmonella / Campylobacter</td><td>25g / cfu/g</td><td class="num">Pos / 10</td><td class="num"><span class="pill pill-fail">Pos / 1,000</span></td></tr>
+      <tr><td class="mims-col">2SP015 / 2SP016</td><td>M&amp;S Raw / Primal</td><td>spPsF52</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">10,000</td><td class="num"><span class="pill pill-fail">1,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP015 / 2SP016</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">500</td><td class="num"><span class="pill pill-fail">5,000</span></td></tr>
+      <tr><td class="mims-col">2SP017</td><td>M&amp;S Monthly</td><td>Campy1F</td><td>Campylobacter</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SP017</td><td></td><td>spTVCF50</td><td>TVC</td><td>cfu/g</td><td class="num">100,000</td><td class="num"><span class="pill pill-fail">10,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP079 / 2SP080</td><td>Co-op Weekly / Monthly</td><td>spPsF52</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">10,000</td><td class="num"><span class="pill pill-fail">10,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP079 / 2SP080</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">10</td><td class="num"><span class="pill pill-fail">500</span></td></tr>
+      <tr><td class="mims-col">2SP148 / 2SP149</td><td>KFC Fresh Each / Monthly</td><td>spTVCF50</td><td>TVC</td><td>cfu/g</td><td class="num">500,000</td><td class="num"><span class="pill pill-fail">1,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP148 / 2SP149</td><td></td><td>EcF</td><td>E. coli</td><td>cfu/g</td><td class="num">500</td><td class="num"><span class="pill pill-fail">500</span></td></tr>
+      <tr><td class="mims-col">2SP149</td><td></td><td>spPsF52 / Campy1F</td><td>Pseudomonas / Campylobacter</td><td>cfu/g</td><td class="num">5,000 / 1,000</td><td class="num"><span class="pill pill-fail">10,000,000 / 1,000</span></td></tr>
+      <tr><td class="mims-col">2SP156–2SP159</td><td>Aldi Fresh SOL/EOL</td><td>spPsF50/52</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">5,000</td><td class="num"><span class="pill pill-fail">50,000–10,000,000</span></td></tr>
+      <tr><td class="mims-col">2SP156–2SP159</td><td></td><td>EcF / Campy1F</td><td>E. coli / Campylobacter</td><td>cfu/g</td><td class="num">100 / 500</td><td class="num"><span class="pill pill-fail">500 / 1,000</span></td></tr>
+      <tr><td class="mims-col">2SP176 / 2SP177</td><td>Sainsbury's Primary</td><td>spPsF50</td><td>Pseudomonas</td><td>cfu/g</td><td class="num">10,000</td><td class="num"><span class="pill pill-fail">100,000</span></td></tr>
+      <tr><td class="mims-col">2SP176 / 2SP177</td><td></td><td>EcF / Campy1F</td><td>E. coli / Campylobacter</td><td>cfu/g</td><td class="num">50 / 100</td><td class="num"><span class="pill pill-fail">500 / 1,000</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-top:14px">🧫 Swabs</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Suite</th><th>Title</th><th>Det</th><th>Organism</th><th>Units</th><th>Alert</th><th>Fail</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">2SS001</td><td>Swab – Hand</td><td>SaSdup / EcS</td><td>Staph / E. coli</td><td>cfu/swab</td><td class="num">10</td><td class="num"><span class="pill pill-fail">100</span></td></tr>
+      <tr><td class="mims-col">2SS002</td><td>Swab – Standard (Env)</td><td>TVCS</td><td>TVC</td><td>cfu/swab</td><td class="num">100</td><td class="num"><span class="pill pill-fail">999</span></td></tr>
+      <tr><td class="mims-col">2SS002</td><td></td><td>EntS / PsS</td><td>Enterobacteriaceae / Pseudomonas</td><td>cfu/swab</td><td class="num">10 / 100</td><td class="num"><span class="pill pill-fail">100 / 1,000</span></td></tr>
+      <tr><td class="mims-col">2SS003</td><td>Swab – Campylobacter</td><td>CampySS</td><td>Campylobacter</td><td>cfu/swab</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+      <tr><td class="mims-col">2SS004</td><td>Swab – Listeria</td><td>LlessS</td><td>Listeria spp.</td><td>per swab</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+      <tr><td class="mims-col">2SS005 / 2SS007</td><td>Swab – E.coli &amp; Sal / E.coli</td><td>EcS / SOBS</td><td>E. coli / Salmonella</td><td>cfu/swab</td><td class="num">10 / Pos</td><td class="num"><span class="pill pill-fail">10</span> / <span class="pill pill-abs">Pos</span></td></tr>
+      <tr><td class="mims-col">2SS010</td><td>Salmonella Swab</td><td>SOBS</td><td>Salmonella</td><td>per swab</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-top:14px">💧 Water</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Suite</th><th>Title</th><th>Det</th><th>Organism</th><th>Units</th><th>Alert</th><th>Fail</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">2SW004</td><td>Potable Water</td><td>TVC22 / TVC37</td><td>TVC</td><td>cfu/ml</td><td class="num">100 / 20</td><td class="num"><span class="pill pill-fail">100 / 20</span></td></tr>
+      <tr><td class="mims-col">2SW004</td><td></td><td>EcW / ColiW / EntW</td><td>E. coli / Coliforms / Enterococci</td><td>mpn/10</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+      <tr><td class="mims-col">2SW015</td><td>Potable (Increased Dilutions)</td><td>TVC22 / TVC37</td><td>TVC</td><td>cfu/ml</td><td class="num">3,000</td><td class="num"><span class="pill pill-fail">4,500</span></td></tr>
+      <tr><td class="mims-col">2SW015</td><td></td><td>EntW / EcW / ColiW / SRClW</td><td>Enterococci / E. coli / Coliforms / Clostridia</td><td>mpn/10</td><td class="num">1</td><td class="num"><span class="pill pill-fail">1</span></td></tr>
+      <tr><td class="mims-col">2SW001</td><td>Private Pre-Treatment Water</td><td>TVC22 / TVC37</td><td>TVC</td><td>cfu/ml</td><td class="num">100 / 20</td><td class="num"><span class="pill pill-fail">100 / 20</span></td></tr>
+      <tr><td class="mims-col">2SW001</td><td></td><td>EcW / ColiW</td><td>E. coli / Coliforms</td><td>mpn/10</td><td class="num"><span class="pill pill-abs">Pos</span></td><td class="num"><span class="pill pill-abs">Pos</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="section-title" style="margin-top:14px">🌬 Air Plates</div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>Suite</th><th>Title</th><th>Det</th><th>Organism</th><th>Units</th><th>Alert</th><th>Fail</th></tr></thead>
+    <tbody>
+      <tr><td class="mims-col">2SA002</td><td>Air Plate – Yeast &amp; Mould</td><td>Mair / Yair</td><td>Moulds / Yeasts</td><td>cfu/plate</td><td class="num">10</td><td class="num"><span class="pill pill-fail">20</span></td></tr>
+      <tr><td class="mims-col">2SA004</td><td>Air Plate – Pseudomonas</td><td>PsAir</td><td>Pseudomonas</td><td>cfu</td><td class="num">10</td><td class="num"><span class="pill pill-fail">100</span></td></tr>
+      <tr><td class="mims-col">2SA007</td><td>Air Plate – TVC</td><td>PCA</td><td>TVC 30°C</td><td>cfu/plate</td><td class="num">100</td><td class="num"><span class="pill pill-fail">1,000</span></td></tr>
+    </tbody>
+  </table></div>
+
   <div class="note warn"><b>Suite code is critical and fatal if wrong.</b> It determines which organisms the lab tests for. An incorrect suite from a wrong SHIFT selection means wrong organisms are tested — results are useless. Always verify suite matches the correct frequency row in MIMS seed.</div>
 
   <div class="section-title">Notable Results from Recent MIMS Data (Aug 2026)</div>
@@ -636,7 +736,6 @@
   <div class="proc-tabs" id="proc-tabs">
     <button class="proc-btn active" onclick="showProcTab('pmethods',this)">🧫 Micro Methods</button>
     <button class="proc-btn" onclick="showProcTab('praci',this)">👥 RACI</button>
-    <button class="proc-btn" onclick="showProcTab('pdoccontrol',this)">📄 Doc Control</button>
     <button class="proc-btn" onclick="showProcTab('pcomplaints',this)">⚠ Complaints</button>
     <button class="proc-btn" onclick="showProcTab('ppest',this)">🐀 Pest Control</button>
     <button class="proc-btn" onclick="showProcTab('prca',this)">🔍 Root Cause</button>
@@ -804,47 +903,6 @@
       </tbody>
     </table></div>
     <div class="note warn">Training records must be completed and retained. The signature confirms the employee commits to following the requirements — not just that they attended.</div>
-  </div>
-
-  <!-- ── SUB-TAB: DOCUMENT CONTROL (previously tab-doccontrol) ── -->
-  <div id="proc-pdoccontrol" class="proc-panel">
-    <div class="note"><b>Document Reference:</b> Inspection and Testing Procedure – Microbiology &nbsp;·&nbsp; <b>Current Version:</b> D2.0 &nbsp;·&nbsp; <b>Date:</b> 17/10/2025 &nbsp;·&nbsp; <b>Issued by:</b> UKP Technical Services Manager &nbsp;·&nbsp; <b>Authorised by:</b> Technical Manager</div>
-
-    <div class="section-title">Changes Log (M8)</div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>Issue No.</th><th>Date</th><th>Section(s) Amended</th><th>Detail of Change</th></tr></thead>
-      <tbody>
-        <tr><td class="num">1</td><td>04/07/2019</td><td>All</td><td>Inspection &amp; Testing Procedure broken down into separate procedures: Chemical &amp; Microbiological, and Physical Testing.</td></tr>
-        <tr><td class="num">D1.0</td><td>23/05/2025</td><td>Multiple sections</td><td><b>M3p:</b> Listeria swabbing exclusion added. <b>M3k:</b> Swab segregation requirement added. <b>Scope:</b> References to ATP swabbing removed. <b>RACI:</b> References to TM &amp; HOT amended to "Site Technical Lead". <b>Table 1:</b> Campy Pooled Neck Skin amended to 5 samples of 3 pooled neck skins each. <b>Table 1:</b> Raw Material Intake updated. Former Listeria section removed. Environmental swab pass rate updated to 98%.</td></tr>
-        <tr><td class="num">D2.0</td><td>17/10/2025</td><td>Multiple sections</td><td><b>M5c1a &amp; M5c2a:</b> "at the end of life" added to Salmonella sampling requirements. <b>M5c1e &amp; M5c2d:</b> New clause on "ghost" batches — mandatory MIMS wording: "Retained batch – not on the market". <b>M5c1h:</b> Amended to "All Salmonella positive samples are fully typed." <b>M5c1k:</b> SE/ST escalation to Technical Controller and Technical Director added. Confirmed SE/ST terminology specified throughout.</td></tr>
-      </tbody>
-    </table></div>
-
-    <div class="section-title">Document Footer Reference</div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>Field</th><th>D1.0</th><th>D2.0 (Current)</th></tr></thead>
-      <tbody>
-        <tr><td>Reference</td><td colspan="2">Inspection and Testing Procedure – Microbiology</td></tr>
-        <tr><td>Version No.</td><td>D1.0</td><td><b>D2.0</b></td></tr>
-        <tr><td>Date</td><td>23/05/2025</td><td><b>17/10/2025</b></td></tr>
-        <tr><td>Issued by</td><td colspan="2">UKP Technical Services Manager</td></tr>
-        <tr><td>Authorised by</td><td colspan="2">Technical Manager</td></tr>
-      </tbody>
-    </table></div>
-
-    <div class="section-title">Key Regulatory &amp; Standard References</div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>Reference</th><th>What it covers</th></tr></thead>
-      <tbody>
-        <tr><td>Retained EU Law – EU Directive 98/83/EC</td><td>Potable water specification standards</td></tr>
-        <tr><td>EN/ISO 6579</td><td>Salmonella detection method</td></tr>
-        <tr><td>ISO 4833</td><td>TVC / Aerobic Colony Count method (Minced Meat)</td></tr>
-        <tr><td>ISO 16649-1 or -2</td><td>E. coli enumeration method</td></tr>
-        <tr><td>ISO 18593:2018</td><td>Environmental swabbing — locations, areas, times, technique</td></tr>
-        <tr><td>2SFG-S035</td><td>Group policy — swab pass rate 98%, Pass/Fail limits</td></tr>
-        <tr><td>Microbiological Criteria for Foodstuffs (UK Regs)</td><td>Governs actions (withdrawal, recall) for unsatisfactory results</td></tr>
-      </tbody>
-    </table></div>
   </div>
 
   <!-- ── SUB-TAB: COMPLAINTS ── -->
@@ -1860,16 +1918,16 @@ const SEARCH_INDEX = [
   { t:'Private water borehole', d:'Local councils responsible for monitoring. Sites using private supply must maintain compliance procedures to meet regulations and customer requirements.', cat:'Sample Types', tab:'sample' },
   { t:'EOL end of life temperature', d:'>8°C for at least 20% of total product life. Min. annually. Salmonella + Campy included in routine unless customer-specific exclusion.', cat:'Sample Types', tab:'sample' },
   // TIMING
-  { t:'Swab transport time deadline 24 hours', d:'Environmental swabs: store 1–4°C, transport within 24 hrs. Results invalid if received >24 hrs or no date/time on sample.', cat:'Timing', tab:'timing' },
-  { t:'Water sample deadline 6 hours 24 hours', d:'Target within 6 hrs. Hard limit 24 hrs. Store 2–4°C dark. Results invalid if received >24 hrs.', cat:'Timing', tab:'timing' },
-  { t:'Air plate transport time', d:'Direct to lab within 20 min (max 1 hr without refrigeration). Refrigerated <5°C. Hard limit 24 hrs.', cat:'Timing', tab:'timing' },
-  { t:'Product sample 48 hours', d:'Aseptic product samples (Appendix 5): transport within 48 hrs of collection. Refrigerated courier.', cat:'Timing', tab:'timing' },
-  { t:'EOL product 24 hours', d:'EOL and routine micro product samples (M4): refrigerated courier, tested within 24 hrs.', cat:'Timing', tab:'timing' },
-  { t:'Neck skin 24 hours immediately', d:'Salmonella neck skin: 0–4°C, testing within 24 hrs. Table 1: "tested immediately after primary chilling." Carcasses must be chilled ≥1.5 hrs before sampling.', cat:'Timing', tab:'timing' },
-  { t:'72 hours swabs', d:'72 hrs is NOT in this document. Hard limit is 24 hrs. 72 hrs comes from swab manufacturer data and some external labs — needs formal agreement and documentation to use.', cat:'Timing', tab:'timing' },
-  { t:'MIMS results reporting one week', d:'Normal results: within 1 week of delivery. OOS results: reported immediately by telephone or email — not waiting for MIMS.', cat:'Timing', tab:'timing' },
-  { t:'Control swab control plate', d:'Control swabs/plates must NOT be opened/used. Label, tape, return with samples. Check sterility and sampler technique integrity.', cat:'Timing', tab:'timing' },
-  { t:'Swab storage temperature 1 4', d:'Swabs after sampling stored at 1–4°C. Unused swabs stored 4–10°C. Steriliser min. 82°C for neck skin knives.', cat:'Timing', tab:'timing' },
+  { t:'Swab transport time deadline 24 hours', d:'Environmental swabs: store 1–4°C, transport within 24 hrs. Results invalid if received >24 hrs or no date/time on sample.', cat:'Timing', tab:'sample' },
+  { t:'Water sample deadline 6 hours 24 hours', d:'Target within 6 hrs. Hard limit 24 hrs. Store 2–4°C dark. Results invalid if received >24 hrs.', cat:'Timing', tab:'sample' },
+  { t:'Air plate transport time', d:'Direct to lab within 20 min (max 1 hr without refrigeration). Refrigerated <5°C. Hard limit 24 hrs.', cat:'Timing', tab:'sample' },
+  { t:'Product sample 48 hours', d:'Aseptic product samples (Appendix 5): transport within 48 hrs of collection. Refrigerated courier.', cat:'Timing', tab:'sample' },
+  { t:'EOL product 24 hours', d:'EOL and routine micro product samples (M4): refrigerated courier, tested within 24 hrs.', cat:'Timing', tab:'sample' },
+  { t:'Neck skin 24 hours immediately', d:'Salmonella neck skin: 0–4°C, testing within 24 hrs. Table 1: "tested immediately after primary chilling." Carcasses must be chilled ≥1.5 hrs before sampling.', cat:'Timing', tab:'sample' },
+  { t:'72 hours swabs', d:'72 hrs is NOT in this document. Hard limit is 24 hrs. 72 hrs comes from swab manufacturer data and some external labs — needs formal agreement and documentation to use.', cat:'Timing', tab:'sample' },
+  { t:'MIMS results reporting one week', d:'Normal results: within 1 week of delivery. OOS results: reported immediately by telephone or email — not waiting for MIMS.', cat:'Timing', tab:'sample' },
+  { t:'Control swab control plate', d:'Control swabs/plates must NOT be opened/used. Label, tape, return with samples. Check sterility and sampler technique integrity.', cat:'Timing', tab:'sample' },
+  { t:'Swab storage temperature 1 4', d:'Swabs after sampling stored at 1–4°C. Unused swabs stored 4–10°C. Steriliser min. 82°C for neck skin knives.', cat:'Timing', tab:'sample' },
   // MIMS
   { t:'TVCF TP4100 TVC column', d:'Total Aerobic Colony Count at 30°C · cfu/g · Swab limit: Fail >1000', cat:'MIMS', tab:'mims' },
   { t:'EntF TP4103 enterobacteriaceae column', d:'Enterobacteriaceae presumptive · cfu/g · Swab Fail >100', cat:'MIMS', tab:'mims' },
@@ -1922,14 +1980,6 @@ const SEARCH_INDEX = [
   { t:'procedure objective scope', d:'Objective: micro testing complies with legal requirements, customer specs, and correct frequencies. Consistent sampling methods for reliable results. Scope: ingredients, WIP, finished products, water, air, equipment validation.', cat:'RACI', tab:'raci' },
   { t:'hygiene manager swab results access record', d:'Site Hygiene Manager must have access to all swab results and must record all actions taken as a result of failures and trends.', cat:'RACI', tab:'raci' },
   { t:'AWO deputy SHS marker authorise', d:'AWO or deputy must authorise processing of SHS (Salmonella positive) flocks and physically remove the SHS marker before processing begins.', cat:'RACI', tab:'raci' },
-  // DOCUMENT CONTROL
-  { t:'D2.0 changes log ghost batch SE ST escalation', d:'D2.0 (17/10/2025): Added ghost batch wording requirement. Added SE/ST escalation to DTC+TD. Added positive Salmonella escalation (mince/meat preps). Added "fully typed" requirement. Added "at end of life" to Salmonella sampling.', cat:'Document Control', tab:'doccontrol' },
-  { t:'D1.0 changes log warning standard removed 98%', d:'D1.0 (23/05/2025): Warning standard removed from swabs — now Pass/Fail only. Pass rate updated to 98%. Listeria section removed. ATP swabbing references removed. Water testing updated. Ice testing clause added.', cat:'Document Control', tab:'doccontrol' },
-  { t:'version D2.0 17 October 2025 issued authorised', d:'Current version: D2.0 · Date: 17/10/2025 · Issued by: UKP Technical Services Manager · Authorised by: Technical Manager · 19 pages', cat:'Document Control', tab:'doccontrol' },
-  { t:'2SFG-S035 group policy swab pass fail', d:'Group policy statement 2SFG-S035 is the basis for the swab pass rate of 98% and the Pass ≤1000 / Fail >1000 limits introduced in D1.0.', cat:'Document Control', tab:'doccontrol' },
-  { t:'EU Directive 98/83 water potable', d:'Potable water specification standards governed by Retained EU Law — EU Directive 98/83/EC.', cat:'Document Control', tab:'doccontrol' },
-  { t:'ISO 4833 ISO 16649 EN ISO 6579 method references', d:'ISO 4833 = TVC/ACC method. ISO 16649-1 or -2 = E. coli enumeration. EN/ISO 6579 = Salmonella detection. ISO 18593:2018 = Environmental swabbing guidance.', cat:'Document Control', tab:'doccontrol' },
-  { t:'review record annual significant changes', d:'Procedure reviewed annually or after significant changes to process flow or equipment per M3 swabbing RA requirement. Review Record (M9) maintained in live document.', cat:'Document Control', tab:'doccontrol' },
   // CUSTOMER COPs
   { t:'COP code of practice full form meaning', d:'COP = Code of Practice. Per-customer microbiological limits documents. These limits are what results are judged against for each retailer — they may be tighter than the internal 2SFG procedure.', cat:'Customer COPs', tab:'cop' },
   { t:'Aldi pseudomonas limit product', d:'Aldi Pseudomonas: SOL target <5,000 cfu/g · EOL target <10,000,000 cfu/g · Testing: SOL Daily/Weekly/Monthly, EOL Annual. UKAS No.1916.', cat:'Customer COPs', tab:'cop' },
